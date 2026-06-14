@@ -9,21 +9,21 @@ class LandingController extends Controller
 {
     // 1. Halaman Utama
     public function index()
-    {
-        // Kartu rekomendasi: hanya 6 data
-        $rekomendasiWisata = ObjekWisata::with('kabupaten')->take(6)->get();
+{
+    // Pastikan kedua variabel ini didefinisikan dengan benar
+    // 1. Data untuk Kartu Katalog (Limit 6)
+    $allWisata = ObjekWisata::with('kabupaten')->take(6)->get();
 
-        // Peta SIG: semua data yang punya koordinat
-        $semuaWisata = ObjekWisata::with('kabupaten')
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->where('latitude', '!=', '')
-            ->where('longitude', '!=', '')
-            ->get();
+    // 2. Data untuk Marker Peta (Semua yang memiliki koordinat)
+    $wisataMarkers = ObjekWisata::whereNotNull('latitude')
+                                ->whereNotNull('longitude')
+                                ->where('latitude', '!=', '')
+                                ->where('longitude', '!=', '')
+                                ->get();
 
-        return view('frontend.index', compact('rekomendasiWisata', 'semuaWisata'));
-    }
-
+    // Kirim keduanya ke view
+    return view('frontend.index', compact('allWisata', 'wisataMarkers'));
+}
     // 2. Halaman Katalog
     public function katalog()
     {

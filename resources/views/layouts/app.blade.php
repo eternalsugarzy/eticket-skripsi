@@ -130,6 +130,13 @@
                     </li>
                     @endif
 
+                    {{-- TOMBOL FRONT-END (DIRAPIKAN & BISA DIAKSES SEMUA ROLE) --}}
+                    <li class="pc-item mt-4 mb-4" style="padding: 0 20px;">
+                        <a href="{{ route('landing') }}" target="_blank" class="btn btn-primary w-100 d-flex justify-content-center align-items-center shadow-sm" style="border-radius: 8px; padding: 12px; font-weight: 600;">
+                            <i class="ti ti-world me-2 fs-5"></i> Halaman Publik
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>

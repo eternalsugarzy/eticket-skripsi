@@ -112,6 +112,20 @@
         width: 14px;
         height: 14px;
     }
+
+    /* Tombol Google Maps */
+    .btn-gmaps {
+        border: 2px solid #ea4335;
+        color: #ea4335;
+        background-color: transparent;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .btn-gmaps:hover {
+        background-color: #ea4335;
+        color: white;
+    }
 </style>
 @endpush
 
@@ -193,8 +207,17 @@
                     <h5 class="fw-bold m-0 text-dark">Titik Navigasi</h5>
                 </div>
                 <div id="map" class="mb-3"></div>
-                <div class="text-center bg-light p-2 rounded">
-                    <code class="text-secondary">{{ $wisata->latitude }}, {{ $wisata->longitude }}</code>
+                
+                <div class="d-flex flex-column gap-2">
+                    <div class="text-center bg-light p-2 rounded">
+                        <code class="text-secondary">{{ $wisata->latitude }}, {{ $wisata->longitude }}</code>
+                    </div>
+                    {{-- TOMBOL REDIRECT GOOGLE MAPS --}}
+                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ $wisata->latitude }},{{ $wisata->longitude }}" 
+                       target="_blank" 
+                       class="btn btn-gmaps w-100 d-flex justify-content-center align-items-center py-2">
+                        <i class="bi bi-google me-2"></i> Buka Rute di Google Maps
+                    </a>
                 </div>
             </div>
         </div>

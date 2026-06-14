@@ -7,36 +7,6 @@
 <style>
     #map { height: 350px; z-index: 1; }
 
-    .galeri-thumb {
-        position: relative;
-        display: inline-block;
-    }
-    .galeri-thumb img {
-        height: 80px;
-        width: 80px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-    }
-    .galeri-thumb .btn-hapus-galeri {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: #dc3545;
-        color: white;
-        border: none;
-        font-size: 12px;
-        line-height: 1;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-    }
-
     #preview-container {
         display: flex;
         flex-wrap: wrap;
@@ -78,7 +48,8 @@
                     {{-- Nama --}}
                     <div class="form-group mb-3">
                         <label class="form-label">Nama Objek Wisata</label>
-                        <input type="text" name="nama_objek" class="form-control @error('nama_objek') is-invalid @enderror"
+                        <input type="text" name="nama_objek"
+                               class="form-control @error('nama_objek') is-invalid @enderror"
                                value="{{ old('nama_objek', $objekWisata->nama_objek) }}" required>
                         @error('nama_objek')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
@@ -106,7 +77,8 @@
                     {{-- Alamat --}}
                     <div class="form-group mb-3">
                         <label class="form-label">Alamat Lengkap</label>
-                        <textarea name="alamat" class="form-control @error('alamat') is-invalid @enderror"
+                        <textarea name="alamat"
+                                  class="form-control @error('alamat') is-invalid @enderror"
                                   rows="3" required>{{ old('alamat', $objekWisata->alamat) }}</textarea>
                         @error('alamat')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
@@ -124,45 +96,6 @@
                         <input type="file" name="foto" class="form-control" accept="image/*">
                         <small class="text-muted">Format: JPG, PNG, WEBP. Maks: 2MB. Kosongkan jika tidak ingin mengganti.</small>
                     </div>
-
-                    {{-- ======================================================= --}}
-                    {{-- GALERI SLIDER                                            --}}
-                    {{-- ======================================================= --}}
-                    <div class="form-group mb-4 border-top pt-3">
-                        <label class="form-label fw-bold text-primary">
-                            <i class="bi bi-images me-1"></i> Foto Galeri (Slider)
-                        </label>
-
-                        {{-- Galeri yang sudah ada --}}
-                        @if($objekWisata->galeri->count() > 0)
-                            <p class="small fw-semibold text-muted mb-2">Galeri saat ini — klik <span class="text-danger">✕</span> untuk hapus:</p>
-                            <div class="d-flex flex-wrap gap-2 mb-3" id="galeri-existing">
-                                @foreach($objekWisata->galeri as $g)
-                                    <div class="galeri-thumb" id="thumb-{{ $g->id }}">
-                                        <img src="{{ asset('uploads/wisata/galeri/' . $g->foto) }}"
-                                             alt="Galeri">
-                                        <button type="button"
-                                                class="btn-hapus-galeri"
-                                                onclick="hapusGaleri({{ $g->id }}, this)"
-                                                title="Hapus foto ini">✕</button>
-                                    </div>
-                                @endforeach
-                            </div>
-                            {{-- Input hidden untuk ID galeri yang dihapus --}}
-                            <div id="hapus-galeri-inputs"></div>
-                        @endif
-
-                        {{-- Upload galeri baru --}}
-                        <input type="file" name="galeri[]" id="input-galeri"
-                               class="form-control" multiple accept="image/*">
-                        <small class="text-muted d-block mt-1">
-                            Pilih beberapa foto sekaligus (tahan Ctrl/Cmd). Format: JPG, PNG, WEBP. Maks 2MB per foto.
-                        </small>
-
-                        {{-- Preview foto baru yang dipilih --}}
-                        <div id="preview-container"></div>
-                    </div>
-                    {{-- ======================================================= --}}
 
                     {{-- Koordinat --}}
                     <div class="row">
@@ -211,11 +144,58 @@
                         </div>
                     </div>
 
+                    {{-- Upload Galeri Baru --}}
+                    <div class="form-group mb-4 border-top pt-3">
+                        <label class="form-label fw-bold text-primary">
+                            <i class="bi bi-images me-1"></i> Tambah Foto Galeri Baru
+                        </label>
+                        <input type="file" name="galeri[]" id="input-galeri"
+                               class="form-control" multiple accept="image/*">
+                        <small class="text-muted d-block mt-1">
+                            Pilih beberapa foto sekaligus (tahan Ctrl/Cmd). Format: JPG, PNG, WEBP. Maks 2MB per foto.
+                        </small>
+                        <div id="preview-container"></div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save me-1"></i> Update
                     </button>
                     <a href="{{ route('objek-wisata.index') }}" class="btn btn-secondary">Batal</a>
                 </form>
+
+                {{-- ======================================================= --}}
+                {{-- GALERI YANG SUDAH ADA — Form hapus terpisah di LUAR      --}}
+                {{-- form utama agar tidak bentrok dengan enctype              --}}
+                {{-- ======================================================= --}}
+                @if($objekWisata->galeri->count() > 0)
+                <div class="border-top pt-3 mt-4">
+                    <label class="form-label fw-bold text-primary">
+                        <i class="bi bi-images me-1"></i> Galeri Foto Saat Ini
+                    </label>
+                    <p class="small text-muted mb-3">Klik tombol <strong>Hapus</strong> di bawah foto untuk menghapusnya.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        @foreach($objekWisata->galeri as $g)
+                        <div class="text-center">
+                            <img src="{{ asset('uploads/wisata/galeri/' . $g->foto) }}"
+                                 class="img-thumbnail shadow-sm d-block mb-1"
+                                 style="height: 100px; width: 100px; object-fit: cover; border-radius: 8px;">
+
+                            {{-- Form hapus per foto — method DELETE via POST spoofing --}}
+                            <form action="{{ route('galeri.destroy', $g->id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Hapus foto ini dari galeri?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm px-2 py-0"
+                                        style="font-size: 11px;">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
 
             </div>
         </div>
@@ -230,9 +210,9 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     // ===== PETA LEAFLET =====
-    var oldLat = {{ $objekWisata->latitude ? $objekWisata->latitude : -3.3285 }};
-    var oldLng = {{ $objekWisata->longitude ? $objekWisata->longitude : 114.5901 }};
-    var zoomLevel = {{ $objekWisata->latitude ? 14 : 10 }};
+    var oldLat    = {{ $objekWisata->latitude  ? $objekWisata->latitude  : -3.3285  }};
+    var oldLng    = {{ $objekWisata->longitude ? $objekWisata->longitude : 114.5901 }};
+    var zoomLevel = {{ $objekWisata->latitude  ? 14 : 10 }};
 
     var map = L.map('map').setView([oldLat, oldLng], zoomLevel);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -265,26 +245,14 @@ document.addEventListener("DOMContentLoaded", function () {
             var reader = new FileReader();
             reader.onload = function (e) {
                 var img = document.createElement('img');
-                img.src = e.target.result;
+                img.src   = e.target.result;
                 img.title = file.name;
                 container.appendChild(img);
             };
             reader.readAsDataURL(file);
         });
     });
+
 });
-
-// ===== HAPUS GALERI YANG SUDAH ADA =====
-function hapusGaleri(id, btn) {
-    // Sembunyikan thumbnail
-    document.getElementById('thumb-' + id).style.display = 'none';
-
-    // Tambahkan hidden input agar controller tahu ID mana yang dihapus
-    var input = document.createElement('input');
-    input.type   = 'hidden';
-    input.name   = 'hapus_galeri[]';
-    input.value  = id;
-    document.getElementById('hapus-galeri-inputs').appendChild(input);
-}
 </script>
 @endpush

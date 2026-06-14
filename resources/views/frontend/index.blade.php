@@ -94,45 +94,33 @@
 
 @push('scripts')
     <script>
-        // ==========================================
         // 1. KUNCI BOUNDING BOX KALSEL
-        // ==========================================
         var batasKalsel = L.latLngBounds(
-            L.latLng(-5.1000, 114.0000), 
-            L.latLng(-1.0000, 117.0000)  
+            L.latLng(-4.8000, 114.0000), // Batas Selatan & Barat
+            L.latLng(-1.0000, 117.0000)  // Batas Utara & Timur
         );
 
-        // ==========================================
-        // 2. INISIALISASI PETA DENGAN BATASAN ZOOM
-        // ==========================================
+        // 2. INISIALISASI PETA DENGAN TEMBOK GAIB
         var map = L.map('map-sig', {
             maxBounds: batasKalsel,
             maxBoundsViscosity: 1.0, 
-            minZoom: 8,              
+            minZoom: 7,              
             maxZoom: 18,
-            zoomControl: true
-        }).setView([-3.0926, 115.2838], 8);
+            zoomControl: true,
+            scrollWheelZoom: false // Mencegah zoom saat scroll halaman
+        }).setView([-3.0926, 115.2838], 7);
 
-        // Fungsi menahan tarikan keluar peta (Hard Lock)
-        map.on('drag', function() {
-            map.panInsideBounds(batasKalsel, { animate: false });
-        });
-
-        // ==========================================
         // 3. TILE LAYER OPENSTREETMAP
-        // ==========================================
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        // ==========================================
         // 4. MEMANGGIL KALSEL.JSON (GEOJSON)
-        // ==========================================
         var geojsonUrl = "{{ asset('assets/geojson/kalsel.geojson') }}";
 
         fetch(geojsonUrl)
             .then(response => {
-                if(!response.ok) throw new Error("GeoJSON tidak ditemukan atau path salah.");
+                if(!response.ok) throw new Error("GeoJSON tidak ditemukan.");
                 return response.json();
             })
             .then(data => {
@@ -150,21 +138,17 @@
             })
             .catch(error => console.log("Info GeoJSON: " + error.message));
 
-        // ==========================================
-        // 5. PIN MARKER OBJEK WISATA
-        // ==========================================
-        @foreach($allWisata as $w)
-            @if(!empty($w->latitude) && !empty($w->longitude))
-                var marker = L.marker([{{ $w->latitude }}, {{ $w->longitude }}]).addTo(map);
-                
-                var popupContent = `
-                    <div style="text-align:center; font-family:sans-serif;">
-                        <h6 style="margin-bottom:8px; font-weight:bold; color:#0f172a;">{{ $w->nama_objek }}</h6>
-                        <a href="{{ route('wisata.detail', $w->id) }}" class="btn btn-sm" style="background-color:#3b82f6; color:white; text-decoration:none; padding:4px 12px; border-radius:20px; display:inline-block; font-size:11px; font-weight:bold;">Lihat Lokasi</a>
-                    </div>
-                `;
-                marker.bindPopup(popupContent);
-            @endif
+        // 5. PIN MARKER OBJEK WISATA (Diperbaiki)
+        @foreach($wisataMarkers as $w)
+            var marker_{{ $w->id }} = L.marker([{{ $w->latitude }}, {{ $w->longitude }}]).addTo(map);
+            
+            var popupContent_{{ $w->id }} = `
+                <div style="text-align:center; font-family:sans-serif;">
+                    <h6 style="margin-bottom:8px; font-weight:bold; color:#0f172a;">{{ $w->nama_objek }}</h6>
+                    <a href="{{ route('wisata.detail', $w->id) }}" class="btn btn-sm" style="background-color:#3b82f6; color:white; text-decoration:none; padding:4px 12px; border-radius:20px; display:inline-block; font-size:11px; font-weight:bold;">Lihat Lokasi</a>
+                </div>
+            `;
+            marker_{{ $w->id }}.bindPopup(popupContent_{{ $w->id }});
         @endforeach
     </script>
 @endpush

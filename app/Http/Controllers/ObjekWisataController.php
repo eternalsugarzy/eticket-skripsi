@@ -172,4 +172,29 @@ class ObjekWisataController extends Controller
             ]);
         }
     }
+
+    // =========================================================
+    // FUNGSI KHUSUS — Hapus Satu Foto Galeri via AJAX
+    // =========================================================
+    // Ganti method hapusGaleri di ObjekWisataController dengan ini:
+
+public function hapusGaleri($id)
+{
+    $galeri = GaleriWisata::findOrFail($id);
+
+    // Simpan id_objek sebelum dihapus, untuk redirect kembali ke halaman edit
+    $idObjek = $galeri->id_objek;
+
+    // Hapus file fisik
+    $path = public_path('uploads/wisata/galeri/' . $galeri->foto);
+    if (file_exists($path)) {
+        unlink($path);
+    }
+
+    // Hapus dari database
+    $galeri->delete();
+
+    return redirect()->route('objek-wisata.edit', $idObjek)
+                     ->with('success', 'Foto galeri berhasil dihapus.');
+}
 }
