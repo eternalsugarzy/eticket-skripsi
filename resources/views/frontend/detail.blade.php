@@ -169,9 +169,9 @@
                     <span class="text-secondary small">Mulai dari</span>
                     <h3 class="fw-bold mb-0 text-dark">Rp {{ number_format($hargaTiket->min('harga') ?? 0, 0, ',', '.') }}</h3>
                 </div>
-                <button class="btn btn-booking w-100 d-flex justify-content-center align-items-center">
-                    <i class="bi bi-cart-plus-fill me-2 fs-5"></i> Pesan Tiket Sekarang
-                </button>
+                <a href="{{ route('checkout.index', $wisata->id) }}" class="btn btn-primary w-100 py-2 fw-bold text-decoration-none rounded-3 d-flex justify-content-center align-items-center">
+                    <i class="bi bi-cart-plus-fill me-2"></i> Pesan Tiket Sekarang
+                </a>
             </div>
         </div>
     </div>

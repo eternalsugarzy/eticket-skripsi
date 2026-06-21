@@ -10,6 +10,11 @@ class AuthController extends Controller
     // 1. Menampilkan Halaman Login
     public function showLoginForm()
     {
+        // Jika sudah login, langsung ke dashboard
+        if (Auth::check()) {
+            return redirect('/dashboard');
+        }
+
         return view('auth.login');
     }
 
@@ -22,18 +27,18 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Cek ke Database (Laravel otomatis menghash password inputan dan membandingkan)
+        // Cek ke Database
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Jika sukses, lempar ke halaman Dashboard
-            return redirect()->intended('/');
+            // ✅ PERBAIKAN: Arahkan ke /dashboard bukan ke /
+            return redirect()->intended('/dashboard');
         }
 
         // Jika gagal, kembalikan ke halaman login dengan pesan error
         return back()->withErrors([
             'username' => 'Username atau password salah.',
-        ]);
+        ])->onlyInput('username');
     }
 
     // 3. Proses Logout
@@ -42,8 +47,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        // Kembalikan ke halaman login
+
         return redirect('/login');
     }
 }

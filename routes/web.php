@@ -13,6 +13,7 @@ use App\Http\Controllers\DataPengunjungController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\CheckoutController; 
 
 // =========================================================================
 //  --- A. RUTE PUBLIK / GUEST (TIDAK PERLU LOGIN) ---
@@ -22,9 +23,18 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/katalog', [LandingController::class, 'katalog'])->name('wisata.katalog');
 Route::get('/wisata/{id}', [LandingController::class, 'detail'])->name('wisata.detail');
 
+Route::get('/checkout/{id_objek}', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/proses', [App\Http\Controllers\CheckoutController::class, 'proses'])->name('checkout.proses');
+Route::get('/cek-pesanan', [App\Http\Controllers\CheckoutController::class, 'cekPesanan'])->name('cek-pesanan');
+
+Route::post('/simulasi-bayar/{kode_pesanan}', [App\Http\Controllers\CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
+
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+
+
+
 });
 
 
