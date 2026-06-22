@@ -3,90 +3,110 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; 
-use Carbon\Carbon; 
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Models\ObjekWisata;
 use App\Models\Transaksi;
-use App\Models\Tiket;
+use App\Models\Pesanan;
+use App\Models\PesananDetail;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $hariIni = Carbon::today();
-        
-        // === 1. DATA KARTU INFO (DI-FILTER AGAR HANYA MENGHITUNG YANG SUKSES) ===
-        $totalPengunjung = Transaksi::where('status', 'sukses')->whereDate('created_at', $hariIni)->count();
-        $totalPendapatan = Transaksi::where('status', 'sukses')->whereDate('created_at', $hariIni)->sum('total_bayar');
-        
-        // Tiket yang dihitung hanya tiket dari transaksi yang berstatus sukses
-        $tiketTerjual    = Tiket::whereHas('transaksi', function($query) {
-                                $query->where('status', 'sukses');
-                            })->whereDate('created_at', $hariIni)->count();
-                            
-        $totalObjekWisata= ObjekWisata::count();
+        $hariIni  = Carbon::today();
+        $tahunIni = Carbon::now()->year;
 
-        // === 2. DATA UNTUK GRAFIK & TOP 5 ===
-        $chartLabels = [];
-        $chartValues = [];
-        $topWisata = [];
+        // =========================================================
+        // 1. KARTU INFO (HARI INI)
+        // =========================================================
 
+        // Jumlah transaksi kasir hari ini
+        $totalPengunjung = Transaksi::whereDate('created_at', $hariIni)->count();
+
+        // Total pendapatan kasir hari ini
+        $totalPendapatan = Transaksi::whereDate('created_at', $hariIni)->sum('total_bayar');
+
+        // Total tiket terjual hari ini (sum jumlah dari detail_transaksis)
+        $tiketTerjual = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->whereDate('transaksis.created_at', $hariIni)
+            ->sum('detail_transaksis.jumlah');
+
+        // Total objek wisata
+        $totalObjekWisata = ObjekWisata::count();
+
+
+        // =========================================================
+        // 2. TOP 5 OBJEK WISATA
+        //    Join: detail_transaksis -> transaksis (ambil id_objek) -> objek_wisatas
+        //    Hitung SUM(jumlah) per objek wisata
+        // =========================================================
         try {
-            // SOLUSI FINAL: Teknik "Smart Match" + Filter Status Transaksi Sukses
-            // Kita hubungkan detail_transaksis ke harga_tikets berdasarkan JENIS + HARGA
-            
-            $queryWisata = DB::table('detail_transaksis')
-                // Tambahan: Join ke tabel transaksis untuk menyaring status transaksi
+            $topWisata = DB::table('detail_transaksis')
                 ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
-                ->join('harga_tikets', function($join) {
-                    // Kunci Rahasia: Join menggunakan DUA kolom agar akurat
-                    $join->on('detail_transaksis.id_jenis_tiket', '=', 'harga_tikets.id_jenis_tiket');
-                    $join->on('detail_transaksis.harga_satuan', '=', 'harga_tikets.harga');
-                })
-                // Setelah dapat baris harga tiket yang pas, baru kita ambil ID Objek-nya
-                ->join('objek_wisatas', 'harga_tikets.id_objek', '=', 'objek_wisatas.id')
-                
-                // Hanya hitung item dari transaksi yang sukses
-                ->where('transaksis.status', 'sukses') 
-                
-                ->select('objek_wisatas.nama_objek', DB::raw('count(*) as total'))
+                ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+                ->select(
+                    'objek_wisatas.id',
+                    'objek_wisatas.nama_objek',
+                    DB::raw('SUM(detail_transaksis.jumlah) as total')
+                )
                 ->groupBy('objek_wisatas.id', 'objek_wisatas.nama_objek')
-                ->orderByDesc('total');
-
-            // Ambil Top 5
-            $topWisata = $queryWisata->limit(5)->get();
-
-            // Ambil Data Grafik
-            $grafikWisata = $queryWisata->limit(10)->get();
-            $chartLabels = $grafikWisata->pluck('nama_objek');
-            $chartValues = $grafikWisata->pluck('total');
-
-        } catch (\Exception $e) {
-            // Fallback jika masih ada kendala, dashboard tetap jalan dengan grafik harian
-            $startDate = Carbon::now()->subDays(6);
-            
-            // Tambahan filter status pada query fallback grafik harian
-            $dataHarian = Transaksi::select(DB::raw('DATE(created_at) as tanggal'), DB::raw('COUNT(*) as total'))
-                ->where('status', 'sukses') 
-                ->where('created_at', '>=', $startDate)
-                ->groupBy('tanggal')
-                ->orderBy('tanggal', 'ASC')
+                ->orderByDesc('total')
+                ->limit(5)
                 ->get();
+        } catch (\Exception $e) {
+            $topWisata = collect();
+        }
 
-            $chartLabels = [];
-            $chartValues = [];
-            for ($i = 6; $i >= 0; $i--) {
-                $tgl = Carbon::today()->subDays($i)->format('Y-m-d');
-                $found = $dataHarian->firstWhere('tanggal', $tgl);
-                $chartLabels[] = Carbon::today()->subDays($i)->format('d/m');
-                $chartValues[] = $found ? $found->total : 0;
-            }
-            $topWisata = [];
+
+        // =========================================================
+        // 3. GRAFIK KUNJUNGAN OFFLINE VS ONLINE PER BULAN
+        //    Offline: detail_transaksis -> transaksis (by created_at)
+        //    Online:  pesanan_details   -> pesanans   (status Paid)
+        // =========================================================
+        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+
+        // Offline — 1 query, group by bulan
+        $offlinePerBulan = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->whereYear('transaksis.created_at', $tahunIni)
+            ->select(
+                DB::raw('MONTH(transaksis.created_at) as bulan'),
+                DB::raw('SUM(detail_transaksis.jumlah) as total')
+            )
+            ->groupBy(DB::raw('MONTH(transaksis.created_at)'))
+            ->pluck('total', 'bulan');
+
+        // Online — 1 query, group by bulan
+        $onlinePerBulan = DB::table('pesanan_details')
+            ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereYear('pesanans.created_at', $tahunIni)
+            ->select(
+                DB::raw('MONTH(pesanans.created_at) as bulan'),
+                DB::raw('SUM(pesanan_details.jumlah) as total')
+            )
+            ->groupBy(DB::raw('MONTH(pesanans.created_at)'))
+            ->pluck('total', 'bulan');
+
+        // Mapping ke array 12 bulan, bulan kosong diisi 0
+        $chartValuesOffline = [];
+        $chartValuesOnline  = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $chartValuesOffline[] = (int) ($offlinePerBulan[$i] ?? 0);
+            $chartValuesOnline[]  = (int) ($onlinePerBulan[$i]  ?? 0);
         }
 
         return view('dashboard', compact(
-            'totalPengunjung', 'totalPendapatan', 'tiketTerjual', 'totalObjekWisata',
-            'chartLabels', 'chartValues', 'topWisata'
+            'totalPengunjung',
+            'totalPendapatan',
+            'tiketTerjual',
+            'totalObjekWisata',
+            'chartLabels',
+            'chartValuesOffline',
+            'chartValuesOnline',
+            'topWisata'
         ));
     }
 }

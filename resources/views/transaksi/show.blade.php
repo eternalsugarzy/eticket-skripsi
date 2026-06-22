@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="flex-grow-1 text-center px-2">
-                        <h4 class="fw-bold text-uppercase m-0">E-Ticket Wisata</h4>
+                        <h4 class="fw-bold text-uppercase m-0">Struk Ticket Wisata</h4>
                         <h6 class="text-muted m-0">{{ $transaksi->objekWisata->nama_objek ?? 'Objek Wisata' }}</h6>
                         <p class="small text-muted m-0" style="font-size: 0.75rem;">{{ $transaksi->objekWisata->alamat ?? '-' }}</p>
                     </div>

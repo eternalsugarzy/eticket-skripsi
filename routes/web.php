@@ -31,6 +31,10 @@ Route::post('/simulasi-bayar/{kode_pesanan}', [App\Http\Controllers\CheckoutCont
 // Rute Cetak E-Ticket
 Route::get('/e-ticket/{kode_pesanan}', [App\Http\Controllers\CheckoutController::class, 'eTicket'])->name('cetak.eticket');
 
+// Manajemen Pesanan Online (Admin)
+Route::get('/pesanan-online', [App\Http\Controllers\PesananOnlineController::class, 'index'])->name('pesanan-online.index');
+Route::get('/pesanan-online/{id}', [App\Http\Controllers\PesananOnlineController::class, 'show'])->name('pesanan-online.show');
+
 Route::middleware('guest')->group(function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
