@@ -4,31 +4,46 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ObjekWisata;
+use App\Models\Kabupaten;
 
 class LandingController extends Controller
 {
     // 1. Halaman Utama
     public function index()
-{
-    // Pastikan kedua variabel ini didefinisikan dengan benar
-    // 1. Data untuk Kartu Katalog (Limit 6)
-    $allWisata = ObjekWisata::with('kabupaten')->take(6)->get();
-
-    // 2. Data untuk Marker Peta (Semua yang memiliki koordinat)
-    $wisataMarkers = ObjekWisata::whereNotNull('latitude')
-                                ->whereNotNull('longitude')
-                                ->where('latitude', '!=', '')
-                                ->where('longitude', '!=', '')
-                                ->get();
-
-    // Kirim keduanya ke view
-    return view('frontend.index', compact('allWisata', 'wisataMarkers'));
-}
-    // 2. Halaman Katalog
-    public function katalog()
     {
-        $allWisata = ObjekWisata::with('kabupaten')->get();
-        return view('frontend.katalog', compact('allWisata'));
+        $allWisata = ObjekWisata::with('kabupaten')->take(6)->get();
+
+        $wisataMarkers = ObjekWisata::whereNotNull('latitude')
+                                    ->whereNotNull('longitude')
+                                    ->where('latitude', '!=', '')
+                                    ->where('longitude', '!=', '')
+                                    ->get();
+
+        return view('frontend.index', compact('allWisata', 'wisataMarkers'));
+    }
+
+    // 2. Halaman Katalog (dengan Search & Filter)
+    public function katalog(Request $request)
+    {
+        $query = ObjekWisata::with('kabupaten')->orderBy('nama_objek', 'asc');
+
+        // Filter: pencarian nama objek wisata
+        if ($request->filled('q')) {
+            $query->where('nama_objek', 'like', '%' . $request->q . '%');
+        }
+
+        // Filter: berdasarkan kabupaten
+        if ($request->filled('kabupaten')) {
+            $query->where('id_kabupaten', $request->kabupaten);
+        }
+
+        // Paginate 12 per halaman, pertahankan query string di link pagination
+        $allWisata  = $query->paginate(12)->withQueryString();
+
+        // Data untuk dropdown filter kabupaten
+        $kabupatens = Kabupaten::orderBy('nama_kabupaten')->get();
+
+        return view('frontend.katalog', compact('allWisata', 'kabupatens'));
     }
 
     // 3. Halaman Detail

@@ -28,6 +28,8 @@ Route::post('/checkout/proses', [App\Http\Controllers\CheckoutController::class,
 Route::get('/cek-pesanan', [App\Http\Controllers\CheckoutController::class, 'cekPesanan'])->name('cek-pesanan');
 
 Route::post('/simulasi-bayar/{kode_pesanan}', [App\Http\Controllers\CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
+// Rute Cetak E-Ticket
+Route::get('/e-ticket/{kode_pesanan}', [App\Http\Controllers\CheckoutController::class, 'eTicket'])->name('cetak.eticket');
 
 Route::middleware('guest')->group(function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

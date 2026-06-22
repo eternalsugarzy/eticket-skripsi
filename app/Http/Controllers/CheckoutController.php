@@ -113,4 +113,21 @@ return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])->with('succes
 
         return back()->with('error', 'Pesanan tidak ditemukan atau sudah dibayar.');
     }
+
+    // Fungsi Menampilkan E-Ticket untuk Dicetak
+    public function eTicket($kode_pesanan)
+    {
+        $pesanan = Pesanan::query()
+                    ->with(['details.jenisTiket', 'objekWisata'])
+                    ->where('kode_pesanan', $kode_pesanan)
+                    ->firstOrFail();
+
+        // Keamanan: Pastikan tiket hanya bisa dicetak jika sudah LUNAS
+        if ($pesanan->status_pembayaran != 'Paid') {
+            return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])
+                             ->with('error', 'Pesanan belum lunas, E-Ticket tidak dapat dicetak.');
+        }
+
+        return view('frontend.e_ticket', compact('pesanan'));
+    }
 }

@@ -111,7 +111,8 @@
                         @forelse($hargaTikets as $ht)
                         <div class="tiket-row d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
                             <div>
-                                <h6 class="mb-0 fw-bold tiket-nama">{{ $ht->jenisTiket->nama_tiket ?? 'Tiket Reguler' }}</h6>
+                                {{-- PERBAIKAN: nama kolom di tabel jenis_tikets adalah "nama_jenis", bukan "nama_tiket" --}}
+                                <h6 class="mb-0 fw-bold tiket-nama">{{ $ht->jenisTiket->nama_jenis ?? 'Tiket Reguler' }}</h6>
                                 <span class="text-muted" style="font-size: 14px;">
                                     Rp {{ number_format($ht->harga, 0, ',', '.') }} / orang
                                 </span>

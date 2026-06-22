@@ -340,9 +340,9 @@
                         Pembayaran diproses secara aman dan terenkripsi.
                     </p>
                 @elseif($pesanan->status_pembayaran == 'Paid')
-                    <button class="btn-eticket">
-                        <i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket
-                    </button>
+                    <a href="{{ route('cetak.eticket', $pesanan->kode_pesanan) }}" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">
+                     <i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket
+                    </a>
                 @endif
             </div>
 
