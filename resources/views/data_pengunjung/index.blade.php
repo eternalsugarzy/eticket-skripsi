@@ -58,21 +58,21 @@
                             <tr>
                                 <td class="ps-3">{{ $pengunungs->firstItem() + $key }}</td>
                                 <td>
-                                    <span class="fw-bold text-dark">{{ date('d M Y', strtotime($p->waktu_validasi ?? $p->tanggal)) }}</span> <br>
-                                    <small class="text-muted">{{ date('H:i:s', strtotime($p->waktu_validasi ?? $p->tanggal)) }} WITA</small>
+                                    <span class="fw-bold text-dark">{{ date('d M Y', strtotime($p->waktu_validasi)) }}</span> <br>
+                                    <small class="text-muted">{{ date('H:i:s', strtotime($p->waktu_validasi)) }} WITA</small>
                                 </td>
                                 <td>
-                                    @if(($p->sumber ?? '') == 'Online')
+                                    @if($p->sumber == 'Online')
                                         <span class="badge bg-info bg-opacity-10 text-info border border-info"><i class="ti ti-world me-1"></i>Online</span>
                                     @else
                                         <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary"><i class="ti ti-device-desktop-analytics me-1"></i>Offline</span>
                                     @endif
                                 </td>
-                                <td class="text-primary fw-bold">{{ $p->no_transaksi ?? $p->kode_pesanan ?? $p->kode_transaksi ?? '-' }}</td>
-                                <td>{{ $p->objekWisata->nama_objek ?? $p->nama_objek ?? '-' }}</td>
+                                <td class="text-primary fw-bold">{{ $p->kode_transaksi }}</td>
+                                <td>{{ $p->nama_objek }}</td>
                                 <td class="text-center">
                                     <span class="badge bg-primary text-white fs-6">
-                                        {{ isset($p->details) ? $p->details->sum('jumlah') : ($p->jumlah_orang ?? $p->jumlah ?? 1) }} Orang
+                                        {{ $p->jumlah_orang }} Orang
                                     </span>
                                 </td>
                                 <td class="text-center">

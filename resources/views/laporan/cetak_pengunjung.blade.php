@@ -4,137 +4,32 @@
     <meta charset="UTF-8">
     <title>Laporan Data Pengunjung</title>
     <style>
-        /* === SETTING HALAMAN === */
-        @page {
-            size: A4 portrait;
-            margin: 15mm 20mm; /* Atas/Bawah 15mm, Kiri/Kanan 20mm */
-        }
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 12px;
-            margin: 0;
-        }
-
-        /* === KOP SURAT (DIPERBAIKI) === */
-        .kop-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: none;
-            margin-bottom: 5px;
-        }
-        .kop-table td {
-            border: none;
-            vertical-align: middle; /* Logo & Teks rata tengah secara vertikal */
-        }
-        
-        /* Kolom Logo */
-        .kop-logo-cell {
-            width: 15%;
-            text-align: center;
-        }
-        .logo-img {
-            width: 90px; /* Lebar logo disesuaikan agar pas */
-            height: auto;
-        }
-
-        /* Kolom Teks */
-        .kop-text-cell {
-            width: 85%;
-            text-align: center;
-            padding-right: 15px; /* Sedikit padding agar teks benar-benar di tengah visual */
-        }
-        .text-col p {
-            margin: 0;
-            line-height: 1.25;
-            color: #000;
-        }
-        .text-col .line1 {
-            font-size: 14pt;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .text-col .line2 {
-            font-size: 18pt;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .text-col .line-contact-utama {
-            font-size: 10pt;
-            line-height: 1.2;
-            margin-top: 5px;
-        }
-        
-        /* Garis Pemisah */
-        .hr-separator {
-            border: 0;
-            border-top: 3px double black; /* Menggunakan double border agar lebih formal */
-            height: 3px;
-            margin-bottom: 20px;
-        }
-
-        /* === ISI LAPORAN === */
-        h1 {
-            text-align: center;
-            font-size: 16px;
-            margin-bottom: 20px;
-            text-decoration: underline;
-            font-family: Arial, sans-serif;
-            text-transform: uppercase;
-        }
-        .info {
-            margin-bottom: 20px;
-            font-family: Arial, sans-serif;
-        }
-        
-        /* === TABEL DATA === */
-        table.data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-family: Arial, sans-serif;
-            font-size: 11px; /* Ukuran font tabel data sedikit diperkecil agar muat */
-        }
-        table.data-table th, table.data-table td {
-            border: 1px solid #000;
-            padding: 6px 8px;
-            vertical-align: middle;
-        }
-        table.data-table th {
-            background-color: #e0e0e0; /* Warna header lebih gelap sedikit */
-            text-align: center;
-            font-weight: bold;
-        }
-        .total-row td {
-            font-weight: bold;
-            background-color: #f2f2f2;
-        }
-        .text-right {
-            text-align: right;
-        }
-        .text-center {
-            text-align: center;
-        }
-        
-        /* === TANDA TANGAN === */
-        .tanda-tangan {
-            margin-top: 40px;
-            width: 100%;
-            font-family: Arial, sans-serif;
-            page-break-inside: avoid; /* Mencegah TTD terpotong ke halaman baru */
-        }
-        .ttd-wrapper {
-            display: table;
-            width: 100%;
-        }
-        .ttd-kiri, .ttd-kanan {
-            display: table-cell;
-            width: 50%;
-            text-align: center;
-            vertical-align: top;
-        }
-        .ttd-spacer {
-            height: 70px;
-        }
+        @page { size: A4 portrait; margin: 15mm 20mm; }
+        body { font-family: 'Times New Roman', Times, serif; font-size: 12px; margin: 0; }
+        .kop-table { width: 100%; border-collapse: collapse; border: none; margin-bottom: 5px; }
+        .kop-table td { border: none; vertical-align: middle; }
+        .kop-logo-cell { width: 15%; text-align: center; }
+        .logo-img { width: 90px; height: auto; }
+        .kop-text-cell { width: 85%; text-align: center; padding-right: 15px; }
+        .text-col p { margin: 0; line-height: 1.25; color: #000; }
+        .line1 { font-size: 14pt; font-weight: bold; text-transform: uppercase; }
+        .line2 { font-size: 18pt; font-weight: bold; text-transform: uppercase; }
+        .line-contact-utama { font-size: 10pt; line-height: 1.2; margin-top: 5px; }
+        .hr-separator { border: 0; border-top: 3px double black; height: 3px; margin-bottom: 20px; }
+        h1 { text-align: center; font-size: 16px; margin-bottom: 20px; text-decoration: underline; font-family: Arial, sans-serif; text-transform: uppercase; }
+        .info { margin-bottom: 20px; font-family: Arial, sans-serif; }
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-family: Arial, sans-serif; font-size: 11px; }
+        table.data-table th, table.data-table td { border: 1px solid #000; padding: 6px 8px; vertical-align: middle; }
+        table.data-table th { background-color: #e0e0e0; text-align: center; font-weight: bold; }
+        .total-row td { font-weight: bold; background-color: #f2f2f2; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .badge-online  { background: #d1ecf1; padding: 2px 6px; border-radius: 3px; font-size: 10px; }
+        .badge-offline { background: #e2e3e5; padding: 2px 6px; border-radius: 3px; font-size: 10px; }
+        .tanda-tangan { margin-top: 40px; width: 100%; font-family: Arial, sans-serif; page-break-inside: avoid; }
+        .ttd-wrapper { display: table; width: 100%; }
+        .ttd-kiri, .ttd-kanan { display: table-cell; width: 50%; text-align: center; vertical-align: top; }
+        .ttd-spacer { height: 70px; }
     </style>
 </head>
 <body onload="window.print()">
@@ -144,8 +39,7 @@
             <td class="kop-logo-cell">
                 <img class="logo-img" src="{{ asset('assets/images/logo2.png') }}" alt="Logo Kalsel">
             </td>
-            
-            <td class="kop-text-cell text-col">      
+            <td class="kop-text-cell text-col">
                 <p class="line1">PEMERINTAH PROVINSI KALIMANTAN SELATAN</p>
                 <p class="line2">DINAS PARIWISATA</p>
                 <p class="line-contact-utama">Jalan Jenderal Ahmad Yani KM 7,5 Kertak Hanyar, Kab. Banjar 70654</p>
@@ -154,8 +48,8 @@
             </td>
         </tr>
     </table>
-    
-    <hr class="hr-separator"> 
+
+    <hr class="hr-separator">
 
     <h1>LAPORAN DATA PENGUNJUNG</h1>
 
@@ -166,37 +60,45 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th width="5%">No</th>
-                <th width="15%">Waktu</th>
-                <th width="20%">No. Tiket</th>
+                <th width="4%">No</th>
+                <th width="10%">Sumber</th>
+                <th width="14%">Waktu</th>
+                <th width="20%">No. Referensi</th>
                 <th>Objek Wisata</th>
-                <th>Petugas</th>
+                <th width="12%">Petugas/Operator</th>
                 <th width="15%" class="text-right">Total Bayar</th>
             </tr>
         </thead>
         <tbody>
             @php $no = 1; $grand_total = 0; @endphp
-            
+
             @forelse ($laporan_pengunjung as $row)
             <tr>
                 <td class="text-center">{{ $no++ }}</td>
+                <td class="text-center">
+                    @if($row->sumber == 'Online')
+                        <span class="badge-online">🌐 Online</span>
+                    @else
+                        <span class="badge-offline">🖥️ Kasir</span>
+                    @endif
+                </td>
                 <td class="text-center">{{ date('d/m/y H:i', strtotime($row->waktu_transaksi)) }}</td>
                 <td class="text-center">{{ $row->id_transaksi }}</td>
                 <td>{{ $row->nama_objek ?? '-' }}</td>
-                <td>{{ $row->nama_kasir ?? 'Admin' }}</td>
+                <td class="text-center">{{ $row->nama_kasir ?? '-' }}</td>
                 <td class="text-right">Rp {{ number_format($row->total_harga, 0, ',', '.') }}</td>
             </tr>
             @php $grand_total += $row->total_harga; @endphp
-            
+
             @empty
             <tr>
-                <td colspan="6" class="text-center">Tidak ada data pengunjung pada periode ini.</td>
+                <td colspan="7" class="text-center">Tidak ada data pengunjung pada periode ini.</td>
             </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="5" class="text-right"><strong>GRAND TOTAL</strong></td>
+                <td colspan="6" class="text-right"><strong>GRAND TOTAL</strong></td>
                 <td class="text-right"><strong>Rp {{ number_format($grand_total, 0, ',', '.') }}</strong></td>
             </tr>
         </tfoot>

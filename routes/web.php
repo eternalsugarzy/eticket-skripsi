@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/cetak-pendapatan', [LaporanController::class, 'cetakPendapatan'])->name('laporan.cetak-pendapatan');
     Route::get('/laporan/cetak-tiket', [LaporanController::class, 'cetakTiket'])->name('laporan.cetak-tiket');
     Route::get('/laporan/cetak-objek', [LaporanController::class, 'cetakObjek'])->name('laporan.cetak-objek');
+    Route::get('/laporan/cetak-master', [LaporanController::class, 'cetakMaster'])->name('laporan.cetak-master');
 
     // 10. Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
