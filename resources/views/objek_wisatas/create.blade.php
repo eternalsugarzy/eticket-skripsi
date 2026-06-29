@@ -37,6 +37,27 @@
                         <textarea name="alamat" class="form-control" rows="3" placeholder="Jalan Raya..." required></textarea>
                     </div>
 
+                    {{-- ===== FASILITAS ===== --}}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold text-primary">Fasilitas Tersedia</label>
+                        <div class="row">
+                            @php
+                                $daftarFasilitas = config('fasilitas');
+                            @endphp
+                            @foreach($daftarFasilitas as $item)
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="fasilitas[]"
+                                               value="{{ $item }}" id="fas_{{ $loop->index }}">
+                                        <label class="form-check-label" for="fas_{{ $loop->index }}">{{ $item }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <small class="text-muted">Pilih fasilitas yang tersedia di objek wisata ini.</small>
+                    </div>
+                    {{-- ===== END FASILITAS ===== --}}
+
                     <div class="form-group mb-3">
                         <label class="form-label">Foto Objek Wisata</label>
                         <input type="file" name="foto" class="form-control" accept="image/*">
@@ -93,7 +114,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Inisialisasi peta ke area Kalsel (Banjarmasin sekitarnya)
         var map = L.map('map').setView([-3.3285, 114.5901], 10); 
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -103,7 +123,6 @@
 
         var marker;
 
-        // Logika klik pada peta
         map.on('click', function(e) {
             var lat = e.latlng.lat.toFixed(6);
             var lng = e.latlng.lng.toFixed(6);

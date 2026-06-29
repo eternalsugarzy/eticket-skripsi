@@ -121,6 +121,29 @@ body {
     font-size: 1.05rem;
 }
 
+/* ── Fasilitas badge ── */
+.fasilitas-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.fasilitas-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cream);
+    border: 1px solid rgba(26,61,43,.08);
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+.fasilitas-badge i {
+    color: var(--forest);
+    font-size: .95rem;
+}
+
 /* ── Booking card ── */
 .booking-card {
     background: linear-gradient(145deg, var(--forest) 0%, var(--forest-mid) 100%);
@@ -284,7 +307,7 @@ body {
 /* ── Galeri ── */
 .galeri-img {
     width: 100%; 
-    height: 400px; /* Diperbesar sedikit karena ruang di kolom kiri lebih luas */
+    height: 400px;
     object-fit: contain;
     background: #0F1C14;
     border-radius: 10px;
@@ -396,6 +419,51 @@ body {
                 </div>
             </div>
 
+            {{-- ===== FASILITAS TERSEDIA ===== --}}
+            @if(!empty($wisata->fasilitas))
+            <div class="content-card mb-4">
+                <div class="card-head">
+                    <div class="card-head-icon"><i class="bi bi-stars"></i></div>
+                    <h4>Fasilitas Tersedia</h4>
+                </div>
+                <div class="fasilitas-grid">
+                    @php
+                        $iconMap = [
+                            'Parkir Motor'         => 'bi-bicycle',
+                            'Parkir Mobil'         => 'bi-car-front-fill',
+                            'Toilet'               => 'bi-droplet-fill',
+                            'Mushola'              => 'bi-moon-stars-fill',
+                            'Warung Makan'         => 'bi-cup-hot-fill',
+                            'Restoran'             => 'bi-egg-fried',
+                            'Gazebo'               => 'bi-house-fill',
+                            'Spot Foto'            => 'bi-camera-fill',
+                            'WiFi'                 => 'bi-wifi',
+                            'Penginapan'           => 'bi-building-fill',
+                            'Camping Ground'       => 'bi-tree-fill',
+                            'Kolam Renang'         => 'bi-water',
+                            'Area Bermain Anak'    => 'bi-balloon-fill',
+                            'Pusat Informasi'      => 'bi-info-circle-fill',
+                            'Pos Keamanan'         => 'bi-shield-fill-check',
+                            'P3K / Klinik'         => 'bi-heart-pulse-fill',
+                            'ATM / Money Changer'  => 'bi-credit-card-fill',
+                            'Toko Souvenir'        => 'bi-bag-fill',
+                            'Loker Penyimpanan'    => 'bi-lock-fill',
+                            'Akses Difabel'        => 'bi-universal-access-circle',
+                            'Penyewaan Alat (Sewa Perahu/Sepeda)' => 'bi-bicycle',
+                            'Live Music / Hiburan' => 'bi-music-note-beamed',
+                        ];
+                    @endphp
+                    @foreach($wisata->fasilitas as $f)
+                        <span class="fasilitas-badge">
+                            <i class="bi {{ $iconMap[$f] ?? 'bi-check-circle-fill' }}"></i>
+                            {{ $f }}
+                        </span>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+            {{-- ===== END FASILITAS ===== --}}
+
             {{-- Retribusi Masuk --}}
             <div class="content-card mb-4">
                 <div class="card-head">
@@ -428,7 +496,7 @@ body {
                 </div>
             </div>
 
-            {{-- Galeri Foto (Dipindah ke sini) --}}
+            {{-- Galeri Foto --}}
             <div class="content-card">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-images"></i></div>
@@ -533,7 +601,6 @@ body {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    /* Custom marker warna hijau forest */
     var icon = L.divIcon({
         className: '',
         html: '<div style="width:32px;height:32px;background:var(--forest,#1A3D2B);border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>',

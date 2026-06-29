@@ -12,6 +12,11 @@ class ObjekWisata extends Model
 {
     protected $guarded = ['id'];
 
+    // Tambahkan ini agar kolom fasilitas otomatis jadi array PHP <-> JSON
+    protected $casts = [
+        'fasilitas' => 'array',
+    ];
+
     // Relasi ke Kabupaten (BelongsTo)
     public function kabupaten()
     {

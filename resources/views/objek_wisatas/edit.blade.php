@@ -83,6 +83,29 @@
                         @error('alamat')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
 
+                    {{-- ===== FASILITAS ===== --}}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold text-primary">Fasilitas Tersedia</label>
+                        <div class="row">
+                            @php
+                                $daftarFasilitas = config('fasilitas');
+                                $fasilitasLama = old('fasilitas', $objekWisata->fasilitas ?? []);
+                            @endphp
+                            @foreach($daftarFasilitas as $item)
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="fasilitas[]"
+                                               value="{{ $item }}" id="fas_{{ $loop->index }}"
+                                               {{ in_array($item, $fasilitasLama) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="fas_{{ $loop->index }}">{{ $item }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <small class="text-muted">Pilih fasilitas yang tersedia di objek wisata ini.</small>
+                    </div>
+                    {{-- ===== END FASILITAS ===== --}}
+
                     {{-- Foto Utama --}}
                     <div class="form-group mb-3">
                         <label class="form-label fw-bold">Foto Utama Objek Wisata</label>
@@ -163,10 +186,7 @@
                     <a href="{{ route('objek-wisata.index') }}" class="btn btn-secondary">Batal</a>
                 </form>
 
-                {{-- ======================================================= --}}
-                {{-- GALERI YANG SUDAH ADA — Form hapus terpisah di LUAR      --}}
-                {{-- form utama agar tidak bentrok dengan enctype              --}}
-                {{-- ======================================================= --}}
+                {{-- GALERI YANG SUDAH ADA --}}
                 @if($objekWisata->galeri->count() > 0)
                 <div class="border-top pt-3 mt-4">
                     <label class="form-label fw-bold text-primary">
@@ -180,7 +200,6 @@
                                  class="img-thumbnail shadow-sm d-block mb-1"
                                  style="height: 100px; width: 100px; object-fit: cover; border-radius: 8px;">
 
-                            {{-- Form hapus per foto — method DELETE via POST spoofing --}}
                             <form action="{{ route('galeri.destroy', $g->id) }}"
                                   method="POST"
                                   onsubmit="return confirm('Hapus foto ini dari galeri?')">
@@ -209,7 +228,6 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ===== PETA LEAFLET =====
     var oldLat    = {{ $objekWisata->latitude  ? $objekWisata->latitude  : -3.3285  }};
     var oldLng    = {{ $objekWisata->longitude ? $objekWisata->longitude : 114.5901 }};
     var zoomLevel = {{ $objekWisata->latitude  ? 14 : 10 }};
@@ -237,7 +255,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // ===== PREVIEW GALERI BARU =====
     document.getElementById('input-galeri').addEventListener('change', function () {
         var container = document.getElementById('preview-container');
         container.innerHTML = '';

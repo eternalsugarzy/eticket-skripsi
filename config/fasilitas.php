@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'Parkir Motor',
+    'Parkir Mobil',
+    'Toilet',
+    'Mushola',
+    'Warung Makan',
+    'Restoran',
+    'Gazebo',
+    'Spot Foto',
+    'WiFi',
+    'Penginapan',
+    'Camping Ground',
+    'Kolam Renang',
+    'Area Bermain Anak',
+    'Pusat Informasi',
+    'Pos Keamanan',
+    'P3K / Klinik',
+    'ATM / Money Changer',
+    'Toko Souvenir',
+    'Loker Penyimpanan',
+    'Akses Difabel',
+    'Penyewaan Alat (Sewa Perahu/Sepeda)',
+    'Live Music / Hiburan',
+];

@@ -59,6 +59,7 @@ class ObjekWisataController extends Controller
         }
 
         $data['is_populer'] = $request->has('is_populer') ? 1 : 0;
+        $data['fasilitas'] = $request->fasilitas ?? [];
 
         $objekWisata = ObjekWisata::create($data);
 
@@ -105,6 +106,7 @@ class ObjekWisataController extends Controller
         }
 
         $data['is_populer'] = $request->has('is_populer') ? 1 : 0;
+        $data['fasilitas']  = $request->fasilitas ?? [];   // <-- tambahkan ini
 
         $objekWisata->update($data);
 
