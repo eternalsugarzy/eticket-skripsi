@@ -18,9 +18,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style-preset.css') }}">
 
     <style>
-        /* ==========================================
-           GLOBAL & TYPOGRAPHY
-        ========================================== */
         :root {
             --brand-primary:   #4361ee;
             --brand-primary-light: #eef0fd;
@@ -41,31 +38,16 @@
             --shadow-card:     0 2px 16px rgba(0,0,0,0.07);
         }
 
-        body {
-            font-family: 'Public Sans', sans-serif;
-            background: #f5f6fa;
-            color: #1e2742;
-        }
+        body { font-family: 'Public Sans', sans-serif; background: #f5f6fa; color: #1e2742; }
+        h1,h2,h3,h4,h5,h6 { font-family: 'Plus Jakarta Sans', 'Public Sans', sans-serif; font-weight: 600; }
 
-        h1,h2,h3,h4,h5,h6 {
-            font-family: 'Plus Jakarta Sans', 'Public Sans', sans-serif;
-            font-weight: 600;
-        }
-
-        /* ==========================================
-           SIDEBAR
-        ========================================== */
         .pc-sidebar {
             background: var(--sidebar-bg) !important;
             width: var(--sidebar-width);
             box-shadow: 2px 0 16px rgba(0,0,0,0.06);
             border-right: 1px solid #ede9e3;
         }
-
-        .pc-sidebar .navbar-wrapper {
-            background: var(--sidebar-bg);
-        }
-
+        .pc-sidebar .navbar-wrapper { background: var(--sidebar-bg); }
         .pc-sidebar .m-header {
             background: #fff;
             border-bottom: 1px solid #ede9e3;
@@ -74,12 +56,7 @@
             display: flex;
             align-items: center;
         }
-
-        .pc-sidebar .m-header .b-brand img {
-            height: 38px;
-        }
-
-        /* Nav labels (caption) */
+        .pc-sidebar .m-header .b-brand img { height: 38px; }
         .pc-sidebar .pc-navbar .pc-item.pc-caption > label {
             font-size: 10px;
             font-weight: 700;
@@ -88,8 +65,6 @@
             color: #b0b8cc;
             padding: 20px 20px 6px;
         }
-
-        /* Nav items */
         .pc-sidebar .pc-navbar .pc-item .pc-link {
             color: var(--sidebar-text);
             padding: 10px 18px;
@@ -102,12 +77,7 @@
             font-weight: 500;
             font-size: 14px;
         }
-
-        .pc-sidebar .pc-navbar .pc-item .pc-link:hover {
-            background: #edeae5;
-            color: #1e2742;
-        }
-
+        .pc-sidebar .pc-navbar .pc-item .pc-link:hover { background: #edeae5; color: #1e2742; }
         .pc-sidebar .pc-navbar .pc-item.active .pc-link,
         .pc-sidebar .pc-navbar .pc-item .pc-link.active {
             background: var(--brand-primary-light);
@@ -115,22 +85,10 @@
             box-shadow: none;
             font-weight: 600;
         }
-
         .pc-sidebar .pc-navbar .pc-item.active .pc-link .pc-micon i,
-        .pc-sidebar .pc-navbar .pc-item .pc-link.active .pc-micon i {
-            color: var(--brand-primary);
-        }
-
-        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-micon i {
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-mtext {
-            font-size: 13.5px;
-        }
-
-        /* CTA Button in sidebar */
+        .pc-sidebar .pc-navbar .pc-item .pc-link.active .pc-micon i { color: var(--brand-primary); }
+        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-micon i { font-size: 18px; line-height: 1; }
+        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-mtext { font-size: 13.5px; }
         .pc-sidebar .pc-navbar .btn-primary {
             background: linear-gradient(135deg, var(--brand-primary) 0%, #7b2ff7 100%) !important;
             border: none !important;
@@ -139,38 +97,39 @@
             box-shadow: 0 4px 14px rgba(67,97,238,0.35) !important;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-
         .pc-sidebar .pc-navbar .btn-primary:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 18px rgba(67,97,238,0.45) !important;
         }
 
-        /* ==========================================
-           HEADER
-        ========================================== */
+        /* Role badge di sidebar */
+        .role-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .role-badge.provinsi { background: #eef0fd; color: #4361ee; }
+        .role-badge.kabkota  { background: #e8faf8; color: #0a9396; }
+        .role-badge.admin    { background: #fdecea; color: #e63946; }
+
         .pc-header {
             background: #fff;
             height: var(--header-height);
             border-bottom: 1px solid #eef0f6;
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         }
-
         .pc-header .header-wrapper {
             padding: 0 24px;
             height: 100%;
             display: flex;
             align-items: center;
         }
-
-        .pc-header .pc-head-link {
-            color: #6b7280;
-            transition: color 0.2s;
-        }
-
-        .pc-header .pc-head-link:hover {
-            color: var(--brand-primary);
-        }
-
+        .pc-header .pc-head-link { color: #6b7280; transition: color 0.2s; }
+        .pc-header .pc-head-link:hover { color: var(--brand-primary); }
         .pc-header .user-avtar {
             width: 36px;
             height: 36px;
@@ -178,14 +137,7 @@
             border: 2px solid var(--brand-primary-light);
             object-fit: cover;
         }
-
-        .pc-header .dropdown-toggle span {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e2742;
-            margin-left: 8px;
-        }
-
+        .pc-header .dropdown-toggle span { font-size: 14px; font-weight: 600; color: #1e2742; margin-left: 8px; }
         .pc-header .dropdown-menu {
             border: none;
             border-radius: 12px;
@@ -193,11 +145,7 @@
             min-width: 220px;
             padding: 8px;
         }
-
-        .pc-header .dropdown-menu .dropdown-header {
-            padding: 12px;
-        }
-
+        .pc-header .dropdown-menu .dropdown-header { padding: 12px; }
         .pc-header .dropdown-item {
             border-radius: 8px;
             padding: 9px 14px;
@@ -208,47 +156,14 @@
             gap: 10px;
             transition: background 0.15s;
         }
+        .pc-header .dropdown-item:hover { background: var(--brand-primary-light); color: var(--brand-primary); }
 
-        .pc-header .dropdown-item:hover {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
-        }
+        .pc-container { background: #f5f6fa; min-height: 100vh; }
+        .pc-content { padding: 28px 28px; }
 
-        /* ==========================================
-           MAIN CONTAINER
-        ========================================== */
-        .pc-container {
-            background: #f5f6fa;
-            min-height: 100vh;
-        }
-
-        .pc-content {
-            padding: 28px 28px;
-        }
-
-        /* ==========================================
-           DASHBOARD SPECIFIC
-        ========================================== */
-        .dashboard-wrapper {}
-
-        .dash-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .dash-greeting {
-            font-size: 13.5px;
-        }
-
-        .dash-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1e2742;
-        }
-
+        .dash-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .dash-greeting { font-size: 13.5px; }
+        .dash-title { font-size: 22px; font-weight: 700; color: #1e2742; }
         .dash-date-badge {
             display: flex;
             align-items: center;
@@ -262,9 +177,6 @@
             box-shadow: var(--shadow-card);
         }
 
-        /* ==========================================
-           STAT CARDS
-        ========================================== */
         .stat-card {
             border-radius: var(--radius-card);
             padding: 22px 22px;
@@ -277,205 +189,43 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: default;
         }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
         .stat-card--blue   { background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); }
         .stat-card--green  { background: linear-gradient(135deg, #2ec4b6 0%, #0a9396 100%); }
         .stat-card--orange { background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%); }
         .stat-card--purple { background: linear-gradient(135deg, #7b2d8b 0%, #480ca8 100%); }
-
         .stat-card__icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 48px; height: 48px; border-radius: 12px;
             background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
+        .stat-card__icon i { font-size: 22px; color: #fff; }
+        .stat-card__body { flex: 1; z-index: 1; }
+        .stat-card__label { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.75); margin-bottom: 4px; letter-spacing: 0.02em; text-transform: uppercase; }
+        .stat-card__value { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; line-height: 1.2; }
+        .stat-card__sub { font-size: 11.5px; color: rgba(255,255,255,0.6); }
+        .stat-card__bg-icon { position: absolute; right: -10px; bottom: -10px; font-size: 80px; opacity: 0.12; color: #fff; line-height: 1; pointer-events: none; }
 
-        .stat-card__icon i {
-            font-size: 22px;
-            color: #fff;
-        }
+        .card-modern { background: #fff; border: 1px solid #eef0f6; border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+        .card-header-modern { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #f0f2f8; background: transparent; }
+        .card-title-modern { font-size: 15px; font-weight: 700; color: #1e2742; }
+        .badge-soft-primary { background: var(--brand-primary-light); color: var(--brand-primary); font-size: 12px; font-weight: 600; border-radius: 7px; padding: 5px 10px; }
+        .badge-soft-warning { background: var(--brand-warning-light); color: #d4600a; font-size: 12px; font-weight: 600; border-radius: 7px; padding: 5px 10px; }
 
-        .stat-card__body {
-            flex: 1;
-            z-index: 1;
-        }
+        .top-wisata-item { display: flex; align-items: center; padding: 14px 20px; gap: 14px; transition: background 0.15s; }
+        .top-wisata-item:hover { background: #fafbff; }
+        .top-wisata-rank { font-size: 22px; width: 36px; text-align: center; flex-shrink: 0; }
+        .rank-num { font-size: 12px; font-weight: 700; color: #9ca3af; background: #f3f4f6; border-radius: 6px; padding: 4px 7px; }
+        .top-wisata-name { font-size: 13.5px; font-weight: 600; color: #1e2742; margin-bottom: 6px !important; }
+        .top-wisata-bar-wrap { background: #eef0f6; border-radius: 99px; height: 5px; overflow: hidden; }
+        .top-wisata-bar { height: 100%; background: linear-gradient(90deg, var(--brand-primary) 0%, #7b2ff7 100%); border-radius: 99px; min-width: 4px; transition: width 0.6s ease; }
+        .top-wisata-count { text-align: right; flex-shrink: 0; }
+        .top-wisata-count strong { font-size: 15px; color: #1e2742; }
+        .top-wisata-count small { font-size: 11px; }
+        .empty-state { text-align: center; color: #9ca3af; }
+        .empty-state i { font-size: 36px; display: block; margin-bottom: 8px; }
+        .empty-state p { font-size: 13px; margin: 0; }
 
-        .stat-card__label {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.75);
-            margin-bottom: 4px;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-        }
-
-        .stat-card__value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
-            line-height: 1.2;
-        }
-
-        .stat-card__sub {
-            font-size: 11.5px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .stat-card__bg-icon {
-            position: absolute;
-            right: -10px;
-            bottom: -10px;
-            font-size: 80px;
-            opacity: 0.12;
-            color: #fff;
-            line-height: 1;
-            pointer-events: none;
-        }
-
-        .stat-card__bg-icon i {
-            font-size: inherit;
-        }
-
-        /* ==========================================
-           MODERN CARDS (Chart + Top Wisata)
-        ========================================== */
-        .card-modern {
-            background: #fff;
-            border: 1px solid #eef0f6;
-            border-radius: var(--radius-card);
-            box-shadow: var(--shadow-card);
-        }
-
-        .card-header-modern {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 22px;
-            border-bottom: 1px solid #f0f2f8;
-            background: transparent;
-        }
-
-        .card-title-modern {
-            font-size: 15px;
-            font-weight: 700;
-            color: #1e2742;
-        }
-
-        .badge-soft-primary {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 7px;
-            padding: 5px 10px;
-        }
-
-        .badge-soft-warning {
-            background: var(--brand-warning-light);
-            color: #d4600a;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 7px;
-            padding: 5px 10px;
-        }
-
-        /* ==========================================
-           TOP WISATA LIST
-        ========================================== */
-        .top-wisata-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 20px;
-            gap: 14px;
-            transition: background 0.15s;
-        }
-
-        .top-wisata-item:hover {
-            background: #fafbff;
-        }
-
-        .top-wisata-rank {
-            font-size: 22px;
-            width: 36px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .rank-num {
-            font-size: 12px;
-            font-weight: 700;
-            color: #9ca3af;
-            background: #f3f4f6;
-            border-radius: 6px;
-            padding: 4px 7px;
-        }
-
-        .top-wisata-name {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: #1e2742;
-            margin-bottom: 6px !important;
-        }
-
-        .top-wisata-bar-wrap {
-            background: #eef0f6;
-            border-radius: 99px;
-            height: 5px;
-            overflow: hidden;
-        }
-
-        .top-wisata-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--brand-primary) 0%, #7b2ff7 100%);
-            border-radius: 99px;
-            min-width: 4px;
-            transition: width 0.6s ease;
-        }
-
-        .top-wisata-count {
-            text-align: right;
-            flex-shrink: 0;
-        }
-
-        .top-wisata-count strong {
-            font-size: 15px;
-            color: #1e2742;
-        }
-
-        .top-wisata-count small {
-            font-size: 11px;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            color: #9ca3af;
-        }
-
-        .empty-state i {
-            font-size: 36px;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .empty-state p {
-            font-size: 13px;
-            margin: 0;
-        }
-
-        /* ==========================================
-           RESPONSIVE
-        ========================================== */
         @media (max-width: 767px) {
             .pc-content { padding: 18px 16px; }
             .dash-header { flex-direction: column; align-items: flex-start; }
@@ -485,6 +235,19 @@
 </head>
 
 <body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
+
+@php
+    $role = Auth::user()->role;
+    $isAdmin       = $role === 'admin';
+    $isKadisProv   = $role === 'kadis_provinsi';
+    $isKadisKab    = $role === 'kadis_kabkota';
+    $isKasir       = $role === 'kasir';
+    $isPetugas     = $role === 'petugas';
+
+    // Grup untuk kemudahan pengecekan
+    $isSupervisor  = $isAdmin || $isKadisProv;           // akses penuh + kelola user
+    $isDinas       = $isAdmin || $isKadisProv || $isKadisKab; // semua role dinas
+@endphp
 
     {{-- ==================== SIDEBAR ==================== --}}
     <nav class="pc-sidebar">
@@ -501,7 +264,7 @@
             <div class="navbar-content">
                 <ul class="pc-navbar">
 
-                    {{-- Dashboard --}}
+                    {{-- ── NAVIGASI UTAMA ── --}}
                     <li class="pc-item pc-caption">
                         <label>Navigasi Utama</label>
                     </li>
@@ -512,11 +275,18 @@
                         </a>
                     </li>
 
-                    {{-- DATA MASTER (ADMIN ONLY) --}}
-                    @if(Auth::user()->role == 'admin')
+                    {{-- ── DATA MASTER ──
+                         Tampil untuk: admin, kadis_provinsi, kadis_kabkota
+                         - admin & kadis_provinsi: semua sub-menu
+                         - kadis_kabkota: hanya objek wisata, jenis tiket, harga tiket
+                    --}}
+                    @if($isDinas)
                     <li class="pc-item pc-caption">
                         <label>Data Master</label>
                     </li>
+
+                    {{-- Manajemen User & Kabupaten — hanya admin & kadis provinsi --}}
+                    @if($isSupervisor)
                     <li class="pc-item {{ request()->is('users*') ? 'active' : '' }}">
                         <a href="{{ route('users.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-users"></i></span>
@@ -529,6 +299,9 @@
                             <span class="pc-mtext">Data Kabupaten</span>
                         </a>
                     </li>
+                    @endif
+
+                    {{-- Objek wisata, jenis tiket, harga — semua role dinas --}}
                     <li class="pc-item {{ request()->is('objek-wisata*') ? 'active' : '' }}">
                         <a href="{{ route('objek-wisata.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-map"></i></span>
@@ -549,12 +322,13 @@
                     </li>
                     @endif
 
-                    {{-- TRANSAKSI --}}
+                    {{-- ── TRANSAKSI ── --}}
                     <li class="pc-item pc-caption">
                         <label>Transaksi</label>
                     </li>
 
-                    @if(Auth::user()->role == 'admin' || Auth::user()->role == 'kasir')
+                    {{-- Kasir Penjualan — admin & kasir --}}
+                    @if($isAdmin || $isKasir)
                     <li class="pc-item {{ request()->is('transaksi/create*') ? 'active' : '' }}">
                         <a href="{{ route('transaksi.create') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-device-desktop"></i></span>
@@ -563,7 +337,8 @@
                     </li>
                     @endif
 
-                    @if(Auth::user()->role == 'admin' || Auth::user()->role == 'petugas')
+                    {{-- Validasi Tiket — admin & petugas --}}
+                    @if($isAdmin || $isPetugas)
                     <li class="pc-item {{ request()->is('validasi*') ? 'active' : '' }}">
                         <a href="{{ route('validasi.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-scan"></i></span>
@@ -572,20 +347,19 @@
                     </li>
                     @endif
 
+                    {{-- Menu berikut tampil untuk semua role --}}
                     <li class="pc-item {{ request()->is('data-pengunjung*') ? 'active' : '' }}">
                         <a href="{{ route('data_pengunjung.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-users"></i></span>
                             <span class="pc-mtext">Data Pengunjung</span>
                         </a>
                     </li>
-
                     <li class="pc-item {{ request()->routeIs('transaksi.index') ? 'active' : '' }}">
                         <a href="{{ route('transaksi.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-history"></i></span>
                             <span class="pc-mtext">Riwayat Transaksi</span>
                         </a>
                     </li>
-
                     <li class="pc-item {{ request()->routeIs('pesanan-online.*') ? 'active' : '' }}">
                         <a href="{{ route('pesanan-online.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-world"></i></span>
@@ -593,8 +367,11 @@
                         </a>
                     </li>
 
-                    {{-- LAPORAN (ADMIN ONLY) --}}
-                    @if(Auth::user()->role == 'admin')
+                    {{-- ── LAPORAN — admin, kadis_provinsi, kadis_kabkota ── --}}
+                    @if($isDinas)
+                    <li class="pc-item pc-caption">
+                        <label>Laporan</label>
+                    </li>
                     <li class="pc-item {{ Request::routeIs('laporan*') ? 'active' : '' }}">
                         <a href="{{ route('laporan.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-file-analytics"></i></span>
@@ -603,9 +380,11 @@
                     </li>
                     @endif
 
-                    {{-- CTA: Halaman Publik --}}
+                    {{-- ── CTA Halaman Publik ── --}}
                     <li class="pc-item mt-4 mb-3" style="padding: 0 14px;">
-                        <a href="{{ route('landing') }}" target="_blank" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" style="border-radius: 10px; padding: 11px 16px; font-size: 13px; font-weight: 600;">
+                        <a href="{{ route('landing') }}" target="_blank"
+                           class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                           style="border-radius: 10px; padding: 11px 16px; font-size: 13px; font-weight: 600;">
                             <i class="ti ti-world fs-5"></i> Halaman Publik
                         </a>
                     </li>
@@ -643,7 +422,16 @@
                             <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" alt="user-image" class="user-avtar">
                             <div class="d-none d-md-block ms-2">
                                 <span style="font-size:14px; font-weight:600; color:#1e2742;">{{ Auth::user()->nama ?? 'User' }}</span>
-                                <small class="d-block text-muted" style="font-size:11px; line-height:1.2;">{{ ucfirst(Auth::user()->role ?? 'Guest') }}</small>
+                                <small class="d-block text-muted" style="font-size:11px; line-height:1.2;">
+                                    @switch($role)
+                                        @case('admin')          Admin Sistem @break
+                                        @case('kadis_provinsi') Kadis Provinsi @break
+                                        @case('kadis_kabkota')  Kadis Kab/Kota @break
+                                        @case('kasir')          Kasir @break
+                                        @case('petugas')        Petugas @break
+                                        @default                {{ ucfirst($role) }}
+                                    @endswitch
+                                </small>
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
@@ -652,13 +440,23 @@
                                     <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" alt="user-image" class="user-avtar wid-35 me-2">
                                     <div>
                                         <h6 class="mb-0" style="font-size:13.5px;">{{ Auth::user()->nama ?? 'User' }}</h6>
-                                        <small class="text-muted">{{ ucfirst(Auth::user()->role ?? 'Guest') }}</small>
+                                        <small class="text-muted">
+                                            @switch($role)
+                                                @case('admin')          Admin Sistem @break
+                                                @case('kadis_provinsi') Kadis Provinsi Kalsel @break
+                                                @case('kadis_kabkota')  Kadis {{ Auth::user()->kabupaten->nama_kabupaten ?? 'Kab/Kota' }} @break
+                                                @case('kasir')          Kasir @break
+                                                @case('petugas')        Petugas @break
+                                                @default                {{ ucfirst($role) }}
+                                            @endswitch
+                                        </small>
                                     </div>
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
-                            <a href="#" class="dropdown-item text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="#" class="dropdown-item text-danger"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="ti ti-power"></i> Logout
                             </a>
                         </div>
@@ -687,22 +485,15 @@
     <script>
         @if(session('success'))
             Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
+                icon: 'success', title: 'Berhasil!',
                 text: '{{ session("success") }}',
-                showConfirmButton: false,
-                timer: 1800,
-                toast: true,
-                position: 'top-end'
+                showConfirmButton: false, timer: 1800,
+                toast: true, position: 'top-end'
             });
         @endif
 
         @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: '{{ session("error") }}',
-            });
+            Swal.fire({ icon: 'error', title: 'Gagal!', text: '{{ session("error") }}' });
         @endif
 
         function confirmDelete(event) {
@@ -717,13 +508,9 @@
                 cancelButtonColor: '#6b7280',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
-                borderRadius: '12px'
-            }).then((result) => {
-                if (result.isConfirmed) form.submit();
-            });
+            }).then((result) => { if (result.isConfirmed) form.submit(); });
         }
     </script>
     @yield('scripts')
 </body>
-
 </html>

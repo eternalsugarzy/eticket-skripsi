@@ -23,4 +23,10 @@ class Pesanan extends Model
     {
         return $this->hasMany(PesananDetail::class, 'id_pesanan');
     }
+
+    // Relasi ke Akun Pengunjung (nullable — bisa null kalau pesan tanpa akun)
+    public function pengunjung()
+    {
+        return $this->belongsTo(Pengunjung::class, 'id_pengunjung');
+    }
 }

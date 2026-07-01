@@ -12,18 +12,32 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
+    // Helper: cek apakah user login adalah kadis_kabkota, kembalikan id_kabupaten-nya atau null
+    private function scopeKabupaten()
+    {
+        $user = Auth::user();
+        return $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
+    }
+
     // 1. Riwayat Transaksi Gabungan
     public function index(Request $request)
     {
-        $listKabupaten = \App\Models\Kabupaten::all();
-        $listWisata    = \App\Models\ObjekWisata::all();
+        $idKabupaten = $this->scopeKabupaten();
+
+        $listKabupaten = $idKabupaten
+            ? \App\Models\Kabupaten::where('id', $idKabupaten)->get()
+            : \App\Models\Kabupaten::all();
+
+        $listWisata = $idKabupaten
+            ? \App\Models\ObjekWisata::where('id_kabupaten', $idKabupaten)->get()
+            : \App\Models\ObjekWisata::all();
 
         // --- OFFLINE ---
-        // status_tiket: active | used | batal  (dari migration validasi)
         $queryOffline = DB::table('transaksis')
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
             ->leftJoin('users', 'transaksis.id_kasir', '=', 'users.id')
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'transaksis.id',
                 DB::raw("'Offline' as sumber"),
@@ -32,8 +46,6 @@ class TransaksiController extends Controller
                 'objek_wisatas.nama_objek',
                 'kabupatens.nama_kabupaten',
                 'transaksis.total_bayar as total',
-                // Gabungkan status_tiket (validasi) ke kolom "status"
-                // Kalau batal → batal | used → used | active → sukses
                 DB::raw("
                     CASE
                         WHEN transaksis.status_tiket = 'batal' THEN 'batal'
@@ -47,11 +59,10 @@ class TransaksiController extends Controller
             );
 
         // --- ONLINE ---
-        // Gabungkan status_pembayaran + status_tiket menjadi 1 kolom status
-        // Unpaid → pending | Cancelled → batal | Paid+used → used | Paid+active → paid
         $queryOnline = DB::table('pesanans')
             ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'pesanans.id',
                 DB::raw("'Online' as sumber"),
@@ -103,7 +114,12 @@ class TransaksiController extends Controller
     // 2. Form Kasir
     public function create()
     {
-        $objekWisatas = ObjekWisata::all();
+        $idKabupaten = $this->scopeKabupaten();
+
+        $objekWisatas = $idKabupaten
+            ? ObjekWisata::where('id_kabupaten', $idKabupaten)->get()
+            : ObjekWisata::all();
+
         return view('transaksi.create', compact('objekWisatas'));
     }
 
@@ -128,6 +144,15 @@ class TransaksiController extends Controller
             'subtotal'      => 'required|array',
         ]);
 
+        // 🔒 SCOPING: kadis_kabkota tidak boleh transaksi di objek luar wilayahnya
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda tidak memiliki akses ke objek wisata ini.');
+            }
+        }
+
         try {
             DB::beginTransaction();
 
@@ -141,7 +166,7 @@ class TransaksiController extends Controller
                 'total_bayar'   => $grandTotal,
                 'bayar'         => $request->bayar,
                 'kembali'       => $request->bayar - $grandTotal,
-                'status_tiket'  => 'active', // default saat transaksi baru dibuat
+                'status_tiket'  => 'active',
             ]);
 
             foreach ($request->id_jenis_tiket as $key => $jenisId) {
