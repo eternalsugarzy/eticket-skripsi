@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // TAMBAHKAN INI
+        'pengunjung' => [
+            'driver' => 'session',
+            'provider' => 'pengunjungs',
+        ],
     ],
 
     /*
@@ -63,6 +69,12 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        // TAMBAHKAN INI
+        'pengunjungs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Pengunjung::class,
         ],
 
         // 'users' => [
@@ -94,6 +106,14 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        // TAMBAHKAN INI (kalau nanti mau buat fitur lupa password pengunjung)
+        'pengunjungs' => [
+            'provider' => 'pengunjungs',
+            'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],

@@ -11,8 +11,16 @@ class User extends Authenticatable
 
     protected $guarded = ['id']; // Semua kolom boleh diisi kecuali ID
 
-    // Helper untuk cek role (nanti berguna di Middleware)
-    public function isAdmin() { return $this->role === 'admin'; }
-    public function isKasir() { return $this->role === 'kasir'; }
-    public function isPetugas() { return $this->role === 'petugas'; }
+    // Relasi ke kabupaten (khusus role kadis_kabkota)
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class, 'id_kabupaten');
+    }
+
+    // Helper cek role — biar controller/view lebih rapi
+    public function isAdmin()        { return $this->role === 'admin'; }
+    public function isKadisProvinsi(){ return $this->role === 'kadis_provinsi'; }
+    public function isKadisKabkota() { return $this->role === 'kadis_kabkota'; }
+    public function isKasir()        { return $this->role === 'kasir'; }
+    public function isPetugas()      { return $this->role === 'petugas'; }
 }

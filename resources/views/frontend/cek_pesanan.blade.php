@@ -309,17 +309,45 @@
 
             {{-- Rincian Tiket --}}
             <p class="fw-bold text-uppercase" style="font-size:.78rem; letter-spacing:.08em; color:#6B7280; margin-bottom:10px;">Rincian Tiket</p>
+            @php $subtotalMentah = $pesanan->details->sum('subtotal'); @endphp
             <ul class="tiket-list">
                 @foreach($pesanan->details as $detail)
                 <li>
                     <div>
-                        <div class="tiket-nama">{{ $detail->jenisTiket->nama_tiket ?? 'Tiket' }}</div>
+                        <div class="tiket-nama">{{ $detail->jenisTiket->nama_jenis ?? 'Tiket' }}</div>
                         <div class="tiket-qty">{{ $detail->jumlah }} × Rp {{ number_format($detail->harga, 0, ',', '.') }}</div>
                     </div>
                     <div class="tiket-sub">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</div>
                 </li>
                 @endforeach
+
+                {{-- ── Baris diskon (hanya tampil jika ada) ── --}}
+                @if($pesanan->diskon_persen > 0)
+                <li style="background:#f0fdf4; border-radius:8px; padding:10px 4px; margin-top:4px;">
+                    <div>
+                        <div class="tiket-nama" style="color:#059669;">
+                            <i class="bi bi-tag-fill me-1"></i>
+                            Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)
+                        </div>
+                        <div class="tiket-qty" style="color:#6B7280;">
+                            Hemat Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
+                        </div>
+                    </div>
+                    <div class="tiket-sub" style="color:#059669;">
+                        - Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
+                    </div>
+                </li>
+                @endif
             </ul>
+
+            {{-- Subtotal sebelum diskon (hanya tampil jika ada diskon) --}}
+            @if($pesanan->diskon_persen > 0)
+            <div style="display:flex; justify-content:space-between; padding:8px 0; color:#6B7280; font-size:.88rem;">
+                <span>Subtotal sebelum diskon</span>
+                <span>Rp {{ number_format($subtotalMentah, 0, ',', '.') }}</span>
+            </div>
+            @endif
+
             <div class="tiket-total">
                 <span class="label">Total Pembayaran</span>
                 <span class="amount">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</span>

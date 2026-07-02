@@ -5,14 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ObjekWisata;
 use App\Models\Kabupaten;
-use App\Models\GaleriWisata; // <-- tambahkan import ini
+use App\Models\GaleriWisata;
 
 class ObjekWisataController extends Controller
 {
     // 1. TAMPILKAN DATA
     public function index(Request $request)
     {
+        $user = auth()->user();
         $query = ObjekWisata::with('kabupaten');
+
+        // 🔒 SCOPING: kadis_kabkota hanya lihat wilayahnya sendiri
+        if ($user->role === 'kadis_kabkota') {
+            $query->where('id_kabupaten', $user->id_kabupaten);
+        }
 
         if ($request->has('search') && $request->search != null) {
             $query->where('nama_objek', 'like', '%' . $request->search . '%');
@@ -23,7 +29,10 @@ class ObjekWisataController extends Controller
         }
 
         $objekWisatas = $query->latest()->get();
-        $kabupatens   = Kabupaten::all();
+
+        $kabupatens = $user->role === 'kadis_kabkota'
+            ? Kabupaten::where('id', $user->id_kabupaten)->get()
+            : Kabupaten::all();
 
         return view('objek_wisatas.index', compact('objekWisatas', 'kabupatens'));
     }
@@ -31,7 +40,11 @@ class ObjekWisataController extends Controller
     // 2. FORM TAMBAH
     public function create()
     {
-        $kabupatens = Kabupaten::all();
+        $user = auth()->user();
+        $kabupatens = $user->role === 'kadis_kabkota'
+            ? Kabupaten::where('id', $user->id_kabupaten)->get()
+            : Kabupaten::all();
+
         return view('objek_wisatas.create', compact('kabupatens'));
     }
 
@@ -46,6 +59,13 @@ class ObjekWisataController extends Controller
             'galeri.*'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
+        $user = auth()->user();
+
+        // 🔒 SCOPING: kadis_kabkota hanya boleh tambah objek di kabupatennya sendiri
+        if ($user->role === 'kadis_kabkota' && (int) $request->id_kabupaten !== (int) $user->id_kabupaten) {
+            abort(403, 'Anda hanya bisa menambahkan objek wisata di wilayah Anda sendiri.');
+        }
+
         $data = $request->all();
 
         // Foto utama
@@ -59,11 +79,10 @@ class ObjekWisataController extends Controller
         }
 
         $data['is_populer'] = $request->has('is_populer') ? 1 : 0;
-        $data['fasilitas'] = $request->fasilitas ?? [];
+        $data['fasilitas']  = $request->fasilitas ?? [];
 
         $objekWisata = ObjekWisata::create($data);
 
-        // Simpan galeri (jika ada)
         $this->simpanGaleri($request, $objekWisata->id);
 
         return redirect()->route('objek-wisata.index')
@@ -73,15 +92,23 @@ class ObjekWisataController extends Controller
     // 4. FORM EDIT
     public function edit(ObjekWisata $objekWisata)
     {
-        // Eager load galeri agar bisa ditampilkan di view
+        $this->cekAksesKabupaten($objekWisata);
+
         $objekWisata->load('galeri');
-        $kabupatens = Kabupaten::all();
+
+        $user = auth()->user();
+        $kabupatens = $user->role === 'kadis_kabkota'
+            ? Kabupaten::where('id', $user->id_kabupaten)->get()
+            : Kabupaten::all();
+
         return view('objek_wisatas.edit', compact('objekWisata', 'kabupatens'));
     }
 
     // 5. UPDATE DATA
     public function update(Request $request, ObjekWisata $objekWisata)
     {
+        $this->cekAksesKabupaten($objekWisata);
+
         $request->validate([
             'nama_objek'   => 'required',
             'id_kabupaten' => 'required',
@@ -90,9 +117,14 @@ class ObjekWisataController extends Controller
             'galeri.*'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
+        $user = auth()->user();
+
+        if ($user->role === 'kadis_kabkota' && (int) $request->id_kabupaten !== (int) $user->id_kabupaten) {
+            abort(403, 'Anda hanya bisa memindahkan objek wisata di wilayah Anda sendiri.');
+        }
+
         $data = $request->all();
 
-        // Update foto utama jika ada file baru
         if ($request->hasFile('foto')) {
             if ($objekWisata->foto && $objekWisata->foto != 'default.jpg') {
                 $foto_lama = public_path('uploads/wisata/' . $objekWisata->foto);
@@ -106,11 +138,10 @@ class ObjekWisataController extends Controller
         }
 
         $data['is_populer'] = $request->has('is_populer') ? 1 : 0;
-        $data['fasilitas']  = $request->fasilitas ?? [];   // <-- tambahkan ini
+        $data['fasilitas']  = $request->fasilitas ?? [];
 
         $objekWisata->update($data);
 
-        // Hapus foto galeri yang dipilih admin
         if ($request->filled('hapus_galeri')) {
             foreach ($request->hapus_galeri as $galeriId) {
                 $galeri = GaleriWisata::find($galeriId);
@@ -122,7 +153,6 @@ class ObjekWisataController extends Controller
             }
         }
 
-        // Simpan galeri baru yang diunggah
         $this->simpanGaleri($request, $objekWisata->id);
 
         return redirect()->route('objek-wisata.index')
@@ -132,27 +162,37 @@ class ObjekWisataController extends Controller
     // 6. HAPUS DATA
     public function destroy(ObjekWisata $objekWisata)
     {
-        // Hapus semua foto galeri terlebih dahulu
+        $this->cekAksesKabupaten($objekWisata);
+
         foreach ($objekWisata->galeri as $galeri) {
             $path = public_path('uploads/wisata/galeri/' . $galeri->foto);
             if (file_exists($path)) unlink($path);
         }
 
-        // Hapus foto utama
         if ($objekWisata->foto && $objekWisata->foto != 'default.jpg') {
             $foto_lama = public_path('uploads/wisata/' . $objekWisata->foto);
             if (file_exists($foto_lama)) unlink($foto_lama);
         }
 
-        $objekWisata->delete(); // galeri terhapus otomatis via onDelete('cascade') di migration
+        $objekWisata->delete();
 
         return redirect()->route('objek-wisata.index')
                          ->with('success', 'Data berhasil dihapus!');
     }
 
     // =========================================================
+    // PRIVATE HELPER — Cek akses kadis_kabkota terhadap satu objek
+    // =========================================================
+    private function cekAksesKabupaten(ObjekWisata $objekWisata)
+    {
+        $user = auth()->user();
+        if ($user->role === 'kadis_kabkota' && $objekWisata->id_kabupaten != $user->id_kabupaten) {
+            abort(403, 'Anda tidak memiliki akses ke objek wisata di luar wilayah Anda.');
+        }
+    }
+
+    // =========================================================
     // PRIVATE HELPER — Simpan file galeri ke disk + database
-    // Dipakai oleh store() dan update()
     // =========================================================
     private function simpanGaleri(Request $request, $idObjek)
     {
@@ -162,41 +202,35 @@ class ObjekWisataController extends Controller
         if (!file_exists($dir)) mkdir($dir, 0755, true);
 
         foreach ($request->file('galeri') as $foto) {
-            // Skip jika file tidak valid
             if (!$foto->isValid()) continue;
 
             $namaFile = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
             $foto->move($dir, $namaFile);
 
             GaleriWisata::create([
-                'id_objek' => $idObjek, // sesuai foreign key di model GaleriWisata
+                'id_objek' => $idObjek,
                 'foto'     => $namaFile,
             ]);
         }
     }
 
     // =========================================================
-    // FUNGSI KHUSUS — Hapus Satu Foto Galeri via AJAX
+    // FUNGSI KHUSUS — Hapus Satu Foto Galeri
     // =========================================================
-    // Ganti method hapusGaleri di ObjekWisataController dengan ini:
+    public function hapusGaleri($id)
+    {
+        $galeri = GaleriWisata::findOrFail($id);
 
-public function hapusGaleri($id)
-{
-    $galeri = GaleriWisata::findOrFail($id);
+        $idObjek = $galeri->id_objek;
 
-    // Simpan id_objek sebelum dihapus, untuk redirect kembali ke halaman edit
-    $idObjek = $galeri->id_objek;
+        $path = public_path('uploads/wisata/galeri/' . $galeri->foto);
+        if (file_exists($path)) {
+            unlink($path);
+        }
 
-    // Hapus file fisik
-    $path = public_path('uploads/wisata/galeri/' . $galeri->foto);
-    if (file_exists($path)) {
-        unlink($path);
+        $galeri->delete();
+
+        return redirect()->route('objek-wisata.edit', $idObjek)
+                         ->with('success', 'Foto galeri berhasil dihapus.');
     }
-
-    // Hapus dari database
-    $galeri->delete();
-
-    return redirect()->route('objek-wisata.edit', $idObjek)
-                     ->with('success', 'Foto galeri berhasil dihapus.');
-}
 }

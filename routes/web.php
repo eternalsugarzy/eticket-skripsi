@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PengunjungAuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\ObjekWisataController;
@@ -13,7 +14,8 @@ use App\Http\Controllers\DataPengunjungController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LandingController;
-use App\Http\Controllers\CheckoutController; 
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DiskonRombonganController;
 
 // =========================================================================
 //  --- A. RUTE PUBLIK / GUEST (TIDAK PERLU LOGIN) ---
@@ -23,45 +25,60 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/katalog', [LandingController::class, 'katalog'])->name('wisata.katalog');
 Route::get('/wisata/{id}', [LandingController::class, 'detail'])->name('wisata.detail');
 
-Route::get('/checkout/{id_objek}', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/proses', [App\Http\Controllers\CheckoutController::class, 'proses'])->name('checkout.proses');
-Route::get('/cek-pesanan', [App\Http\Controllers\CheckoutController::class, 'cekPesanan'])->name('cek-pesanan');
+Route::get('/checkout/{id_objek}', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('checkout.proses');
+Route::get('/cek-pesanan', [CheckoutController::class, 'cekPesanan'])->name('cek-pesanan');
 
-Route::post('/simulasi-bayar/{kode_pesanan}', [App\Http\Controllers\CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
-// Rute Cetak E-Ticket
-Route::get('/e-ticket/{kode_pesanan}', [App\Http\Controllers\CheckoutController::class, 'eTicket'])->name('cetak.eticket');
+Route::post('/simulasi-bayar/{kode_pesanan}', [CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
+Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->name('cetak.eticket');
+
+// API tier diskon (dipanggil JS, tidak perlu login)
+Route::get('/api/diskon-tiers', [DiskonRombonganController::class, 'apiTiers'])->name('diskon.tiers');
 
 // Manajemen Pesanan Online (Admin)
 Route::get('/pesanan-online', [App\Http\Controllers\PesananOnlineController::class, 'index'])->name('pesanan-online.index');
 Route::get('/pesanan-online/{id}', [App\Http\Controllers\PesananOnlineController::class, 'show'])->name('pesanan-online.show');
 
+// ── Auth Staff (Admin/Kadis/Kasir/Petugas) ──
 Route::middleware('guest')->group(function () {
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.proses');
+});
 
+// ── Auth Pengunjung (guard terpisah dari staff) ──
+Route::get('/daftar', [PengunjungAuthController::class, 'showRegisterForm'])->name('pengunjung.register.form');
+Route::post('/daftar', [PengunjungAuthController::class, 'register'])->name('pengunjung.register');
+Route::get('/masuk', [PengunjungAuthController::class, 'showLoginForm'])->name('pengunjung.login');
+Route::post('/masuk', [PengunjungAuthController::class, 'login'])->name('pengunjung.login.proses');
+Route::post('/keluar', [PengunjungAuthController::class, 'logout'])->name('pengunjung.logout');
 
-
+Route::middleware('pengunjung')->group(function () {
+    Route::get('/riwayat-pesanan', [PengunjungAuthController::class, 'riwayat'])->name('pengunjung.riwayat');
 });
 
 
 // =========================================================================
-//  --- B. RUTE BACK-OFFICE / MANAJEMEN (WAJIB LOGIN) ---
+//  --- B. RUTE BACK-OFFICE / MANAJEMEN (WAJIB LOGIN STAFF) ---
 // =========================================================================
 Route::middleware('auth')->group(function () {
 
     // 1. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Manajemen User / Pegawai
-    Route::resource('users', UserController::class);
+    // 2. Manajemen User, Wilayah & Diskon Rombongan — hanya admin & kadis provinsi
+    Route::middleware('role:admin,kadis_provinsi')->group(function () {
+        Route::resource('users', UserController::class);
+        Route::resource('kabupatens', KabupatenController::class);
+        Route::resource('diskon-rombongan', DiskonRombonganController::class)->parameters([
+            'diskon-rombongan' => 'diskonRombongan'
+        ]);
+    });
 
-    // 3. Manajemen Wilayah & Destinasi
-    Route::resource('kabupatens', KabupatenController::class);
+    // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller)
     Route::resource('objek-wisata', ObjekWisataController::class)->parameters([
         'objek-wisata' => 'objekWisata'
     ]);
 
-    // Route hapus galeri via AJAX — letakkan SEBELUM resource agar tidak tertimpa
     Route::delete('/galeri-wisata/{id}', [ObjekWisataController::class, 'hapusGaleri'])->name('galeri.destroy');
 
     // 4. Manajemen Kategori & Harga Tiket

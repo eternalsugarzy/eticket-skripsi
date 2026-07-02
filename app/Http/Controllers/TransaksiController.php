@@ -12,18 +12,32 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
+    // Helper: cek apakah user login adalah kadis_kabkota, kembalikan id_kabupaten-nya atau null
+    private function scopeKabupaten()
+    {
+        $user = Auth::user();
+        return $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
+    }
+
     // 1. Riwayat Transaksi Gabungan
     public function index(Request $request)
     {
-        $listKabupaten = \App\Models\Kabupaten::all();
-        $listWisata    = \App\Models\ObjekWisata::all();
+        $idKabupaten = $this->scopeKabupaten();
+
+        $listKabupaten = $idKabupaten
+            ? \App\Models\Kabupaten::where('id', $idKabupaten)->get()
+            : \App\Models\Kabupaten::all();
+
+        $listWisata = $idKabupaten
+            ? \App\Models\ObjekWisata::where('id_kabupaten', $idKabupaten)->get()
+            : \App\Models\ObjekWisata::all();
 
         // --- OFFLINE ---
-        // status_tiket: active | used | batal  (dari migration validasi)
         $queryOffline = DB::table('transaksis')
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
             ->leftJoin('users', 'transaksis.id_kasir', '=', 'users.id')
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'transaksis.id',
                 DB::raw("'Offline' as sumber"),
@@ -32,8 +46,6 @@ class TransaksiController extends Controller
                 'objek_wisatas.nama_objek',
                 'kabupatens.nama_kabupaten',
                 'transaksis.total_bayar as total',
-                // Gabungkan status_tiket (validasi) ke kolom "status"
-                // Kalau batal → batal | used → used | active → sukses
                 DB::raw("
                     CASE
                         WHEN transaksis.status_tiket = 'batal' THEN 'batal'
@@ -47,11 +59,10 @@ class TransaksiController extends Controller
             );
 
         // --- ONLINE ---
-        // Gabungkan status_pembayaran + status_tiket menjadi 1 kolom status
-        // Unpaid → pending | Cancelled → batal | Paid+used → used | Paid+active → paid
         $queryOnline = DB::table('pesanans')
             ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'pesanans.id',
                 DB::raw("'Online' as sumber"),
@@ -100,11 +111,20 @@ class TransaksiController extends Controller
         return view('transaksi.index', compact('transaksis', 'listKabupaten', 'listWisata'));
     }
 
-    // 2. Form Kasir
+    // 2. Form Kasir — tambah diskon tiers
     public function create()
     {
-        $objekWisatas = ObjekWisata::all();
-        return view('transaksi.create', compact('objekWisatas'));
+        $idKabupaten  = $this->scopeKabupaten();
+        $objekWisatas = $idKabupaten
+            ? ObjekWisata::where('id_kabupaten', $idKabupaten)->get()
+            : ObjekWisata::all();
+
+        // Kirim tier diskon ke view supaya JS bisa hitung tanpa request tambahan
+        $diskonTiers = \App\Models\DiskonRombongan::where('aktif', 1)
+            ->orderBy('min_orang')
+            ->get(['min_orang', 'persen_diskon', 'keterangan']);
+
+        return view('transaksi.create', compact('objekWisatas', 'diskonTiers'));
     }
 
     // 3. API: Tiket by Objek Wisata
@@ -116,22 +136,38 @@ class TransaksiController extends Controller
         return response()->json($listTiket);
     }
 
-    // 4. Simpan Transaksi Kasir
+    // 4. Simpan Transaksi Kasir — tambah kalkulasi diskon
     public function store(Request $request)
     {
         $request->validate([
-            'id_objek'      => 'required',
-            'bayar'         => 'required|numeric',
-            'id_jenis_tiket'=> 'required|array',
-            'jumlah'        => 'required|array',
-            'harga_satuan'  => 'required|array',
-            'subtotal'      => 'required|array',
+            'id_objek'       => 'required',
+            'bayar'          => 'required|numeric',
+            'id_jenis_tiket' => 'required|array',
+            'jumlah'         => 'required|array',
+            'harga_satuan'   => 'required|array',
+            'subtotal'       => 'required|array',
         ]);
+
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda tidak memiliki akses ke objek wisata ini.');
+            }
+        }
 
         try {
             DB::beginTransaction();
 
-            $grandTotal = array_sum($request->subtotal);
+            // Hitung subtotal sebelum diskon
+            $subtotalSebelumDiskon = array_sum($request->subtotal);
+
+            // Cari diskon rombongan yang berlaku (server-side, tidak percaya client)
+            $totalQty   = array_sum($request->jumlah);
+            $diskon     = \App\Models\DiskonRombongan::cariDiskon($totalQty);
+            $diskonPersen  = $diskon ? (float) $diskon->persen_diskon : 0;
+            $diskonNominal = (int) round($subtotalSebelumDiskon * $diskonPersen / 100);
+            $grandTotal    = $subtotalSebelumDiskon - $diskonNominal;
 
             $transaksi = Transaksi::create([
                 'no_transaksi'  => 'TRX-' . date('YmdHis') . '-' . rand(100, 999),
@@ -139,25 +175,28 @@ class TransaksiController extends Controller
                 'id_kasir'      => Auth::id(),
                 'id_objek'      => $request->id_objek,
                 'total_bayar'   => $grandTotal,
+                'diskon_persen' => $diskonPersen,
+                'diskon_nominal'=> $diskonNominal,
                 'bayar'         => $request->bayar,
                 'kembali'       => $request->bayar - $grandTotal,
-                'status_tiket'  => 'active', // default saat transaksi baru dibuat
+                'status_tiket'  => 'active',
             ]);
 
             foreach ($request->id_jenis_tiket as $key => $jenisId) {
                 if ($request->jumlah[$key] > 0) {
                     TransaksiDetail::create([
-                        'id_transaksi'  => $transaksi->id,
-                        'id_jenis_tiket'=> $jenisId,
-                        'jumlah'        => $request->jumlah[$key],
-                        'harga_satuan'  => $request->harga_satuan[$key],
-                        'subtotal'      => $request->subtotal[$key],
+                        'id_transaksi'   => $transaksi->id,
+                        'id_jenis_tiket' => $jenisId,
+                        'jumlah'         => $request->jumlah[$key],
+                        'harga_satuan'   => $request->harga_satuan[$key],
+                        'subtotal'       => $request->subtotal[$key],
                     ]);
                 }
             }
 
             DB::commit();
-            return redirect()->route('transaksi.show', $transaksi->id)->with('success', 'Transaksi Berhasil!');
+            return redirect()->route('transaksi.show', $transaksi->id)
+                ->with('success', 'Transaksi Berhasil!' . ($diskonPersen > 0 ? " Diskon rombongan {$diskonPersen}% diterapkan." : ''));
 
         } catch (\Exception $e) {
             DB::rollback();

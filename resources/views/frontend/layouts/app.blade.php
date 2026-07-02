@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'E-Tourism Kalimantan Selatan')</title>
 
-
     <link rel="icon" href="{{ asset('assets/images/logo1.png') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +30,6 @@
             --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
         }
 
-        /* ── Base ── */
         *, *::before, *::after { box-sizing: border-box; }
         body {
             font-family: var(--font-body);
@@ -52,7 +50,6 @@
             padding: 0;
         }
 
-        /* Navbar sedikit lebih solid saat scroll */
         .navbar-custom.scrolled {
             background: rgba(247, 244, 239, 0.97);
             box-shadow: 0 4px 32px rgba(15, 28, 20, 0.10);
@@ -71,10 +68,7 @@
             gap: 10px;
             text-decoration: none;
         }
-        .navbar-brand-wrap img {
-            height: 38px;
-            width: auto;
-        }
+        .navbar-brand-wrap img { height: 38px; width: auto; }
         .brand-text {
             font-family: var(--font-display);
             font-size: 1.15rem;
@@ -117,15 +111,11 @@
             transition: width 0.25s ease;
         }
         .navbar-custom .nav-link:hover,
-        .navbar-custom .nav-link.active {
-            color: var(--forest);
-        }
+        .navbar-custom .nav-link.active { color: var(--forest); }
         .navbar-custom .nav-link:hover::after,
-        .navbar-custom .nav-link.active::after {
-            width: 100%;
-        }
+        .navbar-custom .nav-link.active::after { width: 100%; }
 
-        /* CTA Lacak Pesanan */
+        /* ── Tombol Lacak Pesanan ── */
         .btn-lacak {
             display: inline-flex;
             align-items: center;
@@ -156,13 +146,205 @@
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(26, 61, 43, 0.28);
         }
-        .btn-lacak:active {
+        .btn-lacak:active { transform: translateY(0); box-shadow: none; }
+
+        /* ── Tombol Masuk (pengunjung belum login) ── */
+        .btn-masuk {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: transparent;
+            color: var(--forest) !important;
+            font-family: var(--font-body);
+            font-size: 0.845rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 2px solid var(--forest);
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+        }
+        .btn-masuk:hover {
+            background: var(--forest);
+            color: #fff !important;
+            transform: translateY(-1px);
+        }
+
+        /* ── Dropdown avatar pengunjung (sudah login) ── */
+        .nav-avatar-wrap {
+            position: relative;
+        }
+        .nav-avatar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 50px;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .nav-avatar-btn:hover { background: rgba(26,61,43,.07); }
+        .nav-avatar-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--forest);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 2px solid var(--gold);
+        }
+        .nav-avatar-name {
+            font-size: .83rem;
+            font-weight: 700;
+            color: var(--forest);
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Dropdown menu kustom */
+        .nav-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: #fff;
+            border: 1px solid rgba(26,61,43,.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(15,28,20,.12);
+            padding: 8px 0;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: opacity .2s, transform .2s, visibility .2s;
+        }
+        .nav-dropdown.show {
+            opacity: 1;
+            visibility: visible;
             transform: translateY(0);
-            box-shadow: none;
         }
-        .btn-lacak .bi {
-            font-size: 0.9rem;
+        .nav-dropdown-header {
+            padding: 10px 16px 8px;
+            border-bottom: 1px solid rgba(26,61,43,.07);
+            margin-bottom: 4px;
         }
+        .nav-dropdown-header .dd-name {
+            font-weight: 700;
+            font-size: .88rem;
+            color: var(--text-dark);
+        }
+        .nav-dropdown-header .dd-email {
+            font-size: .74rem;
+            color: var(--text-muted);
+        }
+        .nav-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
+            font-size: .84rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background .15s, color .15s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+        .nav-dropdown-item i { color: var(--forest); font-size: .9rem; }
+        .nav-dropdown-item:hover { background: var(--cream); color: var(--forest); }
+        .nav-dropdown-item.danger { color: #dc2626; }
+        .nav-dropdown-item.danger i { color: #dc2626; }
+        .nav-dropdown-item.danger:hover { background: #FEF2F2; }
+        .nav-dropdown-divider {
+            border: none;
+            border-top: 1px solid rgba(26,61,43,.07);
+            margin: 4px 0;
+        }
+
+        /* ── Dropdown Masuk (2 pilihan role) ── */
+        .btn-masuk-wrap { position: relative; }
+        .masuk-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 240px;
+            background: #fff;
+            border: 1px solid rgba(26,61,43,.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(15,28,20,.12);
+            padding: 8px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: opacity .2s, transform .2s, visibility .2s;
+        }
+        .masuk-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .masuk-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background .15s;
+        }
+        .masuk-option:hover { background: var(--cream); }
+        .masuk-option-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .masuk-option-icon.visitor { background: rgba(26,61,43,.08); color: var(--forest); }
+        .masuk-option-icon.officer { background: rgba(201,147,58,.12); color: var(--gold); }
+        .masuk-option-label {
+            font-size: .83rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+        .masuk-option-sub {
+            font-size: .72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .masuk-divider {
+            border: none;
+            border-top: 1px solid rgba(26,61,43,.07);
+            margin: 4px 0;
+        }
+        .masuk-register-link {
+            display: block;
+            text-align: center;
+            padding: 8px;
+            font-size: .78rem;
+            color: var(--forest);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .masuk-register-link:hover { color: var(--gold); text-decoration: underline; }
 
         /* Hamburger */
         .navbar-toggler {
@@ -183,11 +365,22 @@
                 padding: 16px 0 20px;
                 margin-top: 4px;
             }
-            .navbar-custom .nav-link {
-                margin: 4px 0;
-                padding: 8px 16px;
+            .navbar-custom .nav-link { margin: 4px 0; padding: 8px 16px; }
+            .btn-lacak, .btn-masuk {
+                margin: 6px 16px 0;
+                width: calc(100% - 32px);
+                justify-content: center;
             }
-            .btn-lacak { margin: 10px 16px 0; width: calc(100% - 32px); justify-content: center; }
+            .nav-dropdown, .masuk-dropdown {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                border: 1px solid rgba(26,61,43,.08);
+                margin: 8px 16px;
+                width: calc(100% - 32px);
+            }
         }
 
         /* ── Cards wisata ── */
@@ -204,29 +397,8 @@
         }
 
         /* ── Peta ── */
-        #map-sig {
-            height: 500px;
-            border-radius: 14px;
-            box-shadow: 0 4px 20px rgba(0,0,0,.06);
-            z-index: 1;
-        }
-        #map {
-            height: 350px;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(0,0,0,.06);
-        }
-
-        /* ── Hero wisata detail ── */
-        .hero-wisata {
-            background: center/cover;
-            height: 380px;
-            border-radius: 0 0 24px 24px;
-        }
-        .info-icon {
-            font-size: 1.1rem;
-            color: var(--forest);
-            margin-right: 8px;
-        }
+        #map-sig { height: 500px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,.06); z-index: 1; }
+        #map { height: 350px; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
 
         /* ── Footer ── */
         .footer-custom {
@@ -239,8 +411,6 @@
         }
         .footer-custom p { margin: 0; font-size: .875rem; }
         .footer-custom small { color: rgba(255,255,255,.45); font-size: .75rem; }
-
-        /* Gold divider atas footer */
         .footer-custom::before {
             content: '';
             display: block;
@@ -249,21 +419,8 @@
             margin-bottom: 28px;
         }
 
-        /* Tombol login tersembunyi */
-        .secret-login {
-            position: absolute;
-            bottom: 18px;
-            right: 22px;
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 1.1rem;
-            transition: color 0.3s;
-            text-decoration: none;
-        }
-        .secret-login:hover { color: var(--gold); }
-
-        /* ── Utilities ── */
         @media (prefers-reduced-motion: reduce) {
-            .wisata-card, .btn-lacak { transition: none; }
+            .wisata-card, .btn-lacak, .btn-masuk { transition: none; }
         }
     </style>
 
@@ -293,7 +450,8 @@
 
             {{-- Menu --}}
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
+
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('wisata.katalog') ? 'active' : '' }}"
                            href="{{ route('wisata.katalog') }}">
@@ -305,12 +463,91 @@
                             Peta SIG
                         </a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        {{-- ✅ PERBAIKAN: arahkan ke route cek-pesanan yang benar --}}
-                        <a class="btn-lacak" href="{{ route('cek-pesanan') }}">
+                    <li class="nav-item">
+                        <a class="btn-lacak ms-2" href="{{ route('cek-pesanan') }}">
                             <i class="bi bi-search"></i> Lacak Pesanan
                         </a>
                     </li>
+
+                    {{-- ======================================================= --}}
+                    {{-- AUTH: Cek apakah pengunjung sudah login                  --}}
+                    {{-- ======================================================= --}}
+                    @auth('pengunjung')
+                    {{-- SUDAH LOGIN → Tampilkan avatar + dropdown --}}
+                    <li class="nav-item ms-2">
+                        <div class="nav-avatar-wrap" id="avatarWrap">
+                            <button class="nav-avatar-btn" id="avatarBtn" type="button" aria-label="Menu Akun">
+                                <div class="nav-avatar-circle">
+                                    {{ strtoupper(substr(Auth::guard('pengunjung')->user()->nama, 0, 1)) }}
+                                </div>
+                                <span class="nav-avatar-name d-none d-lg-block">
+                                    {{ Auth::guard('pengunjung')->user()->nama }}
+                                </span>
+                                <i class="bi bi-chevron-down" style="font-size:.7rem; color:var(--text-muted);"></i>
+                            </button>
+
+                            <div class="nav-dropdown" id="avatarDropdown">
+                                <div class="nav-dropdown-header">
+                                    <div class="dd-name">{{ Auth::guard('pengunjung')->user()->nama }}</div>
+                                    <div class="dd-email">{{ Auth::guard('pengunjung')->user()->email }}</div>
+                                </div>
+                                <a href="{{ route('pengunjung.riwayat') }}" class="nav-dropdown-item">
+                                    <i class="bi bi-clock-history"></i> Riwayat Pesanan
+                                </a>
+                                <hr class="nav-dropdown-divider">
+                                <form action="{{ route('pengunjung.logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="nav-dropdown-item danger">
+                                        <i class="bi bi-box-arrow-right"></i> Keluar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+
+                    @else
+                    {{-- BELUM LOGIN → Tampilkan tombol Masuk dengan dropdown 2 pilihan --}}
+                    <li class="nav-item ms-2">
+                        <div class="btn-masuk-wrap" id="masukWrap">
+                            <button class="btn-masuk" id="masukBtn" type="button">
+                                <i class="bi bi-person-fill"></i> Masuk
+                            </button>
+
+                            <div class="masuk-dropdown" id="masukDropdown">
+                                {{-- Pilihan 1: Pengunjung --}}
+                                <a href="{{ route('pengunjung.login') }}" class="masuk-option">
+                                    <div class="masuk-option-icon visitor">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div class="masuk-option-label">Masuk sebagai Pengunjung</div>
+                                        <div class="masuk-option-sub">Akses riwayat & pesanan tiket Anda</div>
+                                    </div>
+                                </a>
+
+                                <hr class="masuk-divider">
+
+                                {{-- Pilihan 2: Petugas Dinas --}}
+                                <a href="{{ route('login') }}" class="masuk-option">
+                                    <div class="masuk-option-icon officer">
+                                        <i class="bi bi-shield-fill-check"></i>
+                                    </div>
+                                    <div>
+                                        <div class="masuk-option-label">Masuk sebagai Petugas Dinas</div>
+                                        <div class="masuk-option-sub">Kadis Provinsi / Kadis Kab-Kota</div>
+                                    </div>
+                                </a>
+
+                                <hr class="masuk-divider">
+
+                                <a href="{{ route('pengunjung.register.form') }}" class="masuk-register-link">
+                                    Belum punya akun? <strong>Daftar di sini</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    @endauth
+
                 </ul>
             </div>
 
@@ -328,11 +565,6 @@
             <p>&copy; {{ date('Y') }} Dinas Pariwisata Provinsi Kalimantan Selatan. Hak Cipta Dilindungi.</p>
             <small>Sistem Informasi E-Tourism Terintegrasi</small>
         </div>
-
-        {{-- Login tersembunyi untuk petugas --}}
-        <a href="{{ route('login') }}" class="secret-login" title="Akses Petugas" aria-label="Login Petugas">
-            <i class="bi bi-shield-lock-fill"></i>
-        </a>
     </footer>
 
     {{-- ══════════ SCRIPTS ══════════ --}}
@@ -340,18 +572,48 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        /* Navbar solid saat scroll */
+        /* ── Navbar solid saat scroll ── */
         (function () {
             var nav = document.getElementById('mainNav');
             if (!nav) return;
-            var onScroll = function () {
+            window.addEventListener('scroll', function () {
                 nav.classList.toggle('scrolled', window.scrollY > 20);
-            };
-            window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll();
+            }, { passive: true });
+        })();
+
+        /* ── Toggle dropdown avatar (pengunjung sudah login) ── */
+        (function () {
+            var btn = document.getElementById('avatarBtn');
+            var dd  = document.getElementById('avatarDropdown');
+            if (!btn || !dd) return;
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dd.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function () {
+                dd.classList.remove('show');
+            });
+        })();
+
+        /* ── Toggle dropdown Masuk (belum login) ── */
+        (function () {
+            var btn = document.getElementById('masukBtn');
+            var dd  = document.getElementById('masukDropdown');
+            if (!btn || !dd) return;
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dd.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function () {
+                dd.classList.remove('show');
+            });
         })();
     </script>
 
     @stack('scripts')
 </body>
-</html> 
+</html>

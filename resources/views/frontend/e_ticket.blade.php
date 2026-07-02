@@ -205,16 +205,34 @@
                 </tr>
             </thead>
             <tbody>
+                @php $subtotalMentah = $pesanan->details->sum('subtotal'); @endphp
                 @foreach($pesanan->details as $detail)
                 <tr>
-                    <td>{{ $detail->jenisTiket->nama_tiket ?? 'Tiket' }}</td>
+                    <td>{{ $detail->jenisTiket->nama_jenis ?? 'Tiket' }}</td>
                     <td>{{ $detail->jumlah }} Orang</td>
                     <td>Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
                 </tr>
                 @endforeach
+
+                {{-- ── Baris diskon rombongan ── --}}
+                @if($pesanan->diskon_persen > 0)
+                <tr style="background:#f8f8f8;">
+                    <td colspan="2" style="color:#6B7280; font-size:13px;">Subtotal</td>
+                    <td style="color:#6B7280; font-size:13px;">Rp {{ number_format($subtotalMentah, 0, ',', '.') }}</td>
+                </tr>
+                <tr style="background:#f0fdf4;">
+                    <td colspan="2" style="color:#059669; font-weight:600; font-size:13px;">
+                        🏷️ Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)
+                    </td>
+                    <td style="color:#059669; font-weight:700; font-size:13px;">
+                        - Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
+                    </td>
+                </tr>
+                @endif
+
                 <tr class="total-row">
-                    <td colspan="2" style="text-align: right; padding-right: 20px;">Total Pembayaran</td>
-                    <td style="font-weight: 700;">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</td>
+                    <td colspan="2" style="text-align:right; padding-right:20px;">Total Pembayaran</td>
+                    <td style="font-weight:700;">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</td>
                 </tr>
             </tbody>
         </table>

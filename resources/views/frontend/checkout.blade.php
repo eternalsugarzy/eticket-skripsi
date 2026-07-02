@@ -215,105 +215,113 @@
      Ini memastikan script berjalan SETELAH semua elemen HTML ada di DOM,
      tanpa bergantung pada apakah layout me-yield section 'scripts' atau tidak.
 ====================================================================== --}}
+
+{{-- Embed tier diskon --}}
+<script>
+    const DISKON_TIERS = @json($diskonTiers);
+</script>
+
 <script>
 (function () {
-    // Tunggu DOM siap (aman meski script ada di tengah halaman)
     function init() {
-        var displayTotal = document.getElementById('display-total');
-        var inputTotal   = document.getElementById('input-total');
-        var btnSubmit    = document.getElementById('btn-submit');
-        var rincianBox   = document.getElementById('rincian-tiket');
+        var displayTotal  = document.getElementById('display-total');
+        var inputTotal    = document.getElementById('input-total');
+        var btnSubmit     = document.getElementById('btn-submit');
+        var rincianBox    = document.getElementById('rincian-tiket');
 
-        if (!displayTotal || !inputTotal || !btnSubmit) {
-            console.error('[Checkout] Elemen tidak ditemukan. Cek ID: display-total, input-total, btn-submit');
-            return;
-        }
+        if (!displayTotal || !inputTotal || !btnSubmit) return;
 
-        // ── Format Rupiah ──────────────────────────────────────────
         function formatRupiah(angka) {
             return 'Rp ' + Number(angka).toLocaleString('id-ID');
         }
 
-        // ── Hitung ulang total dari semua input-qty ────────────────
+        // Cari tier diskon tertinggi
+        function cariDiskon(totalQty) {
+            var best = null;
+            DISKON_TIERS.forEach(function(tier) {
+                if (totalQty >= tier.min_orang) {
+                    if (!best || tier.min_orang > best.min_orang) best = tier;
+                }
+            });
+            return best;
+        }
+
         function calculateTotal() {
             var inputs   = document.querySelectorAll('.input-qty');
-            var total    = 0;
+            var subtotal = 0;
             var totalQty = 0;
             var rincian  = '';
 
-            inputs.forEach(function (input) {
-                var qty      = parseInt(input.value, 10) || 0;
-                var harga    = parseInt(input.getAttribute('data-harga'), 10) || 0;
-                var subtotal = qty * harga;
-
-                total    += subtotal;
+            inputs.forEach(function(input) {
+                var qty   = parseInt(input.value, 10) || 0;
+                var harga = parseInt(input.getAttribute('data-harga'), 10) || 0;
+                subtotal += qty * harga;
                 totalQty += qty;
 
                 if (qty > 0) {
-                    // Cari nama tiket dari .tiket-nama di baris yang sama
                     var row  = input.closest('.tiket-row');
                     var nama = row && row.querySelector('.tiket-nama')
                                 ? row.querySelector('.tiket-nama').innerText.trim()
                                 : 'Tiket';
-
                     rincian +=
                         '<div class="d-flex justify-content-between text-muted mb-1">' +
                             '<span>' + nama + ' \u00d7 ' + qty + '</span>' +
-                            '<span>' + formatRupiah(subtotal) + '</span>' +
+                            '<span>' + formatRupiah(qty * harga) + '</span>' +
                         '</div>';
                 }
             });
 
-            displayTotal.innerText  = formatRupiah(total);
-            inputTotal.value        = total;
-            rincianBox.innerHTML    = rincian;
-            btnSubmit.disabled      = (totalQty === 0);
-        }
+            // Hitung diskon
+            var tierAktif    = cariDiskon(totalQty);
+            var persen       = tierAktif ? parseFloat(tierAktif.persen_diskon) : 0;
+            var nominalDisk  = Math.round(subtotal * persen / 100);
+            var totalAkhir   = subtotal - nominalDisk;
 
-        // ── Event delegation pada document (paling andal) ──────────
-        // Menangkap klik pada .btn-plus dan .btn-min di mana pun posisinya
-        document.addEventListener('click', function (e) {
-            var target = e.target;
-
-            // Tombol bisa diklik pada icon <i> di dalamnya, naik ke button
-            if (target.tagName === 'I') {
-                target = target.parentElement;
+            // Tampilkan rincian diskon
+            if (persen > 0) {
+                rincian +=
+                    '<div class="d-flex justify-content-between text-muted mb-1">' +
+                        '<span>Subtotal</span>' +
+                        '<span>' + formatRupiah(subtotal) + '</span>' +
+                    '</div>' +
+                    '<div class="d-flex justify-content-between mb-1" style="color:#059669; font-weight:600;">' +
+                        '<span><i class="bi bi-tag-fill me-1"></i>Diskon Rombongan (' + persen + '%)</span>' +
+                        '<span>- ' + formatRupiah(nominalDisk) + '</span>' +
+                    '</div>';
             }
 
-            // Tombol PLUS
+            displayTotal.innerText = formatRupiah(totalAkhir);
+            inputTotal.value       = totalAkhir;
+            rincianBox.innerHTML   = rincian;
+            btnSubmit.disabled     = (totalQty === 0);
+        }
+
+        document.addEventListener('click', function(e) {
+            var target = e.target;
+            if (target.tagName === 'I') target = target.parentElement;
+
             if (target.classList.contains('btn-plus')) {
                 e.preventDefault();
                 var id    = target.getAttribute('data-id');
                 var input = document.getElementById('qty-' + id);
-                if (input) {
-                    input.value = (parseInt(input.value, 10) || 0) + 1;
-                    calculateTotal();
-                }
+                if (input) { input.value = (parseInt(input.value, 10) || 0) + 1; calculateTotal(); }
             }
 
-            // Tombol MINUS
             if (target.classList.contains('btn-min')) {
                 e.preventDefault();
                 var id    = target.getAttribute('data-id');
                 var input = document.getElementById('qty-' + id);
-                if (input && parseInt(input.value, 10) > 0) {
-                    input.value = (parseInt(input.value, 10) || 0) - 1;
-                    calculateTotal();
-                }
+                if (input && parseInt(input.value, 10) > 0) { input.value -= 1; calculateTotal(); }
             }
         });
 
-        // Hitung sekali saat halaman load
         calculateTotal();
-
-        console.log('[Checkout] Script tiket berhasil dimuat.');
     }
 
-    // Jalankan setelah DOM siap
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
-        init(); // DOM sudah siap
+        init();
     }
 })();
 </script>

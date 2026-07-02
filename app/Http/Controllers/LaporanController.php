@@ -12,13 +12,21 @@ class LaporanController extends Controller
         return view('laporan.index');
     }
 
+    // Helper: cek apakah user login adalah kadis_kabkota, kembalikan id_kabupaten-nya atau null
+    private function scopeKabupaten()
+    {
+        $user = auth()->user();
+        return $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
+    }
+
     // =========================================================
     // CETAK LAPORAN DATA PENGUNJUNG (OFFLINE + ONLINE)
     // =========================================================
     public function cetakPengunjung(Request $request)
     {
-        $tgl_mulai   = $request->tgl_awal;
-        $tgl_selesai = $request->tgl_akhir;
+        $tgl_mulai     = $request->tgl_awal;
+        $tgl_selesai   = $request->tgl_akhir;
+        $idKabupaten   = $this->scopeKabupaten();
 
         $queryOffline = DB::table('transaksis')
             ->leftJoin('users', 'transaksis.id_kasir', '=', 'users.id')
@@ -26,6 +34,7 @@ class LaporanController extends Controller
             ->where('transaksis.status_tiket', '!=', 'batal')
             ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_mulai)
             ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_selesai)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'transaksis.no_transaksi as id_transaksi',
                 'transaksis.tgl_transaksi as waktu_transaksi',
@@ -40,6 +49,7 @@ class LaporanController extends Controller
             ->where('pesanans.status_pembayaran', 'Paid')
             ->whereDate('pesanans.created_at', '>=', $tgl_mulai)
             ->whereDate('pesanans.created_at', '<=', $tgl_selesai)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'pesanans.kode_pesanan as id_transaksi',
                 'pesanans.created_at as waktu_transaksi',
@@ -60,14 +70,16 @@ class LaporanController extends Controller
     // =========================================================
     public function cetakPendapatan(Request $request)
     {
-        $tgl_awal  = $request->tgl_awal;
-        $tgl_akhir = $request->tgl_akhir;
+        $tgl_awal    = $request->tgl_awal;
+        $tgl_akhir   = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
 
         $queryOffline = DB::table('transaksis')
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
             ->where('transaksis.status_tiket', '!=', 'batal')
             ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_awal)
             ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select('objek_wisatas.nama_objek',
                 DB::raw('COUNT(transaksis.id) as jumlah_transaksi'),
                 DB::raw('SUM(transaksis.total_bayar) as total_pendapatan'))
@@ -78,6 +90,7 @@ class LaporanController extends Controller
             ->where('pesanans.status_pembayaran', 'Paid')
             ->whereDate('pesanans.created_at', '>=', $tgl_awal)
             ->whereDate('pesanans.created_at', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select('objek_wisatas.nama_objek',
                 DB::raw('COUNT(pesanans.id) as jumlah_transaksi'),
                 DB::raw('SUM(pesanans.total_bayar) as total_pendapatan'))
@@ -100,8 +113,9 @@ class LaporanController extends Controller
     // =========================================================
     public function cetakTiket(Request $request)
     {
-        $tgl_awal  = $request->tgl_awal;
-        $tgl_akhir = $request->tgl_akhir;
+        $tgl_awal    = $request->tgl_awal;
+        $tgl_akhir   = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
 
         $queryOffline = DB::table('detail_transaksis')
             ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
@@ -110,6 +124,7 @@ class LaporanController extends Controller
             ->where('transaksis.status_tiket', '!=', 'batal')
             ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_awal)
             ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis',
                 DB::raw('SUM(detail_transaksis.jumlah) as total_terjual'),
                 DB::raw('SUM(detail_transaksis.subtotal) as total_uang'))
@@ -122,6 +137,7 @@ class LaporanController extends Controller
             ->where('pesanans.status_pembayaran', 'Paid')
             ->whereDate('pesanans.created_at', '>=', $tgl_awal)
             ->whereDate('pesanans.created_at', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis',
                 DB::raw('SUM(pesanan_details.jumlah) as total_terjual'),
                 DB::raw('SUM(pesanan_details.subtotal) as total_uang'))
@@ -144,8 +160,9 @@ class LaporanController extends Controller
     // =========================================================
     public function cetakObjek(Request $request)
     {
-        $tgl_awal  = $request->tgl_awal;
-        $tgl_akhir = $request->tgl_akhir;
+        $tgl_awal    = $request->tgl_awal;
+        $tgl_akhir   = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
 
         $queryOffline = DB::table('detail_transaksis')
             ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
@@ -153,6 +170,7 @@ class LaporanController extends Controller
             ->where('transaksis.status_tiket', '!=', 'batal')
             ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_awal)
             ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select('objek_wisatas.nama_objek',
                 DB::raw('SUM(detail_transaksis.jumlah) as total_pengunjung'))
             ->groupBy('objek_wisatas.nama_objek');
@@ -163,6 +181,7 @@ class LaporanController extends Controller
             ->where('pesanans.status_pembayaran', 'Paid')
             ->whereDate('pesanans.created_at', '>=', $tgl_awal)
             ->whereDate('pesanans.created_at', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select('objek_wisatas.nama_objek',
                 DB::raw('SUM(pesanan_details.jumlah) as total_pengunjung'))
             ->groupBy('objek_wisatas.nama_objek');
@@ -181,13 +200,18 @@ class LaporanController extends Controller
     // =========================================================
     public function cetakMaster(Request $request)
     {
-        $jenis = $request->jenis; // users | kabupatens | objek_wisatas | jenis_tikets | harga_tikets
+        $jenis       = $request->jenis; // users | kabupatens | objek_wisatas | jenis_tikets | harga_tikets
+        $idKabupaten = $this->scopeKabupaten();
 
         $data  = collect();
         $judul = '';
 
         switch ($jenis) {
             case 'users':
+                // 🔒 kadis_kabkota tidak boleh lihat data master akun staff
+                if ($idKabupaten) {
+                    abort(403, 'Anda tidak memiliki akses ke data ini.');
+                }
                 $judul = 'Data Pengguna Sistem';
                 $data  = DB::table('users')
                     ->select('id', 'nama', 'username', 'role', 'created_at')
@@ -195,6 +219,9 @@ class LaporanController extends Controller
                 break;
 
             case 'kabupatens':
+                if ($idKabupaten) {
+                    abort(403, 'Anda tidak memiliki akses ke data ini.');
+                }
                 $judul = 'Data Kabupaten / Kota';
                 $data  = DB::table('kabupatens')
                     ->select('id', 'nama_kabupaten', 'created_at')
@@ -205,6 +232,7 @@ class LaporanController extends Controller
                 $judul = 'Data Objek Wisata';
                 $data  = DB::table('objek_wisatas')
                     ->join('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                    ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
                     ->select('objek_wisatas.id', 'objek_wisatas.nama_objek',
                         'kabupatens.nama_kabupaten', 'objek_wisatas.alamat',
                         'objek_wisatas.jam_operasional', 'objek_wisatas.status',
@@ -225,6 +253,7 @@ class LaporanController extends Controller
                 $data  = DB::table('harga_tikets')
                     ->join('objek_wisatas', 'harga_tikets.id_objek', '=', 'objek_wisatas.id')
                     ->join('jenis_tikets', 'harga_tikets.id_jenis_tiket', '=', 'jenis_tikets.id')
+                    ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
                     ->select('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis', 'harga_tikets.harga')
                     ->orderBy('objek_wisatas.nama_objek')->orderBy('jenis_tikets.nama_jenis')
                     ->get();
