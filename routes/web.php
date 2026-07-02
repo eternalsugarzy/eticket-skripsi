@@ -15,6 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DiskonRombonganController;
 
 // =========================================================================
 //  --- A. RUTE PUBLIK / GUEST (TIDAK PERLU LOGIN) ---
@@ -30,6 +31,9 @@ Route::get('/cek-pesanan', [CheckoutController::class, 'cekPesanan'])->name('cek
 
 Route::post('/simulasi-bayar/{kode_pesanan}', [CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
 Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->name('cetak.eticket');
+
+// API tier diskon (dipanggil JS, tidak perlu login)
+Route::get('/api/diskon-tiers', [DiskonRombonganController::class, 'apiTiers'])->name('diskon.tiers');
 
 // Manajemen Pesanan Online (Admin)
 Route::get('/pesanan-online', [App\Http\Controllers\PesananOnlineController::class, 'index'])->name('pesanan-online.index');
@@ -61,10 +65,13 @@ Route::middleware('auth')->group(function () {
     // 1. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Manajemen User & Wilayah — hanya admin & kadis provinsi
+    // 2. Manajemen User, Wilayah & Diskon Rombongan — hanya admin & kadis provinsi
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('kabupatens', KabupatenController::class);
+        Route::resource('diskon-rombongan', DiskonRombonganController::class)->parameters([
+            'diskon-rombongan' => 'diskonRombongan'
+        ]);
     });
 
     // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller)

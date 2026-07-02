@@ -119,9 +119,28 @@
                                 @endforeach
                             </tbody>
                             <tfoot class="border-top border-2">
+                                @if($pesanan->diskon_persen > 0)
+                                @php $subtotalMentah = $pesanan->details->sum('subtotal'); @endphp
+                                <tr>
+                                    <td colspan="3" class="text-end py-2 text-muted" style="font-size:13px;">Subtotal</td>
+                                    <td class="text-end py-2 pe-4 text-muted" style="font-size:13px;">
+                                        Rp {{ number_format($subtotalMentah, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                <tr style="background:#f0fdf4;">
+                                    <td colspan="3" class="text-end py-2" style="color:#059669; font-weight:600; font-size:13px;">
+                                        🏷️ Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)
+                                    </td>
+                                    <td class="text-end py-2 pe-4" style="color:#059669; font-weight:700; font-size:13px;">
+                                        - Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @endif
                                 <tr>
                                     <td colspan="3" class="text-end py-4 fw-bold fs-6 text-muted">Total Pembayaran</td>
-                                    <td class="text-end py-4 pe-4 fs-4 text-primary fw-bold">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</td>
+                                    <td class="text-end py-4 pe-4 fs-4 text-primary fw-bold">
+                                        Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>

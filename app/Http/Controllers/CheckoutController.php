@@ -22,13 +22,17 @@ class CheckoutController extends Controller
                         ->where('id_objek', $id_objek)
                         ->get();
 
-        return view('frontend.checkout', compact('wisata', 'hargaTikets'));
+        // Kirim tier diskon ke view
+        $diskonTiers = \App\Models\DiskonRombongan::where('aktif', 1)
+                        ->orderBy('min_orang')
+                        ->get(['min_orang', 'persen_diskon', 'keterangan']);
+
+        return view('frontend.checkout', compact('wisata', 'hargaTikets', 'diskonTiers'));
     }
 
-    // 2. Proses simpan pesanan
+    // 2. Proses simpan pesanan — ditambah kalkulasi diskon rombongan
     public function proses(Request $request)
     {
-        // 1. Validasi input
         $request->validate([
             'nama_pengunjung'   => 'required|string|max:255',
             'no_wa'             => 'required|string|max:20',
@@ -38,50 +42,67 @@ class CheckoutController extends Controller
             'total_bayar'       => 'required|numeric|min:1',
         ]);
 
-        // 2. Buat Kode Pesanan Unik
         $kode_pesanan = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(5));
-
-        // 3. Cek apakah pengunjung sedang login via guard 'pengunjung'
-        //    Kalau login → id_pengunjung diisi, kalau tidak (guest) → null
         $idPengunjung = Auth::guard('pengunjung')->check()
             ? Auth::guard('pengunjung')->id()
             : null;
 
-        // 4. Simpan ke tabel pesanans
+        // Hitung diskon rombongan server-side
+        $totalQty = array_sum(array_filter($request->tiket, fn($q) => $q > 0));
+        $diskon   = \App\Models\DiskonRombongan::cariDiskon((int) $totalQty);
+
+        // Hitung subtotal dari database (jangan percaya nilai dari client)
+        $subtotalSebelumDiskon = 0;
+        $detailTikets = [];
+        foreach ($request->tiket as $id_jenis_tiket => $qty) {
+            if ($qty > 0) {
+                $hargaTiket = HargaTiket::where('id_objek', $request->id_objek)
+                    ->where('id_jenis_tiket', $id_jenis_tiket)
+                    ->first();
+                
+                if ($hargaTiket) {
+                    $subtotal = $hargaTiket->harga * $qty;
+                    $subtotalSebelumDiskon += $subtotal;
+                    $detailTikets[] = [
+                        'id_jenis_tiket' => $id_jenis_tiket,
+                        'harga'          => $hargaTiket->harga,
+                        'jumlah'         => $qty,
+                        'subtotal'       => $subtotal,
+                    ];
+                }
+            }
+        }
+
+        $diskonPersen  = $diskon ? (float) $diskon->persen_diskon : 0;
+        $diskonNominal = (int) round($subtotalSebelumDiskon * $diskonPersen / 100);
+        $totalBayar    = $subtotalSebelumDiskon - $diskonNominal;
+
         $pesanan = Pesanan::create([
-            'id_pengunjung'     => $idPengunjung,   // <-- null jika pesan tanpa akun
+            'id_pengunjung'     => $idPengunjung,
             'kode_pesanan'      => $kode_pesanan,
             'nama_pengunjung'   => $request->nama_pengunjung,
             'no_wa'             => $request->no_wa,
             'email'             => $request->email,
             'tanggal_kunjungan' => $request->tanggal_kunjungan,
             'id_objek'          => $request->id_objek,
-            'total_bayar'       => $request->total_bayar,
+            'total_bayar'       => $totalBayar,
+            'diskon_persen'     => $diskonPersen,
+            'diskon_nominal'    => $diskonNominal,
             'status_pembayaran' => 'Unpaid',
         ]);
 
-        // 5. Simpan detail tiket yang jumlahnya lebih dari 0
-        foreach ($request->tiket as $id_jenis_tiket => $qty) {
-            if ($qty > 0) {
-                $hargaTiket = HargaTiket::where('id_objek', $request->id_objek)
-                                ->where('id_jenis_tiket', $id_jenis_tiket)
-                                ->first();
-
-                if ($hargaTiket) {
-                    PesananDetail::create([
-                        'id_pesanan'    => $pesanan->id,
-                        'id_jenis_tiket'=> $id_jenis_tiket,
-                        'harga'         => $hargaTiket->harga,
-                        'jumlah'        => $qty,
-                        'subtotal'      => $hargaTiket->harga * $qty,
-                    ]);
-                }
-            }
+        foreach ($detailTikets as $detail) {
+            PesananDetail::create([
+                'id_pesanan'     => $pesanan->id,
+                'id_jenis_tiket' => $detail['id_jenis_tiket'],
+                'harga'          => $detail['harga'],
+                'jumlah'         => $detail['jumlah'],
+                'subtotal'       => $detail['subtotal'],
+            ]);
         }
 
-        // 6. Redirect ke halaman cek pesanan
         return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])
-            ->with('success_checkout', 'Pesanan dibuat. Silakan selesaikan pembayaran!');
+            ->with('success_checkout', 'Pesanan dibuat.' . ($diskonPersen > 0 ? " Diskon rombongan {$diskonPersen}% diterapkan!" : ' Silakan selesaikan pembayaran!'));
     }
 
     // 3. Halaman cek status pesanan

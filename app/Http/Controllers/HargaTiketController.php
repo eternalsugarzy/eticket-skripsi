@@ -4,53 +4,73 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\HargaTiket;
-use App\Models\ObjekWisata; // Wajib ada: untuk dropdown nama wisata
-use App\Models\JenisTiket;  // Wajib ada: untuk dropdown jenis (dewasa/anak)
+use App\Models\ObjekWisata;
+use App\Models\JenisTiket;
 use App\Models\Kabupaten;
 
 class HargaTiketController extends Controller
 {
+    // Helper: kembalikan id_kabupaten kalau kadis_kabkota, null kalau role lain
+    private function scopeKabupaten()
+    {
+        $user = auth()->user();
+        return $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
+    }
+
     // 1. TAMPILKAN DAFTAR HARGA
     public function index(Request $request)
     {
-        // 1. Siapkan Query Dasar (Ambil Relasi)
+        $idKabupaten = $this->scopeKabupaten();
+
         $query = HargaTiket::with(['objekWisata.kabupaten', 'jenisTiket']);
 
-        // 2. Logika PENCARIAN (Berdasarkan Nama Wisata)
+        // 🔒 SCOPING: kadis_kabkota hanya lihat harga di wilayahnya
+        if ($idKabupaten) {
+            $query->whereHas('objekWisata', function ($q) use ($idKabupaten) {
+                $q->where('id_kabupaten', $idKabupaten);
+            });
+        }
+
         if ($request->has('search') && $request->search != null) {
-            $query->whereHas('objekWisata', function($q) use ($request) {
+            $query->whereHas('objekWisata', function ($q) use ($request) {
                 $q->where('nama_objek', 'like', '%' . $request->search . '%');
             });
         }
 
-        // 3. Logika FILTER KABUPATEN
         if ($request->has('filter_kabupaten') && $request->filter_kabupaten != null) {
-            $query->whereHas('objekWisata', function($q) use ($request) {
+            $query->whereHas('objekWisata', function ($q) use ($request) {
                 $q->where('id_kabupaten', $request->filter_kabupaten);
             });
         }
 
-        // 4. Logika FILTER JENIS TIKET
         if ($request->has('filter_jenis') && $request->filter_jenis != null) {
             $query->where('id_jenis_tiket', $request->filter_jenis);
         }
 
-        // 5. Ambil Data Hasil Filter
         $hargaTikets = $query->latest()->get();
 
-        // 6. Ambil Data Master untuk isi Dropdown Filter
-        $kabupatens = Kabupaten::all();
+        // 🔒 SCOPING: dropdown filter kabupaten juga dibatasi
+        $kabupatens = $idKabupaten
+            ? Kabupaten::where('id', $idKabupaten)->get()
+            : Kabupaten::all();
+
         $jenisTikets = JenisTiket::all();
 
         return view('harga_tikets.index', compact('hargaTikets', 'kabupatens', 'jenisTikets'));
     }
 
-    // 2. FORM TAMBAH (Siapkan data untuk 2 Dropdown)
+    // 2. FORM TAMBAH
     public function create()
     {
-        $objekWisatas = ObjekWisata::all();
+        $idKabupaten = $this->scopeKabupaten();
+
+        // 🔒 SCOPING: dropdown objek wisata hanya wilayahnya sendiri
+        $objekWisatas = $idKabupaten
+            ? ObjekWisata::where('id_kabupaten', $idKabupaten)->get()
+            : ObjekWisata::all();
+
         $jenisTikets = JenisTiket::all();
-        
+
         return view('harga_tikets.create', compact('objekWisatas', 'jenisTikets'));
     }
 
@@ -58,17 +78,25 @@ class HargaTiketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_objek' => 'required',
+            'id_objek'       => 'required',
             'id_jenis_tiket' => 'required',
-            'harga' => 'required|numeric'
+            'harga'          => 'required|numeric',
         ]);
 
-        // Cek Duplikat: Agar tidak ada harga ganda untuk (Wisata A + Jenis B)
+        // 🔒 SCOPING: pastikan objek yang dipilih memang milik wilayahnya
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda tidak memiliki akses ke objek wisata ini.');
+            }
+        }
+
         $cek = HargaTiket::where('id_objek', $request->id_objek)
                          ->where('id_jenis_tiket', $request->id_jenis_tiket)
                          ->exists();
 
-        if($cek) {
+        if ($cek) {
             return back()->with('error', 'Setting harga untuk kombinasi ini sudah ada!');
         }
 
@@ -80,20 +108,38 @@ class HargaTiketController extends Controller
     // 4. FORM EDIT
     public function edit(HargaTiket $hargaTiket)
     {
-        $objekWisatas = ObjekWisata::all();
+        $this->cekAksesHarga($hargaTiket);
+
+        $idKabupaten = $this->scopeKabupaten();
+
+        $objekWisatas = $idKabupaten
+            ? ObjekWisata::where('id_kabupaten', $idKabupaten)->get()
+            : ObjekWisata::all();
+
         $jenisTikets = JenisTiket::all();
-        
+
         return view('harga_tikets.edit', compact('hargaTiket', 'objekWisatas', 'jenisTikets'));
     }
 
     // 5. UPDATE DATA
     public function update(Request $request, HargaTiket $hargaTiket)
     {
+        $this->cekAksesHarga($hargaTiket);
+
         $request->validate([
-            'id_objek' => 'required',
+            'id_objek'       => 'required',
             'id_jenis_tiket' => 'required',
-            'harga' => 'required|numeric'
+            'harga'          => 'required|numeric',
         ]);
+
+        // 🔒 SCOPING: pastikan objek tujuan juga masih di wilayahnya
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda tidak memiliki akses ke objek wisata ini.');
+            }
+        }
 
         $hargaTiket->update($request->all());
 
@@ -103,7 +149,25 @@ class HargaTiketController extends Controller
     // 6. HAPUS DATA
     public function destroy(HargaTiket $hargaTiket)
     {
+        $this->cekAksesHarga($hargaTiket);
+
         $hargaTiket->delete();
+
         return redirect()->route('harga-tiket.index')->with('success', 'Setting harga dihapus!');
+    }
+
+    // =========================================================
+    // PRIVATE HELPER — Cek akses kadis_kabkota ke satu record harga
+    // =========================================================
+    private function cekAksesHarga(HargaTiket $hargaTiket)
+    {
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten) {
+            // Load relasi objekWisata kalau belum
+            $hargaTiket->load('objekWisata');
+            if (!$hargaTiket->objekWisata || (int) $hargaTiket->objekWisata->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda tidak memiliki akses ke data harga ini.');
+            }
+        }
     }
 }

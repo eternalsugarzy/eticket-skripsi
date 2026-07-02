@@ -320,6 +320,12 @@
                             <span class="pc-mtext">Manajemen Harga</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ request()->is('diskon-rombongan*') ? 'active' : '' }}">
+                        <a href="{{ route('diskon-rombongan.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-discount"></i></span>
+                            <span class="pc-mtext">Diskon Rombongan</span>
+                        </a>
+                    </li>
                     @endif
 
                     {{-- ── TRANSAKSI ── --}}
