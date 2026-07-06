@@ -459,6 +459,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('berita.*') ? 'active' : '' }}"
+                           href="{{ route('berita.index') }}">
+                            Berita
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('landing') }}#sig">
                             Peta SIG
                         </a>

@@ -328,6 +328,22 @@
                     </li>
                     @endif
 
+                    {{-- ── KONTEN WEBSITE — Berita, Banner, Galeri ──
+                         Tampil untuk semua role dinas (admin, kadis_provinsi, kadis_kabkota)
+                         Scoping per-kabupaten dilakukan di controller masing-masing
+                    --}}
+                    @if($isDinas)
+                    <li class="pc-item pc-caption">
+                        <label>Konten Website</label>
+                    </li>
+                    <li class="pc-item {{ request()->is('berita*') ? 'active' : '' }}">
+                        <a href="{{ route('kelola-berita.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-news"></i></span>
+                            <span class="pc-mtext">Berita</span>
+                        </a>
+                    </li>
+                    @endif
+
                     {{-- ── TRANSAKSI ── --}}
                     <li class="pc-item pc-caption">
                         <label>Transaksi</label>

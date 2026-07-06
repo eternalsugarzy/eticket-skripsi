@@ -232,6 +232,49 @@
             </tr>
         </tfoot>
     </table>
+
+    {{-- ============ TABEL BERITA ============ --}}
+    @elseif($jenis == 'beritas')
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th width="5%">No</th>
+                <th>Judul Berita</th>
+                <th width="14%">Kategori</th>
+                <th width="16%">Wilayah</th>
+                <th width="13%">Tgl Publish</th>
+                <th width="14%">Penulis</th>
+                <th width="10%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($data as $i => $row)
+            <tr>
+                <td class="text-center">{{ $i + 1 }}</td>
+                <td>{{ $row->judul }}</td>
+                <td class="text-center">{{ $row->kategori }}</td>
+                <td>{{ $row->nama_kabupaten ?? 'Provinsi (Umum)' }}</td>
+                <td class="text-center">{{ date('d/m/Y', strtotime($row->tanggal_publish)) }}</td>
+                <td>{{ $row->nama_penulis ?? '-' }}</td>
+                <td class="text-center">
+                    @if($row->status == 'published')
+                        <span class="badge-buka">Published</span>
+                    @else
+                        <span class="badge-tutup">Draft</span>
+                    @endif
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="7" class="text-center">Tidak ada data.</td></tr>
+            @endforelse
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="6" class="text-right">Total Berita</td>
+                <td class="text-center">{{ count($data) }} Artikel</td>
+            </tr>
+        </tfoot>
+    </table>
     @endif
 
     {{-- TANDA TANGAN --}}

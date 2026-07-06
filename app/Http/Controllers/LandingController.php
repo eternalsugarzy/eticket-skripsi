@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ObjekWisata;
 use App\Models\Kabupaten;
+use App\Models\Berita;
 
 class LandingController extends Controller
 {
@@ -19,7 +20,9 @@ class LandingController extends Controller
                                     ->where('longitude', '!=', '')
                                     ->get();
 
-        return view('frontend.index', compact('allWisata', 'wisataMarkers'));
+        $beritaTerbaru = Berita::published()->orderByDesc('tanggal_publish')->take(3)->get();
+
+        return view('frontend.index', compact('allWisata', 'wisataMarkers', 'beritaTerbaru'));
     }
 
     // 2. Halaman Katalog (dengan Search & Filter)

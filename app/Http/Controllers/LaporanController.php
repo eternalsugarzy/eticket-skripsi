@@ -258,6 +258,18 @@ class LaporanController extends Controller
                     ->orderBy('objek_wisatas.nama_objek')->orderBy('jenis_tikets.nama_jenis')
                     ->get();
                 break;
+
+                case 'beritas':
+                $judul = 'Data Berita';
+                $data  = DB::table('beritas')
+                    ->leftJoin('kabupatens', 'beritas.id_kabupaten', '=', 'kabupatens.id')
+                    ->leftJoin('users', 'beritas.id_user', '=', 'users.id')
+                    ->when($idKabupaten, fn($q) => $q->where('beritas.id_kabupaten', $idKabupaten))
+                    ->select('beritas.id', 'beritas.judul', 'beritas.kategori', 'beritas.status',
+                        'beritas.tanggal_publish', 'kabupatens.nama_kabupaten', 'users.nama as nama_penulis')
+                    ->orderByDesc('beritas.tanggal_publish')
+                    ->get();
+                break;
         }
 
         return view('laporan.cetak-master', compact('data', 'judul', 'jenis'));

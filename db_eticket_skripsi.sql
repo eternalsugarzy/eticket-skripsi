@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 29, 2026 at 11:47 AM
+-- Generation Time: Jul 04, 2026 at 03:42 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.31
 
@@ -84,7 +84,33 @@ INSERT INTO `detail_transaksis` (`id`, `id_transaksi`, `id_jenis_tiket`, `jumlah
 (15, 12, 1, 1, '5000.00', '5000.00', '2026-02-05 08:30:46', '2026-02-05 08:30:46'),
 (16, 13, 1, 4, '5000.00', '20000.00', '2026-02-05 09:08:33', '2026-02-05 09:08:33'),
 (17, 14, 1, 2, '10000.00', '20000.00', '2026-02-05 09:10:38', '2026-02-05 09:10:38'),
-(18, 15, 1, 1, '10000.00', '10000.00', '2026-06-22 00:14:35', '2026-06-22 00:14:35');
+(18, 15, 1, 1, '10000.00', '10000.00', '2026-06-22 00:14:35', '2026-06-22 00:14:35'),
+(19, 16, 1, 5, '10000.00', '50000.00', '2026-07-01 19:52:00', '2026-07-01 19:52:00'),
+(20, 16, 2, 20, '8000.00', '160000.00', '2026-07-01 19:52:00', '2026-07-01 19:52:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `diskon_rombongans`
+--
+
+CREATE TABLE `diskon_rombongans` (
+  `id` bigint UNSIGNED NOT NULL,
+  `min_orang` int NOT NULL COMMENT 'Minimal jumlah tiket untuk dapat diskon',
+  `persen_diskon` decimal(5,2) NOT NULL COMMENT 'Persentase diskon (misal: 10.00)',
+  `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `diskon_rombongans`
+--
+
+INSERT INTO `diskon_rombongans` (`id`, `min_orang`, `persen_diskon`, `keterangan`, `aktif`, `created_at`, `updated_at`) VALUES
+(1, 10, '10.00', 'Diskon Rombongan Pelajar SD', 1, '2026-07-01 19:50:04', '2026-07-01 19:50:04'),
+(2, 20, '15.00', 'Diskon Rombongan Pelajar SMP', 1, '2026-07-01 19:50:37', '2026-07-01 19:50:37');
 
 -- --------------------------------------------------------
 
@@ -352,7 +378,7 @@ INSERT INTO `objek_wisatas` (`id`, `id_kabupaten`, `nama_objek`, `foto`, `deskri
 (8, 3, 'Pasar Terapung Lok Baintan', 'default.jpg', 'Pasar terapung alami dan legendaris yang beroperasi saat subuh hari.', NULL, 'Desa Lok Baintan, Kec. Sungai Tabuk', '-3.2981', '114.6642', '05:00 - 09:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (9, 4, 'Pantai Takisung', 'default.jpg', 'Pantai populer dengan pemandangan sunset yang indah dan wahana banana boat.', NULL, 'Desa Takisung, Kec. Takisung', '-3.8794', '114.6542', '24 Jam', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (10, 4, 'Pantai Batakan Baru', 'default.jpg', 'Pantai luas dengan fasilitas camping ground dan dermaga.', NULL, 'Desa Batakan, Kec. Panyipatan', '-4.0019', '114.6853', '24 Jam', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(11, 4, 'Air Terjun Bajuin', 'default.jpg', 'Air terjun alami di kaki pegunungan Meratus dengan suasana sejuk.', NULL, 'Desa Sungai Bakar, Kec. Bajuin', '-3.9011', '114.8524', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(11, 4, 'Air Terjun Bajuin', 'default.jpg', 'Air terjun alami di kaki pegunungan Meratus dengan suasana sejuk.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Warung Makan\", \"Spot Foto\"]', 'Desa Sungai Bakar, Kec. Bajuin', '-3.9011', '114.8524', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-30 21:11:26'),
 (12, 5, 'Pulau Kembang', 'default.jpg', 'Habitat kera ekor panjang dan bekantan di tengah delta sungai Barito.', NULL, 'Kec. Alalak, Tengah Sungai Barito', '-3.3031', '114.5622', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (13, 6, 'Goa Batu Hapu', 'default.jpg', 'Wisata goa alam dengan ornamen stalaktit dan stalagmit yang memukau.', NULL, 'Desa Batu Hapu, Kec. Hatungun', '-3.1114', '115.1236', '08:00 - 16:30 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (14, 7, 'Air Panas Tanuhi', 'default.jpg', 'Pemandian air panas alami di kawasan pegunungan Meratus.', NULL, 'Desa Hulu Banyu, Kec. Loksado', '-2.7936', '115.4853', '07:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
@@ -367,11 +393,36 @@ INSERT INTO `objek_wisatas` (`id`, `id_kabupaten`, `nama_objek`, `foto`, `deskri
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pengunjungs`
+--
+
+CREATE TABLE `pengunjungs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_wa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `pengunjungs`
+--
+
+INSERT INTO `pengunjungs` (`id`, `nama`, `email`, `no_wa`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Muhammad Irwan Firmanto', 'irwan@mail.com', '085347619091', '$2y$12$br0IabE0UBBDYqTU9uQySeiYK5ovfFpkmhWDVyOnrPMANBplBpPl.', NULL, '2026-06-30 21:09:45', '2026-06-30 21:09:45');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pesanans`
 --
 
 CREATE TABLE `pesanans` (
   `id` bigint UNSIGNED NOT NULL,
+  `id_pengunjung` bigint UNSIGNED DEFAULT NULL,
   `kode_pesanan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nama_pengunjung` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `no_wa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -379,6 +430,8 @@ CREATE TABLE `pesanans` (
   `tanggal_kunjungan` date NOT NULL,
   `id_objek` bigint UNSIGNED NOT NULL,
   `total_bayar` int NOT NULL,
+  `diskon_persen` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `diskon_nominal` bigint NOT NULL DEFAULT '0',
   `status_pembayaran` enum('Unpaid','Paid','Cancelled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Unpaid',
   `status_tiket` enum('active','used') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   `waktu_validasi` datetime DEFAULT NULL,
@@ -391,18 +444,20 @@ CREATE TABLE `pesanans` (
 -- Dumping data for table `pesanans`
 --
 
-INSERT INTO `pesanans` (`id`, `kode_pesanan`, `nama_pengunjung`, `no_wa`, `email`, `tanggal_kunjungan`, `id_objek`, `total_bayar`, `status_pembayaran`, `status_tiket`, `waktu_validasi`, `snap_token`, `created_at`, `updated_at`) VALUES
-(1, 'ORD-20260621-VUM2C', 'Muhammad Irwan Firmanto', '089845601233', 'irwan@mail.com', '2026-06-22', 1, 28000, 'Paid', 'active', NULL, NULL, '2026-06-21 05:58:27', '2026-06-21 06:07:43'),
-(2, 'ORD-20260621-9AQ74', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:17:04', '2026-06-21 06:17:04'),
-(3, 'ORD-20260621-NP15Z', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, 'Paid', 'active', NULL, NULL, '2026-06-21 06:22:11', '2026-06-21 06:22:23'),
-(4, 'ORD-20260621-KW99C', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:47:20', '2026-06-21 06:47:20'),
-(5, 'ORD-20260621-ZOJOU', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:53:16', '2026-06-21 06:53:16'),
-(6, 'ORD-20260621-5O70L', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, 'Paid', 'active', NULL, NULL, '2026-06-21 06:58:38', '2026-06-21 07:02:12'),
-(7, 'ORD-20260621-URGFZ', 'Ahmad Saidun', '087896552010', 'putra@mail.com', '2026-06-30', 3, 36000, 'Paid', 'used', '2026-06-23 06:02:20', NULL, '2026-06-21 11:03:04', '2026-06-22 22:02:20'),
-(8, 'ORD-20260622-QDQQJ', 'Saputri', '08456311201', 'saputri@mail.com', '2026-06-29', 1, 20000, 'Paid', 'used', '2026-06-23 06:01:16', NULL, '2026-06-22 09:42:35', '2026-06-22 22:01:16'),
-(9, 'ORD-20260623-PRWRB', 'Nur Sabila', '085412332005', 'putri@mail.com', '2026-06-23', 11, 5000, 'Paid', 'used', '2026-06-23 05:46:08', NULL, '2026-06-22 21:45:27', '2026-06-22 21:46:08'),
-(10, 'ORD-20260623-PM4EJ', 'Saputri', '089845601233', 'admin@mail.com', '2026-06-28', 20, 10000, 'Paid', 'used', '2026-06-23 05:47:31', NULL, '2026-06-22 21:46:45', '2026-06-22 21:47:31'),
-(11, 'ORD-20260624-CDO1Z', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-06-24', 1, 10000, 'Paid', 'used', '2026-06-24 03:14:30', NULL, '2026-06-23 19:13:01', '2026-06-23 19:14:30');
+INSERT INTO `pesanans` (`id`, `id_pengunjung`, `kode_pesanan`, `nama_pengunjung`, `no_wa`, `email`, `tanggal_kunjungan`, `id_objek`, `total_bayar`, `diskon_persen`, `diskon_nominal`, `status_pembayaran`, `status_tiket`, `waktu_validasi`, `snap_token`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'ORD-20260621-VUM2C', 'Muhammad Irwan Firmanto', '089845601233', 'irwan@mail.com', '2026-06-22', 1, 28000, '0.00', 0, 'Paid', 'active', NULL, NULL, '2026-06-21 05:58:27', '2026-06-21 06:07:43'),
+(2, NULL, 'ORD-20260621-9AQ74', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:17:04', '2026-06-21 06:17:04'),
+(3, NULL, 'ORD-20260621-NP15Z', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, 'Paid', 'active', NULL, NULL, '2026-06-21 06:22:11', '2026-06-21 06:22:23'),
+(4, NULL, 'ORD-20260621-KW99C', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:47:20', '2026-06-21 06:47:20'),
+(5, NULL, 'ORD-20260621-ZOJOU', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:53:16', '2026-06-21 06:53:16'),
+(6, NULL, 'ORD-20260621-5O70L', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, 'Paid', 'active', NULL, NULL, '2026-06-21 06:58:38', '2026-06-21 07:02:12'),
+(7, NULL, 'ORD-20260621-URGFZ', 'Ahmad Saidun', '087896552010', 'putra@mail.com', '2026-06-30', 3, 36000, '0.00', 0, 'Paid', 'used', '2026-06-23 06:02:20', NULL, '2026-06-21 11:03:04', '2026-06-22 22:02:20'),
+(8, NULL, 'ORD-20260622-QDQQJ', 'Saputri', '08456311201', 'saputri@mail.com', '2026-06-29', 1, 20000, '0.00', 0, 'Paid', 'used', '2026-06-23 06:01:16', NULL, '2026-06-22 09:42:35', '2026-06-22 22:01:16'),
+(9, NULL, 'ORD-20260623-PRWRB', 'Nur Sabila', '085412332005', 'putri@mail.com', '2026-06-23', 11, 5000, '0.00', 0, 'Paid', 'used', '2026-06-23 05:46:08', NULL, '2026-06-22 21:45:27', '2026-06-22 21:46:08'),
+(10, NULL, 'ORD-20260623-PM4EJ', 'Saputri', '089845601233', 'admin@mail.com', '2026-06-28', 20, 10000, '0.00', 0, 'Paid', 'used', '2026-06-23 05:47:31', NULL, '2026-06-22 21:46:45', '2026-06-22 21:47:31'),
+(11, NULL, 'ORD-20260624-CDO1Z', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-06-24', 1, 10000, '0.00', 0, 'Paid', 'used', '2026-06-24 03:14:30', NULL, '2026-06-23 19:13:01', '2026-06-23 19:14:30'),
+(12, 1, 'ORD-20260701-57MIZ', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-05', 11, 10000, '0.00', 0, 'Paid', 'active', NULL, NULL, '2026-06-30 21:11:49', '2026-06-30 21:11:53'),
+(13, NULL, 'ORD-20260702-UKLFK', 'SDN Komet 1 Banjarbaru', '087845654111', 'komet1@mail.com', '2026-07-12', 5, 144500, '15.00', 25500, 'Paid', 'active', NULL, NULL, '2026-07-01 19:54:43', '2026-07-01 19:54:46');
 
 -- --------------------------------------------------------
 
@@ -438,7 +493,10 @@ INSERT INTO `pesanan_details` (`id`, `id_pesanan`, `id_jenis_tiket`, `harga`, `j
 (10, 8, 1, 10000, 2, 20000, '2026-06-22 09:42:35', '2026-06-22 09:42:35'),
 (11, 9, 1, 5000, 1, 5000, '2026-06-22 21:45:27', '2026-06-22 21:45:27'),
 (12, 10, 1, 5000, 2, 10000, '2026-06-22 21:46:45', '2026-06-22 21:46:45'),
-(13, 11, 1, 10000, 1, 10000, '2026-06-23 19:13:02', '2026-06-23 19:13:02');
+(13, 11, 1, 10000, 1, 10000, '2026-06-23 19:13:02', '2026-06-23 19:13:02'),
+(14, 12, 1, 5000, 2, 10000, '2026-06-30 21:11:50', '2026-06-30 21:11:50'),
+(15, 13, 1, 10000, 5, 50000, '2026-07-01 19:54:44', '2026-07-01 19:54:44'),
+(16, 13, 2, 8000, 15, 120000, '2026-07-01 19:54:44', '2026-07-01 19:54:44');
 
 -- --------------------------------------------------------
 
@@ -468,6 +526,8 @@ CREATE TABLE `transaksis` (
   `no_transaksi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tgl_transaksi` date NOT NULL,
   `total_bayar` decimal(15,2) NOT NULL,
+  `diskon_persen` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `diskon_nominal` bigint NOT NULL DEFAULT '0',
   `bayar` decimal(15,2) NOT NULL,
   `kembali` decimal(15,2) NOT NULL,
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'sukses',
@@ -483,22 +543,23 @@ CREATE TABLE `transaksis` (
 -- Dumping data for table `transaksis`
 --
 
-INSERT INTO `transaksis` (`id`, `no_transaksi`, `tgl_transaksi`, `total_bayar`, `bayar`, `kembali`, `status`, `waktu_validasi`, `id_kasir`, `id_objek`, `status_tiket`, `created_at`, `updated_at`) VALUES
-(1, 'TRX-20251217185620-997', '2025-12-17', '20000.00', '50000.00', '30000.00', 'sukses', NULL, 1, 2, 'active', '2025-12-17 10:56:20', '2025-12-17 10:56:20'),
-(2, 'TRX-20251217190954-189', '2025-12-17', '10000.00', '10000.00', '0.00', 'sukses', NULL, 1, 2, 'active', '2025-12-17 11:09:54', '2025-12-17 11:09:54'),
-(3, 'TRX-20251217191126-708', '2025-12-17', '10000.00', '20000.00', '10000.00', 'sukses', NULL, 1, 3, 'active', '2025-12-17 11:11:26', '2025-12-17 11:11:26'),
-(4, 'TRX-20251217191814-398', '2025-12-17', '10000.00', '10000.00', '0.00', 'sukses', '2025-12-17 19:24:39', 1, 2, 'active', '2025-12-17 11:18:14', '2025-12-17 11:24:39'),
-(5, 'TRX-20251217192311-192', '2025-12-17', '10000.00', '20000.00', '10000.00', 'sukses', '2025-12-17 19:29:42', 1, 2, 'active', '2025-12-17 11:23:11', '2025-12-17 11:29:42'),
-(6, 'TRX-20251217193020-898', '2025-12-17', '20000.00', '20000.00', '0.00', 'sukses', '2025-12-17 19:30:52', 1, 3, 'active', '2025-12-17 11:30:20', '2025-12-17 11:30:52'),
-(7, 'TRX-20251217194041-263', '2025-12-17', '20000.00', '50000.00', '30000.00', 'sukses', NULL, 1, 2, 'active', '2025-12-17 11:40:41', '2025-12-17 11:40:41'),
-(8, 'TRX-20251217194227-264', '2025-12-17', '10000.00', '10000.00', '0.00', 'sukses', NULL, 1, 3, 'active', '2025-12-17 11:42:27', '2025-12-17 11:42:27'),
-(9, 'TRX-20251225132136-287', '2025-12-25', '8000.00', '10000.00', '2000.00', 'sukses', '2025-12-25 13:25:46', 1, 14, 'active', '2025-12-25 05:21:36', '2025-12-25 05:25:46'),
-(10, 'TRX-20251229115040-353', '2025-12-29', '10000.00', '50000.00', '40000.00', 'sukses', NULL, 7, 2, 'active', '2025-12-29 03:50:40', '2025-12-29 03:50:40'),
-(11, 'TRX-20260205161613-502', '2026-02-05', '28000.00', '50000.00', '22000.00', 'batal', '2026-02-05 16:17:44', 1, 4, 'active', '2026-02-05 08:16:14', '2026-06-11 00:32:04'),
-(12, 'TRX-20260205163046-122', '2026-02-05', '5000.00', '10000.00', '5000.00', 'sukses', '2026-02-05 16:31:12', 1, 12, 'active', '2026-02-05 08:30:46', '2026-02-05 08:31:12'),
-(13, 'TRX-20260205170833-102', '2026-02-05', '20000.00', '20000.00', '0.00', 'sukses', '2026-02-05 17:09:22', 1, 17, 'active', '2026-02-05 09:08:33', '2026-02-05 09:09:22'),
-(14, 'TRX-20260205171038-393', '2026-02-05', '20000.00', '20000.00', '0.00', 'sukses', '2026-02-05 17:11:01', 1, 5, 'active', '2026-02-05 09:10:38', '2026-02-05 09:11:01'),
-(15, 'TRX-20260622081435-698', '2026-06-22', '10000.00', '10000.00', '0.00', 'used', '2026-06-23 06:01:32', 1, 1, 'used', '2026-06-22 00:14:35', '2026-06-22 22:01:32');
+INSERT INTO `transaksis` (`id`, `no_transaksi`, `tgl_transaksi`, `total_bayar`, `diskon_persen`, `diskon_nominal`, `bayar`, `kembali`, `status`, `waktu_validasi`, `id_kasir`, `id_objek`, `status_tiket`, `created_at`, `updated_at`) VALUES
+(1, 'TRX-20251217185620-997', '2025-12-17', '20000.00', '0.00', 0, '50000.00', '30000.00', 'sukses', NULL, 1, 2, 'active', '2025-12-17 10:56:20', '2025-12-17 10:56:20'),
+(2, 'TRX-20251217190954-189', '2025-12-17', '10000.00', '0.00', 0, '10000.00', '0.00', 'sukses', NULL, 1, 2, 'active', '2025-12-17 11:09:54', '2025-12-17 11:09:54'),
+(3, 'TRX-20251217191126-708', '2025-12-17', '10000.00', '0.00', 0, '20000.00', '10000.00', 'sukses', NULL, 1, 3, 'active', '2025-12-17 11:11:26', '2025-12-17 11:11:26'),
+(4, 'TRX-20251217191814-398', '2025-12-17', '10000.00', '0.00', 0, '10000.00', '0.00', 'sukses', '2025-12-17 19:24:39', 1, 2, 'active', '2025-12-17 11:18:14', '2025-12-17 11:24:39'),
+(5, 'TRX-20251217192311-192', '2025-12-17', '10000.00', '0.00', 0, '20000.00', '10000.00', 'sukses', '2025-12-17 19:29:42', 1, 2, 'active', '2025-12-17 11:23:11', '2025-12-17 11:29:42'),
+(6, 'TRX-20251217193020-898', '2025-12-17', '20000.00', '0.00', 0, '20000.00', '0.00', 'sukses', '2025-12-17 19:30:52', 1, 3, 'active', '2025-12-17 11:30:20', '2025-12-17 11:30:52'),
+(7, 'TRX-20251217194041-263', '2025-12-17', '20000.00', '0.00', 0, '50000.00', '30000.00', 'sukses', NULL, 1, 2, 'active', '2025-12-17 11:40:41', '2025-12-17 11:40:41'),
+(8, 'TRX-20251217194227-264', '2025-12-17', '10000.00', '0.00', 0, '10000.00', '0.00', 'sukses', NULL, 1, 3, 'active', '2025-12-17 11:42:27', '2025-12-17 11:42:27'),
+(9, 'TRX-20251225132136-287', '2025-12-25', '8000.00', '0.00', 0, '10000.00', '2000.00', 'sukses', '2025-12-25 13:25:46', 1, 14, 'active', '2025-12-25 05:21:36', '2025-12-25 05:25:46'),
+(10, 'TRX-20251229115040-353', '2025-12-29', '10000.00', '0.00', 0, '50000.00', '40000.00', 'sukses', NULL, 7, 2, 'active', '2025-12-29 03:50:40', '2025-12-29 03:50:40'),
+(11, 'TRX-20260205161613-502', '2026-02-05', '28000.00', '0.00', 0, '50000.00', '22000.00', 'batal', '2026-02-05 16:17:44', 1, 4, 'active', '2026-02-05 08:16:14', '2026-06-11 00:32:04'),
+(12, 'TRX-20260205163046-122', '2026-02-05', '5000.00', '0.00', 0, '10000.00', '5000.00', 'sukses', '2026-02-05 16:31:12', 1, 12, 'active', '2026-02-05 08:30:46', '2026-02-05 08:31:12'),
+(13, 'TRX-20260205170833-102', '2026-02-05', '20000.00', '0.00', 0, '20000.00', '0.00', 'sukses', '2026-02-05 17:09:22', 1, 17, 'active', '2026-02-05 09:08:33', '2026-02-05 09:09:22'),
+(14, 'TRX-20260205171038-393', '2026-02-05', '20000.00', '0.00', 0, '20000.00', '0.00', 'sukses', '2026-02-05 17:11:01', 1, 5, 'active', '2026-02-05 09:10:38', '2026-02-05 09:11:01'),
+(15, 'TRX-20260622081435-698', '2026-06-22', '10000.00', '0.00', 0, '10000.00', '0.00', 'used', '2026-06-23 06:01:32', 1, 1, 'used', '2026-06-22 00:14:35', '2026-06-22 22:01:32'),
+(16, 'TRX-20260702035200-965', '2026-07-02', '178500.00', '15.00', 31500, '200000.00', '21500.00', 'sukses', NULL, 1, 6, 'active', '2026-07-01 19:52:00', '2026-07-01 19:52:00');
 
 -- --------------------------------------------------------
 
@@ -528,7 +589,8 @@ CREATE TABLE `users` (
   `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('admin','kasir','petugas') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'kasir',
+  `role` enum('admin','kadis_provinsi','kadis_kabkota','kasir','petugas') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'kasir',
+  `id_kabupaten` bigint UNSIGNED DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -538,11 +600,25 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrator', 'admin', '$2y$12$8MPSBtgYpzhANJuiboOIOe6GqK/DVCVKssVn2g/IgjefJivtG8n02', 'admin', NULL, '2025-12-17 01:59:55', '2025-12-20 02:12:52'),
-(7, 'Muhammad Irwan Firmanto', 'irwan', '$2y$12$fHBqft6OS0nTOksVanNdzO2aP9GChbVTPv7tvLeC6QX10Fhst11hC', 'admin', NULL, '2025-12-20 02:13:56', '2025-12-20 02:13:56'),
-(8, 'Ahmad Said', 'said', '$2y$12$iLkELP0mK.cWlLhcNB0Hsu/UCrU6vOXN51JMlQQSk5ytU1QJ2Ikp.', 'petugas', NULL, '2026-02-05 08:36:54', '2026-02-05 08:36:54'),
-(9, 'Junady', 'junady', '$2y$12$yLWFIs14g7Atw9mO9R266eIqqir0CuI02lQmTEe8TzHbiSQApnSEC', 'kasir', NULL, '2026-02-05 08:37:13', '2026-02-05 08:37:13');
+INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`, `id_kabupaten`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Administrator', 'admin', '$2y$12$8MPSBtgYpzhANJuiboOIOe6GqK/DVCVKssVn2g/IgjefJivtG8n02', 'admin', NULL, NULL, '2025-12-17 01:59:55', '2025-12-20 02:12:52'),
+(7, 'Muhammad Irwan Firmanto', 'irwan', '$2y$12$fHBqft6OS0nTOksVanNdzO2aP9GChbVTPv7tvLeC6QX10Fhst11hC', 'admin', NULL, NULL, '2025-12-20 02:13:56', '2025-12-20 02:13:56'),
+(8, 'Ahmad Said', 'said', '$2y$12$iLkELP0mK.cWlLhcNB0Hsu/UCrU6vOXN51JMlQQSk5ytU1QJ2Ikp.', 'petugas', NULL, NULL, '2026-02-05 08:36:54', '2026-02-05 08:36:54'),
+(9, 'Junady', 'junady', '$2y$12$yLWFIs14g7Atw9mO9R266eIqqir0CuI02lQmTEe8TzHbiSQApnSEC', 'kasir', NULL, NULL, '2026-02-05 08:37:13', '2026-02-05 08:37:13'),
+(10, 'Kepala Dinas Pariwisata Provinsi Kalsel', 'kadis.provinsi', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_provinsi', NULL, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(11, 'Kepala Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 1, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(12, 'Kepala Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 2, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(13, 'Kepala Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 3, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(14, 'Kepala Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 5, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(15, 'Kepala Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 6, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(16, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 7, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(17, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 8, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(18, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 9, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(19, 'Kepala Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 10, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(20, 'Kepala Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 11, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(21, 'Kepala Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 13, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(22, 'Kepala Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 4, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(23, 'Kepala Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 12, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30');
 
 --
 -- Indexes for dumped tables
@@ -566,6 +642,12 @@ ALTER TABLE `cache_locks`
 ALTER TABLE `detail_transaksis`
   ADD PRIMARY KEY (`id`),
   ADD KEY `detail_transaksis_id_transaksi_foreign` (`id_transaksi`);
+
+--
+-- Indexes for table `diskon_rombongans`
+--
+ALTER TABLE `diskon_rombongans`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -628,12 +710,20 @@ ALTER TABLE `objek_wisatas`
   ADD KEY `objek_wisatas_id_kabupaten_foreign` (`id_kabupaten`);
 
 --
+-- Indexes for table `pengunjungs`
+--
+ALTER TABLE `pengunjungs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `pengunjungs_email_unique` (`email`);
+
+--
 -- Indexes for table `pesanans`
 --
 ALTER TABLE `pesanans`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `pesanans_kode_pesanan_unique` (`kode_pesanan`),
-  ADD KEY `pesanans_id_objek_foreign` (`id_objek`);
+  ADD KEY `pesanans_id_objek_foreign` (`id_objek`),
+  ADD KEY `pesanans_id_pengunjung_foreign` (`id_pengunjung`);
 
 --
 -- Indexes for table `pesanan_details`
@@ -672,7 +762,8 @@ ALTER TABLE `transaksi_details`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_username_unique` (`username`);
+  ADD UNIQUE KEY `users_username_unique` (`username`),
+  ADD KEY `users_id_kabupaten_foreign` (`id_kabupaten`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -682,7 +773,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `detail_transaksis`
 --
 ALTER TABLE `detail_transaksis`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `diskon_rombongans`
+--
+ALTER TABLE `diskon_rombongans`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -733,16 +830,22 @@ ALTER TABLE `objek_wisatas`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
+-- AUTO_INCREMENT for table `pengunjungs`
+--
+ALTER TABLE `pengunjungs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `pesanans`
 --
 ALTER TABLE `pesanans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `pesanan_details`
 --
 ALTER TABLE `pesanan_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tikets`
@@ -754,7 +857,7 @@ ALTER TABLE `tikets`
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
@@ -766,7 +869,7 @@ ALTER TABLE `transaksi_details`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- Constraints for dumped tables
@@ -801,7 +904,8 @@ ALTER TABLE `objek_wisatas`
 -- Constraints for table `pesanans`
 --
 ALTER TABLE `pesanans`
-  ADD CONSTRAINT `pesanans_id_objek_foreign` FOREIGN KEY (`id_objek`) REFERENCES `objek_wisatas` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `pesanans_id_objek_foreign` FOREIGN KEY (`id_objek`) REFERENCES `objek_wisatas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pesanans_id_pengunjung_foreign` FOREIGN KEY (`id_pengunjung`) REFERENCES `pengunjungs` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `pesanan_details`
@@ -823,6 +927,12 @@ ALTER TABLE `tikets`
 ALTER TABLE `transaksi_details`
   ADD CONSTRAINT `transaksi_details_id_jenis_tiket_foreign` FOREIGN KEY (`id_jenis_tiket`) REFERENCES `jenis_tikets` (`id`),
   ADD CONSTRAINT `transaksi_details_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksis` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_id_kabupaten_foreign` FOREIGN KEY (`id_kabupaten`) REFERENCES `kabupatens` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

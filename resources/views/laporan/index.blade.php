@@ -218,7 +218,7 @@
         </div>
     </div>
 
-    {{-- Harga Tiket --}}
+   {{-- Harga Tiket --}}
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header d-flex align-items-center gap-2 py-3">
@@ -236,6 +236,26 @@
             </div>
         </div>
     </div>
+
+    {{-- Berita --}}
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#d4600a"><i class="ti ti-news fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Data Berita</h6>
+                    <small class="text-muted">Seluruh berita & pengumuman</small>
+                </div>
+            </div>
+            <div class="card-body d-flex align-items-end">
+                <a href="{{ route('laporan.cetak-master', ['jenis' => 'beritas']) }}" target="_blank"
+                   class="btn btn-sm fw-bold w-100 text-white" style="background:#d4600a">
+                    <i class="ti ti-printer me-1"></i> Cetak Data Berita
+                </a>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 @endsection

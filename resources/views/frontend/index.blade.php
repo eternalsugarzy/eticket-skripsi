@@ -90,6 +90,46 @@
 
         </div>
     </section>
+
+    @if($beritaTerbaru->count() > 0)
+    <section class="py-5" style="background:#fff;">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-1" style="color: #0f172a;">Berita & Informasi Terbaru</h2>
+                    <p class="text-muted mb-0">Update terkini seputar pariwisata Kalimantan Selatan.</p>
+                </div>
+                <a href="{{ route('berita.index') }}" class="btn btn-outline-primary rounded-pill fw-bold px-4">
+                    Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+
+            <div class="row g-4">
+                @foreach($beritaTerbaru as $b)
+                <div class="col-md-4">
+                    <a href="{{ route('berita.detail', $b->slug) }}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm bg-white" style="border-radius:14px; overflow:hidden; transition: transform .25s ease;">
+                            <img src="{{ $b->gambar ? asset('uploads/berita/' . $b->gambar) : asset('assets/images/logo1.png') }}"
+                                 class="card-img-top" alt="{{ $b->judul }}" style="height:180px; object-fit:cover;">
+                            <div class="card-body">
+                                <span class="badge rounded-pill mb-2" style="background:#F5E6C8; color:#8a611f; font-weight:700; font-size:.7rem; text-transform:uppercase;">
+                                    {{ $b->kategori }}
+                                </span>
+                                <h6 class="fw-bold mb-2" style="color:#0f172a; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                                    {{ $b->judul }}
+                                </h6>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($b->tanggal_publish)->translatedFormat('d M Y') }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 @endsection
 
 @push('scripts')

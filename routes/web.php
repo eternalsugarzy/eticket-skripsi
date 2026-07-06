@@ -16,6 +16,8 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DiskonRombonganController;
+use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\BeritaPublicController;
 
 // =========================================================================
 //  --- A. RUTE PUBLIK / GUEST (TIDAK PERLU LOGIN) ---
@@ -24,6 +26,8 @@ use App\Http\Controllers\DiskonRombonganController;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/katalog', [LandingController::class, 'katalog'])->name('wisata.katalog');
 Route::get('/wisata/{id}', [LandingController::class, 'detail'])->name('wisata.detail');
+
+Route::get('/berita', [BeritaPublicController::class, 'index'])->name('berita.index');
 
 Route::get('/checkout/{id_objek}', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('checkout.proses');
@@ -89,6 +93,13 @@ Route::middleware('auth')->group(function () {
         'harga-tiket' => 'hargaTiket'
     ]);
 
+    // 4b. Manajemen Berita — URI 'kelola-berita' (berbeda dari publik '/berita')
+    // supaya tidak bentrok URL/nama route dengan halaman publik di bawah.
+    // ->parameters() menjaga agar controller tetap pakai $berita, bukan $kelolaBerita.
+    Route::resource('kelola-berita', BeritaController::class)
+        ->except(['show'])
+        ->parameters(['kelola-berita' => 'berita']);
+
     // 5. Operasional Loket & Transaksi
     Route::resource('transaksi', TransaksiController::class);
     Route::get('riwayat-transaksi', [TransaksiController::class, 'riwayat'])->name('transaksi.riwayat');
@@ -120,3 +131,11 @@ Route::middleware('auth')->group(function () {
     // 10. Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+// =========================================================================
+//  --- C. RUTE PUBLIK WILDCARD (HARUS DI PALING BAWAH) ---
+//  Route dengan pola {slug}/{id} satu segmen HARUS diletakkan setelah semua
+//  route statis (termasuk resource admin), supaya tidak "mencuri" request
+//  seperti /berita/create sebelum sampai ke route admin yang dituju.
+// =========================================================================
+Route::get('/berita/{slug}', [BeritaPublicController::class, 'detail'])->name('berita.detail');
