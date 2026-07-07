@@ -567,6 +567,45 @@ body {
                 </p>
             </div>
 
+            {{-- Widget Cuaca --}}
+            @if($cuaca)
+            <div class="content-card mb-4">
+                <div class="card-head">
+                    <div class="card-head-icon"><i class="bi bi-cloud-sun-fill"></i></div>
+                    <h5>Cuaca Hari Ini</h5>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <img src="https://openweathermap.org/img/wn/{{ $cuaca['weather'][0]['icon'] }}@2x.png"
+                         alt="Ikon cuaca" style="width:64px; height:64px; flex-shrink:0;">
+                    <div>
+                        <div style="font-size:1.8rem; font-weight:700; color:var(--text-dark); line-height:1;">
+                            {{ round($cuaca['main']['temp']) }}°C
+                        </div>
+                        <div style="color:var(--text-muted); font-size:.85rem; text-transform:capitalize;">
+                            {{ $cuaca['weather'][0]['description'] }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2 mt-3">
+                    <div class="col-6">
+                        <div class="info-box">
+                            <div class="info-label">Kelembapan</div>
+                            <div class="info-value">{{ $cuaca['main']['humidity'] }}%</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="info-box">
+                            <div class="info-label">Angin</div>
+                            <div class="info-value">{{ round($cuaca['wind']['speed'] * 3.6) }} km/j</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-muted mt-2 mb-0" style="font-size:.72rem;">
+                    <i class="bi bi-info-circle me-1"></i>Data cuaca oleh OpenWeatherMap, diperbarui tiap 30 menit
+                </p>
+            </div>
+            @endif
+
             {{-- Navigasi & Peta --}}
             <div class="content-card sticky-top" style="top: 100px;">
                 <div class="card-head">

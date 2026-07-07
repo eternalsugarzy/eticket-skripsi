@@ -18,6 +18,12 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DiskonRombonganController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BeritaPublicController;
+use App\Http\Controllers\BannerController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventPublicController;
+use App\Http\Controllers\VideoTerbaruController;
+use App\Http\Controllers\FaqController;
+
 
 // =========================================================================
 //  --- A. RUTE PUBLIK / GUEST (TIDAK PERLU LOGIN) ---
@@ -28,6 +34,10 @@ Route::get('/katalog', [LandingController::class, 'katalog'])->name('wisata.kata
 Route::get('/wisata/{id}', [LandingController::class, 'detail'])->name('wisata.detail');
 
 Route::get('/berita', [BeritaPublicController::class, 'index'])->name('berita.index');
+
+Route::get('/event', [EventPublicController::class, 'index'])->name('event.index');
+
+Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
 Route::get('/checkout/{id_objek}', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('checkout.proses');
@@ -78,6 +88,20 @@ Route::middleware('auth')->group(function () {
         ]);
     });
 
+    // 2b. Manajemen Banner — semua role dinas (admin, kadis_provinsi, kadis_kabkota) boleh upload
+    Route::resource('kelola-banner', BannerController::class)
+        ->except(['show'])
+        ->parameters(['kelola-banner' => 'banner']);
+
+    // 2c. Manajemen Event — semua role dinas boleh upload
+    Route::resource('kelola-event', EventController::class)
+        ->except(['show'])
+        ->parameters(['kelola-event' => 'event']);
+
+    // 2d. Manajemen Video Terbaru — singleton (cuma 1 data), semua role dinas boleh update
+    Route::get('/kelola-video', [VideoTerbaruController::class, 'edit'])->name('kelola-video.edit');
+    Route::put('/kelola-video', [VideoTerbaruController::class, 'update'])->name('kelola-video.update');
+
     // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller)
     Route::resource('objek-wisata', ObjekWisataController::class)->parameters([
         'objek-wisata' => 'objekWisata'
@@ -127,6 +151,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/cetak-tiket', [LaporanController::class, 'cetakTiket'])->name('laporan.cetak-tiket');
     Route::get('/laporan/cetak-objek', [LaporanController::class, 'cetakObjek'])->name('laporan.cetak-objek');
     Route::get('/laporan/cetak-master', [LaporanController::class, 'cetakMaster'])->name('laporan.cetak-master');
+
+    // Export Excel
+    Route::get('/laporan/export-pengunjung', [LaporanController::class, 'exportPengunjung'])->name('laporan.export-pengunjung');
+    Route::get('/laporan/export-pendapatan', [LaporanController::class, 'exportPendapatan'])->name('laporan.export-pendapatan');
+    Route::get('/laporan/export-tiket', [LaporanController::class, 'exportTiket'])->name('laporan.export-tiket');
+    Route::get('/laporan/export-objek', [LaporanController::class, 'exportObjek'])->name('laporan.export-objek');
+    Route::get('/laporan/export-master', [LaporanController::class, 'exportMaster'])->name('laporan.export-master');
 
     // 10. Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

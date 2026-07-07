@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\ObjekWisata;
 use App\Models\Kabupaten;
 use App\Models\Berita;
+use App\Models\Banner;
+use App\Models\Event;
+use App\Models\VideoTerbaru;
 
 class LandingController extends Controller
 {
@@ -22,7 +25,15 @@ class LandingController extends Controller
 
         $beritaTerbaru = Berita::published()->orderByDesc('tanggal_publish')->take(3)->get();
 
-        return view('frontend.index', compact('allWisata', 'wisataMarkers', 'beritaTerbaru'));
+        $banners = Banner::aktifSaatIni()->orderBy('urutan')->get();
+
+        $eventTerbaru = Event::aktif()->with('objekWisata')->orderByDesc('tanggal_event')->take(5)->get();
+
+        $videoTerbaru = VideoTerbaru::first();
+
+        return view('frontend.index', compact(
+            'allWisata', 'wisataMarkers', 'beritaTerbaru', 'banners', 'eventTerbaru', 'videoTerbaru'
+        ));
     }
 
     // 2. Halaman Katalog (dengan Search & Filter)
@@ -59,6 +70,43 @@ class LandingController extends Controller
             ->select('jenis_tikets.nama_jenis', 'harga_tikets.harga')
             ->get();
 
-        return view('frontend.detail', compact('wisata', 'hargaTiket'));
+        $cuaca = $this->ambilCuaca($wisata->latitude, $wisata->longitude);
+
+        return view('frontend.detail', compact('wisata', 'hargaTiket', 'cuaca'));
+    }
+
+    // =========================================================
+    // PRIVATE HELPER — Ambil data cuaca dari OpenWeatherMap
+    // Di-cache 30 menit per koordinat supaya hemat kuota API
+    // =========================================================
+    private function ambilCuaca($lat, $lon)
+    {
+        $apiKey = env('OPENWEATHER_API_KEY');
+
+        if (!$lat || !$lon || !$apiKey) {
+            return null; // Widget otomatis tersembunyi kalau key belum diatur
+        }
+
+        $cacheKey = 'cuaca_' . round($lat, 2) . '_' . round($lon, 2);
+
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, now()->addMinutes(30), function () use ($lat, $lon, $apiKey) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get('https://api.openweathermap.org/data/2.5/weather', [
+                    'lat'   => $lat,
+                    'lon'   => $lon,
+                    'appid' => $apiKey,
+                    'units' => 'metric',
+                    'lang'  => 'id',
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+            } catch (\Exception $e) {
+                // Gagal ambil cuaca (misal API key belum aktif) — biarkan null, widget hilang otomatis
+            }
+
+            return null;
+        });
     }
 }

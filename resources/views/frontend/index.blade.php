@@ -25,6 +25,86 @@
     .bg-index-gray {
         background-color: #f1f5f9; 
     }
+
+    /* ── Section 3 Kolom: Banner | Event | Video ── */
+    .info-col-inner { height: 480px; }
+
+    /* Kolom 1: Banner carousel tunggal */
+    .banner-carousel-single, .banner-carousel-single .carousel-inner { height: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+    .banner-carousel-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .banner-carousel-single .carousel-item { height: 100%; position: relative; }
+    .banner-carousel-single .carousel-item::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(rgba(15,23,42,0), rgba(15,23,42,.55));
+        pointer-events: none;
+    }
+    .banner-carousel-single .carousel-caption { z-index: 2; bottom: 20px; }
+
+    /* Kolom 2: Event panel */
+    .event-panel {
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,.04);
+    }
+    .event-panel-header {
+        background: #0f172a;
+        padding: 14px 20px;
+    }
+    .event-panel-header h6 {
+        color: #fff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        font-size: .82rem;
+        margin: 0;
+    }
+    .event-panel-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        text-decoration: none;
+        transition: background .15s;
+    }
+    .event-panel-item:hover { background: #f8fafc; text-decoration: none; }
+    .event-panel-icon {
+        width: 36px; height: 36px; border-radius: 10px;
+        background: #eef2ff; color: #4361ee;
+        display: flex; align-items: center; justify-content: center;
+        font-size: .9rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .event-panel-tanggal { font-size: .74rem; color: #94a3b8; margin-bottom: 2px; }
+    .event-panel-judul { font-weight: 700; color: #0f172a; font-size: .88rem; line-height: 1.35; }
+    .event-panel-footer {
+        display: block; text-align: center; padding: 12px;
+        background: #f8fafc; border-top: 1px solid #e2e8f0;
+        color: #0f172a; font-weight: 700; font-size: .85rem;
+        text-decoration: none;
+    }
+    .event-panel-footer:hover { background: #eef2ff; color: #0f172a; }
+
+    /* Empty state kolom */
+    .info-col-empty {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 16px;
+        color: #94a3b8;
+        font-size: .85rem;
+        gap: 6px;
+    }
+    .info-col-empty i { font-size: 2rem; }
+
+    @media (max-width: 991.98px) {
+        .info-col-inner { height: auto; min-height: 280px; }
+    }
 </style>
 @endpush
 
@@ -36,6 +116,123 @@
             <a href="{{ route('wisata.katalog') }}" class="btn btn-jelajah btn-lg px-5 rounded-pill shadow">Lihat Katalog</a>
         </div>
     </section>
+
+    @php
+        $adaKontenInfo = $banners->count() > 0 || $eventTerbaru->count() > 0 || ($videoTerbaru && $videoTerbaru->embed_url);
+    @endphp
+    @if($adaKontenInfo)
+    <section class="py-5" style="background:#fff;">
+        <div class="container">
+            <div class="row g-4">
+
+                {{-- ══════ KOLOM 1: BANNER (Carousel Tunggal) ══════ --}}
+                <div class="col-lg-4">
+                    <div class="info-col-inner">
+                        @if($banners->count() > 0)
+                        <div id="bannerCarousel" class="carousel slide banner-carousel-single h-100" data-bs-ride="carousel">
+                            <div class="carousel-inner h-100">
+                                @foreach($banners as $i => $banner)
+                                <div class="carousel-item h-100 {{ $i === 0 ? 'active' : '' }}">
+                                    @if($banner->link_url)
+                                    <a href="{{ $banner->link_url }}">
+                                        <img src="{{ asset('uploads/banner/' . $banner->gambar) }}" class="banner-carousel-img" alt="{{ $banner->judul ?? 'Banner' }}">
+                                    </a>
+                                    @else
+                                    <img src="{{ asset('uploads/banner/' . $banner->gambar) }}" class="banner-carousel-img" alt="{{ $banner->judul ?? 'Banner' }}">
+                                    @endif
+                                    @if($banner->judul)
+                                    <div class="carousel-caption">
+                                        <p class="mb-0 fw-bold">{{ $banner->judul }}</p>
+                                    </div>
+                                    @endif
+                                </div>
+                                @endforeach
+                            </div>
+                            @if($banners->count() > 1)
+                            <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Sebelumnya</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Berikutnya</span>
+                            </button>
+                            @endif
+                        </div>
+                        @else
+                        <div class="info-col-empty">
+                            <i class="bi bi-image"></i>
+                            <p class="mb-0">Belum ada banner</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- ══════ KOLOM 2: EVENT TERBARU ══════ --}}
+                <div class="col-lg-4">
+                    <div class="info-col-inner event-panel d-flex flex-column">
+                        <div class="event-panel-header">
+                            <h6 class="mb-0">Event Terbaru</h6>
+                        </div>
+                        <div class="flex-grow-1">
+                            @forelse($eventTerbaru as $ev)
+                            <a href="{{ $ev->link_url ?: '#' }}" class="event-panel-item"
+                               @if($ev->link_url) target="_blank" @endif>
+                                <div class="event-panel-icon"><i class="bi bi-megaphone-fill"></i></div>
+                                <div>
+                                    <div class="event-panel-tanggal">
+                                        <i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($ev->tanggal_event)->translatedFormat('d M Y') }}
+                                    </div>
+                                    <div class="event-panel-judul">{{ $ev->judul }}</div>
+                                    @if($ev->objekWisata)
+                                    <div class="event-panel-tanggal mt-1">
+                                        <i class="bi bi-geo-alt-fill me-1"></i>{{ $ev->objekWisata->nama_objek }}
+                                    </div>
+                                    @endif
+                                </div>
+                            </a>
+                            @empty
+                            <div class="info-col-empty">
+                                <i class="bi bi-calendar-x"></i>
+                                <p class="mb-0">Belum ada event</p>
+                            </div>
+                            @endforelse
+                        </div>
+                        @if($eventTerbaru->count() > 0)
+                        <a href="{{ route('event.index') }}" class="event-panel-footer">
+                            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- ══════ KOLOM 3: VIDEO TERBARU ══════ --}}
+                <div class="col-lg-4">
+                    <div class="info-col-inner d-flex flex-column">
+                        <h6 class="fw-bold mb-3" style="color:#0f172a;">Video Terbaru</h6>
+                        @if($videoTerbaru && $videoTerbaru->embed_url)
+                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm mb-3">
+                            <iframe src="{{ $videoTerbaru->embed_url }}" title="{{ $videoTerbaru->judul ?? 'Video Terbaru' }}" allowfullscreen></iframe>
+                        </div>
+                        @if($videoTerbaru->judul)
+                        <p class="fw-semibold mb-3" style="color:#0f172a; font-size:.92rem;">{{ $videoTerbaru->judul }}</p>
+                        @endif
+                        @else
+                        <div class="ratio ratio-16x9 rounded-4 mb-3 info-col-empty" style="align-items:center; justify-content:center;">
+                            <i class="bi bi-youtube"></i>
+                            <p class="mb-0">Belum ada video</p>
+                        </div>
+                        @endif
+                        <a href="{{ route('wisata.katalog') }}" class="btn btn-jelajah rounded-pill fw-bold align-self-start px-4 mt-auto">
+                            Jelajahi Wisata <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    @endif
 
     <section id="sig" class="py-5 bg-index-gray">
         <div class="container">
@@ -134,28 +331,46 @@
 
 @push('scripts')
     <script>
-        // 1. KUNCI BOUNDING BOX KALSEL
-        var batasKalsel = L.latLngBounds(
-            L.latLng(-4.8000, 114.0000), // Batas Selatan & Barat
-            L.latLng(-1.0000, 117.0000)  // Batas Utara & Timur
-        );
-
-        // 2. INISIALISASI PETA DENGAN TEMBOK GAIB
+        // 1. INISIALISASI PETA — fokus awal ke Kalsel, bebas digeser/zoom setelahnya
         var map = L.map('map-sig', {
-            maxBounds: batasKalsel,
-            maxBoundsViscosity: 1.0, 
-            minZoom: 7,              
-            maxZoom: 18,
+            minZoom: 3,
+            maxZoom: 19,
             zoomControl: true,
-            scrollWheelZoom: false // Mencegah zoom saat scroll halaman
+            scrollWheelZoom: true,   // Zoom pakai scroll mouse, seperti Google Maps
+            zoomSnap: 0.5,           // Zoom bertahap setengah level, lebih halus (bukan loncat)
+            zoomDelta: 0.5,          // Sekali klik +/- juga naik 0.5 level
+            wheelPxPerZoomLevel: 90, // Scroll mouse terasa lebih halus, tidak "kasar"
+            preferCanvas: true       // Render polygon/marker pakai Canvas (jauh lebih ringan saat geser peta)
         }).setView([-3.0926, 115.2838], 7);
 
-        // 3. TILE LAYER OPENSTREETMAP
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
+        // 2. TILE LAYER — Mapbox (Modern + Satelit, bisa dipilih pengunjung)
+        var mapboxToken = "{{ env('MAPBOX_TOKEN') }}";
 
-        // 4. MEMANGGIL KALSEL.JSON (GEOJSON)
+        var layerModern = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=' + mapboxToken, {
+            attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            tileSize: 512,
+            zoomOffset: -1,
+            maxZoom: 19
+        });
+
+        var layerSatelit = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}?access_token=' + mapboxToken, {
+            attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            tileSize: 512,
+            zoomOffset: -1,
+            maxZoom: 19
+        });
+
+        // Tampilkan Modern sebagai default saat peta pertama dibuka
+        layerModern.addTo(map);
+
+        // Tombol pilihan layer di pojok kanan atas peta
+        L.control.layers(
+            { 'Modern': layerModern, 'Satelit': layerSatelit },
+            null,
+            { position: 'topright', collapsed: false }
+        ).addTo(map);
+
+        // 3. MEMANGGIL KALSEL.JSON (GEOJSON)
         var geojsonUrl = "{{ asset('assets/geojson/kalsel.geojson') }}";
 
         fetch(geojsonUrl)
@@ -165,6 +380,7 @@
             })
             .then(data => {
                 L.geoJSON(data, {
+                    renderer: L.canvas(), // Render polygon lewat Canvas, bukan SVG — jauh lebih ringan
                     style: function (feature) {
                         return {
                             color: "#3b82f6",     
@@ -178,7 +394,7 @@
             })
             .catch(error => console.log("Info GeoJSON: " + error.message));
 
-        // 5. PIN MARKER OBJEK WISATA (Diperbaiki)
+        // 4. PIN MARKER OBJEK WISATA (Diperbaiki)
         @foreach($wisataMarkers as $w)
             var marker_{{ $w->id }} = L.marker([{{ $w->latitude }}, {{ $w->longitude }}]).addTo(map);
             

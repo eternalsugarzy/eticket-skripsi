@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GenericExport;
 
 class LaporanController extends Controller
 {
@@ -66,6 +68,62 @@ class LaporanController extends Controller
     }
 
     // =========================================================
+    // EXPORT EXCEL — DATA PENGUNJUNG
+    // =========================================================
+    public function exportPengunjung(Request $request)
+    {
+        $tgl_mulai   = $request->tgl_awal;
+        $tgl_selesai = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
+
+        $queryOffline = DB::table('transaksis')
+            ->leftJoin('users', 'transaksis.id_kasir', '=', 'users.id')
+            ->leftJoin('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+            ->where('transaksis.status_tiket', '!=', 'batal')
+            ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_mulai)
+            ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_selesai)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select(
+                'transaksis.no_transaksi as id_transaksi',
+                'transaksis.tgl_transaksi as waktu_transaksi',
+                'transaksis.total_bayar as total_harga',
+                'users.nama as nama_kasir',
+                'objek_wisatas.nama_objek',
+                DB::raw("'Offline' as sumber")
+            );
+
+        $queryOnline = DB::table('pesanans')
+            ->leftJoin('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', '>=', $tgl_mulai)
+            ->whereDate('pesanans.created_at', '<=', $tgl_selesai)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select(
+                'pesanans.kode_pesanan as id_transaksi',
+                'pesanans.created_at as waktu_transaksi',
+                'pesanans.total_bayar as total_harga',
+                DB::raw("'Sistem Web' as nama_kasir"),
+                'objek_wisatas.nama_objek',
+                DB::raw("'Online' as sumber")
+            );
+
+        $data = $queryOffline->unionAll($queryOnline)->orderBy('waktu_transaksi', 'ASC')->get();
+
+        $rows = $data->map(fn($r) => [
+            $r->id_transaksi,
+            date('d/m/Y H:i', strtotime($r->waktu_transaksi)),
+            $r->nama_objek,
+            $r->sumber,
+            $r->nama_kasir,
+            (float) $r->total_harga,
+        ])->toArray();
+
+        $headings = ['Kode Transaksi', 'Waktu Transaksi', 'Objek Wisata', 'Sumber', 'Kasir/Sistem', 'Total Harga (Rp)'];
+
+        return Excel::download(new GenericExport($rows, $headings, 'Data Pengunjung'), 'laporan-pengunjung-' . date('Ymd') . '.xlsx');
+    }
+
+    // =========================================================
     // CETAK LAPORAN PENDAPATAN (OFFLINE + ONLINE)
     // =========================================================
     public function cetakPendapatan(Request $request)
@@ -106,6 +164,57 @@ class LaporanController extends Controller
         })->sortBy('nama_objek')->values();
 
         return view('laporan.cetak-pendapatan', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+    }
+
+    // =========================================================
+    // EXPORT EXCEL — PENDAPATAN
+    // =========================================================
+    public function exportPendapatan(Request $request)
+    {
+        $tgl_awal    = $request->tgl_awal;
+        $tgl_akhir   = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
+
+        $queryOffline = DB::table('transaksis')
+            ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+            ->where('transaksis.status_tiket', '!=', 'batal')
+            ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_awal)
+            ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select('objek_wisatas.nama_objek',
+                DB::raw('COUNT(transaksis.id) as jumlah_transaksi'),
+                DB::raw('SUM(transaksis.total_bayar) as total_pendapatan'))
+            ->groupBy('objek_wisatas.id', 'objek_wisatas.nama_objek');
+
+        $queryOnline = DB::table('pesanans')
+            ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', '>=', $tgl_awal)
+            ->whereDate('pesanans.created_at', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select('objek_wisatas.nama_objek',
+                DB::raw('COUNT(pesanans.id) as jumlah_transaksi'),
+                DB::raw('SUM(pesanans.total_bayar) as total_pendapatan'))
+            ->groupBy('objek_wisatas.id', 'objek_wisatas.nama_objek');
+
+        $gabungan = $queryOffline->unionAll($queryOnline)->get();
+        $laporan  = $gabungan->groupBy('nama_objek')->map(function ($rows, $nama) {
+            return (object) [
+                'nama_objek'       => $nama,
+                'jumlah_transaksi' => $rows->sum('jumlah_transaksi'),
+                'total_pendapatan' => $rows->sum('total_pendapatan'),
+            ];
+        })->sortBy('nama_objek')->values();
+
+        $rows = $laporan->map(fn($r) => [
+            $r->nama_objek,
+            (int) $r->jumlah_transaksi,
+            (float) $r->total_pendapatan,
+        ])->toArray();
+
+        $headings = ['Objek Wisata', 'Jumlah Transaksi', 'Total Pendapatan (Rp)'];
+
+        return Excel::download(new GenericExport($rows, $headings, 'Laporan Pendapatan'), 'laporan-pendapatan-' . date('Ymd') . '.xlsx');
     }
 
     // =========================================================
@@ -156,6 +265,62 @@ class LaporanController extends Controller
     }
 
     // =========================================================
+    // EXPORT EXCEL — TIKET TERJUAL
+    // =========================================================
+    public function exportTiket(Request $request)
+    {
+        $tgl_awal    = $request->tgl_awal;
+        $tgl_akhir   = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
+
+        $queryOffline = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->join('jenis_tikets', 'detail_transaksis.id_jenis_tiket', '=', 'jenis_tikets.id')
+            ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+            ->where('transaksis.status_tiket', '!=', 'batal')
+            ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_awal)
+            ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis',
+                DB::raw('SUM(detail_transaksis.jumlah) as total_terjual'),
+                DB::raw('SUM(detail_transaksis.subtotal) as total_uang'))
+            ->groupBy('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis');
+
+        $queryOnline = DB::table('pesanan_details')
+            ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+            ->join('jenis_tikets', 'pesanan_details.id_jenis_tiket', '=', 'jenis_tikets.id')
+            ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', '>=', $tgl_awal)
+            ->whereDate('pesanans.created_at', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis',
+                DB::raw('SUM(pesanan_details.jumlah) as total_terjual'),
+                DB::raw('SUM(pesanan_details.subtotal) as total_uang'))
+            ->groupBy('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis');
+
+        $gabungan = $queryOffline->unionAll($queryOnline)->get();
+        $laporan  = $gabungan->groupBy(fn($r) => $r->nama_objek.'||'.$r->nama_jenis)
+            ->map(fn($rows) => (object)[
+                'nama_objek'    => $rows->first()->nama_objek,
+                'nama_jenis'    => $rows->first()->nama_jenis,
+                'total_terjual' => $rows->sum('total_terjual'),
+                'total_uang'    => $rows->sum('total_uang'),
+            ])->sortBy('nama_objek')->values();
+
+        $rows = $laporan->map(fn($r) => [
+            $r->nama_objek,
+            $r->nama_jenis,
+            (int) $r->total_terjual,
+            (float) $r->total_uang,
+        ])->toArray();
+
+        $headings = ['Objek Wisata', 'Jenis Tiket', 'Jumlah Terjual', 'Total Uang (Rp)'];
+
+        return Excel::download(new GenericExport($rows, $headings, 'Tiket Terjual'), 'laporan-tiket-terjual-' . date('Ymd') . '.xlsx');
+    }
+
+    // =========================================================
     // CETAK LAPORAN STATISTIK KUNJUNGAN PER OBJEK WISATA
     // =========================================================
     public function cetakObjek(Request $request)
@@ -193,6 +358,54 @@ class LaporanController extends Controller
         ])->sortByDesc('total_pengunjung')->values();
 
         return view('laporan.cetak-objek', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+    }
+
+    // =========================================================
+    // EXPORT EXCEL — STATISTIK KUNJUNGAN PER OBJEK WISATA
+    // =========================================================
+    public function exportObjek(Request $request)
+    {
+        $tgl_awal    = $request->tgl_awal;
+        $tgl_akhir   = $request->tgl_akhir;
+        $idKabupaten = $this->scopeKabupaten();
+
+        $queryOffline = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+            ->where('transaksis.status_tiket', '!=', 'batal')
+            ->whereDate('transaksis.tgl_transaksi', '>=', $tgl_awal)
+            ->whereDate('transaksis.tgl_transaksi', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select('objek_wisatas.nama_objek',
+                DB::raw('SUM(detail_transaksis.jumlah) as total_pengunjung'))
+            ->groupBy('objek_wisatas.nama_objek');
+
+        $queryOnline = DB::table('pesanan_details')
+            ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+            ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', '>=', $tgl_awal)
+            ->whereDate('pesanans.created_at', '<=', $tgl_akhir)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->select('objek_wisatas.nama_objek',
+                DB::raw('SUM(pesanan_details.jumlah) as total_pengunjung'))
+            ->groupBy('objek_wisatas.nama_objek');
+
+        $gabungan = $queryOffline->unionAll($queryOnline)->get();
+        $laporan  = $gabungan->groupBy('nama_objek')->map(fn($rows, $nama) => (object)[
+            'nama_objek'       => $nama,
+            'total_pengunjung' => $rows->sum('total_pengunjung'),
+        ])->sortByDesc('total_pengunjung')->values();
+
+        $rows = $laporan->map(fn($r, $i) => [
+            $i + 1,
+            $r->nama_objek,
+            (int) $r->total_pengunjung,
+        ])->values()->toArray();
+
+        $headings = ['No', 'Objek Wisata', 'Total Pengunjung'];
+
+        return Excel::download(new GenericExport($rows, $headings, 'Statistik Kunjungan'), 'laporan-kunjungan-objek-' . date('Ymd') . '.xlsx');
     }
 
     // =========================================================
@@ -259,7 +472,7 @@ class LaporanController extends Controller
                     ->get();
                 break;
 
-                case 'beritas':
+            case 'beritas':
                 $judul = 'Data Berita';
                 $data  = DB::table('beritas')
                     ->leftJoin('kabupatens', 'beritas.id_kabupaten', '=', 'kabupatens.id')
@@ -270,8 +483,124 @@ class LaporanController extends Controller
                     ->orderByDesc('beritas.tanggal_publish')
                     ->get();
                 break;
+
+            case 'banners':
+                $judul = 'Data Banner';
+                $data  = DB::table('banners')
+                    ->leftJoin('users', 'banners.id_user', '=', 'users.id')
+                    ->select('banners.id', 'banners.judul', 'banners.urutan', 'banners.status',
+                        'banners.tanggal_mulai', 'banners.tanggal_selesai', 'users.nama as nama_uploader')
+                    ->orderBy('banners.urutan')
+                    ->get();
+                break;
         }
 
         return view('laporan.cetak-master', compact('data', 'judul', 'jenis'));
+    }
+
+    // =========================================================
+    // EXPORT EXCEL — DATA MASTER (users, kabupatens, objek_wisatas, dst)
+    // =========================================================
+    public function exportMaster(Request $request)
+    {
+        $jenis       = $request->jenis;
+        $idKabupaten = $this->scopeKabupaten();
+
+        $rows     = [];
+        $headings = [];
+        $judul    = 'Data Master';
+
+        switch ($jenis) {
+            case 'users':
+                if ($idKabupaten) {
+                    abort(403, 'Anda tidak memiliki akses ke data ini.');
+                }
+                $judul    = 'Data Pengguna';
+                $headings = ['Nama', 'Username', 'Role', 'Tanggal Dibuat'];
+                $data     = DB::table('users')->select('nama', 'username', 'role', 'created_at')
+                    ->orderBy('role')->orderBy('nama')->get();
+                $rows = $data->map(fn($r) => [
+                    $r->nama, $r->username, $r->role, date('d/m/Y', strtotime($r->created_at)),
+                ])->toArray();
+                break;
+
+            case 'kabupatens':
+                if ($idKabupaten) {
+                    abort(403, 'Anda tidak memiliki akses ke data ini.');
+                }
+                $judul    = 'Data Kabupaten';
+                $headings = ['Nama Kabupaten / Kota'];
+                $data     = DB::table('kabupatens')->select('nama_kabupaten')->orderBy('nama_kabupaten')->get();
+                $rows = $data->map(fn($r) => [$r->nama_kabupaten])->toArray();
+                break;
+
+            case 'objek_wisatas':
+                $judul    = 'Data Objek Wisata';
+                $headings = ['Nama Objek', 'Kabupaten', 'Alamat', 'Jam Operasional', 'Status', 'Populer'];
+                $data     = DB::table('objek_wisatas')
+                    ->join('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                    ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+                    ->select('objek_wisatas.nama_objek', 'kabupatens.nama_kabupaten', 'objek_wisatas.alamat',
+                        'objek_wisatas.jam_operasional', 'objek_wisatas.status', 'objek_wisatas.is_populer')
+                    ->orderBy('kabupatens.nama_kabupaten')->orderBy('objek_wisatas.nama_objek')->get();
+                $rows = $data->map(fn($r) => [
+                    $r->nama_objek, $r->nama_kabupaten, $r->alamat, $r->jam_operasional,
+                    ucfirst($r->status), $r->is_populer ? 'Ya' : 'Tidak',
+                ])->toArray();
+                break;
+
+            case 'jenis_tikets':
+                $judul    = 'Data Jenis Tiket';
+                $headings = ['Nama Jenis Tiket'];
+                $data     = DB::table('jenis_tikets')->select('nama_jenis')->orderBy('nama_jenis')->get();
+                $rows = $data->map(fn($r) => [$r->nama_jenis])->toArray();
+                break;
+
+            case 'harga_tikets':
+                $judul    = 'Data Harga Tiket';
+                $headings = ['Objek Wisata', 'Jenis Tiket', 'Harga (Rp)'];
+                $data     = DB::table('harga_tikets')
+                    ->join('objek_wisatas', 'harga_tikets.id_objek', '=', 'objek_wisatas.id')
+                    ->join('jenis_tikets', 'harga_tikets.id_jenis_tiket', '=', 'jenis_tikets.id')
+                    ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+                    ->select('objek_wisatas.nama_objek', 'jenis_tikets.nama_jenis', 'harga_tikets.harga')
+                    ->orderBy('objek_wisatas.nama_objek')->orderBy('jenis_tikets.nama_jenis')->get();
+                $rows = $data->map(fn($r) => [$r->nama_objek, $r->nama_jenis, (float) $r->harga])->toArray();
+                break;
+
+            case 'beritas':
+                $judul    = 'Data Berita';
+                $headings = ['Judul', 'Kategori', 'Wilayah', 'Tanggal Publish', 'Penulis', 'Status'];
+                $data     = DB::table('beritas')
+                    ->leftJoin('kabupatens', 'beritas.id_kabupaten', '=', 'kabupatens.id')
+                    ->leftJoin('users', 'beritas.id_user', '=', 'users.id')
+                    ->when($idKabupaten, fn($q) => $q->where('beritas.id_kabupaten', $idKabupaten))
+                    ->select('beritas.judul', 'beritas.kategori', 'kabupatens.nama_kabupaten',
+                        'beritas.tanggal_publish', 'users.nama as nama_penulis', 'beritas.status')
+                    ->orderByDesc('beritas.tanggal_publish')->get();
+                $rows = $data->map(fn($r) => [
+                    $r->judul, $r->kategori, $r->nama_kabupaten ?? 'Provinsi (Umum)',
+                    date('d/m/Y', strtotime($r->tanggal_publish)), $r->nama_penulis ?? '-', ucfirst($r->status),
+                ])->toArray();
+                break;
+
+            case 'banners':
+                $judul    = 'Data Banner';
+                $headings = ['Judul', 'Urutan', 'Mulai Tayang', 'Selesai Tayang', 'Diupload Oleh', 'Status'];
+                $data     = DB::table('banners')
+                    ->leftJoin('users', 'banners.id_user', '=', 'users.id')
+                    ->select('banners.judul', 'banners.urutan', 'banners.tanggal_mulai',
+                        'banners.tanggal_selesai', 'users.nama as nama_uploader', 'banners.status')
+                    ->orderBy('banners.urutan')->get();
+                $rows = $data->map(fn($r) => [
+                    $r->judul ?: '(Tanpa judul)', $r->urutan,
+                    $r->tanggal_mulai ? date('d/m/Y', strtotime($r->tanggal_mulai)) : '-',
+                    $r->tanggal_selesai ? date('d/m/Y', strtotime($r->tanggal_selesai)) : '-',
+                    $r->nama_uploader ?? '-', ucfirst($r->status),
+                ])->toArray();
+                break;
+        }
+
+        return Excel::download(new GenericExport($rows, $headings, $judul), 'export-' . $jenis . '-' . date('Ymd') . '.xlsx');
     }
 }

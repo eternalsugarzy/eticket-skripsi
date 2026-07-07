@@ -36,9 +36,15 @@
                         </div>
                     </div>
                     <hr class="my-3">
-                    <button type="submit" class="btn btn-primary btn-sm fw-bold w-100">
-                        <i class="ti ti-printer me-1"></i> Cetak Laporan
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm fw-bold flex-fill">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-pengunjung') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -66,9 +72,15 @@
                         </div>
                     </div>
                     <hr class="my-3">
-                    <button type="submit" class="btn btn-success btn-sm fw-bold w-100">
-                        <i class="ti ti-cash me-1"></i> Cetak Pendapatan
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-cash me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-pendapatan') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -96,9 +108,15 @@
                         </div>
                     </div>
                     <hr class="my-3">
-                    <button type="submit" class="btn btn-info btn-sm fw-bold w-100 text-white">
-                        <i class="ti ti-ticket me-1"></i> Cetak Tiket Terjual
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-info btn-sm fw-bold flex-fill text-white">
+                            <i class="ti ti-ticket me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-tiket') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -126,9 +144,15 @@
                         </div>
                     </div>
                     <hr class="my-3">
-                    <button type="submit" class="btn btn-warning btn-sm fw-bold w-100 text-white">
-                        <i class="ti ti-map-pin me-1"></i> Cetak Per Objek
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning btn-sm fw-bold flex-fill text-white">
+                            <i class="ti ti-map-pin me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-objek') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -152,10 +176,14 @@
                     <small class="text-muted">Seluruh akun admin, kasir & petugas</small>
                 </div>
             </div>
-            <div class="card-body d-flex align-items-end">
+            <div class="card-body d-flex flex-column gap-2">
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'users']) }}" target="_blank"
                    class="btn btn-secondary btn-sm fw-bold w-100">
                     <i class="ti ti-printer me-1"></i> Cetak Data User
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'users']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -171,10 +199,14 @@
                     <small class="text-muted">Daftar wilayah kabupaten / kota</small>
                 </div>
             </div>
-            <div class="card-body d-flex align-items-end">
+            <div class="card-body d-flex flex-column gap-2">
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'kabupatens']) }}" target="_blank"
                    class="btn btn-sm fw-bold w-100 text-white" style="background:#6f42c1">
                     <i class="ti ti-printer me-1"></i> Cetak Data Kabupaten
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'kabupatens']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -190,10 +222,14 @@
                     <small class="text-muted">Seluruh lokasi wisata terdaftar</small>
                 </div>
             </div>
-            <div class="card-body d-flex align-items-end">
+            <div class="card-body d-flex flex-column gap-2">
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'objek_wisatas']) }}" target="_blank"
                    class="btn btn-primary btn-sm fw-bold w-100">
                     <i class="ti ti-printer me-1"></i> Cetak Data Objek Wisata
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'objek_wisatas']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -209,16 +245,20 @@
                     <small class="text-muted">Kategori tiket (Dewasa, Anak, dll)</small>
                 </div>
             </div>
-            <div class="card-body d-flex align-items-end">
+            <div class="card-body d-flex flex-column gap-2">
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'jenis_tikets']) }}" target="_blank"
                    class="btn btn-info btn-sm fw-bold w-100 text-white">
                     <i class="ti ti-printer me-1"></i> Cetak Jenis Tiket
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'jenis_tikets']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
                 </a>
             </div>
         </div>
     </div>
 
-   {{-- Harga Tiket --}}
+    {{-- Harga Tiket --}}
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header d-flex align-items-center gap-2 py-3">
@@ -228,10 +268,14 @@
                     <small class="text-muted">Tarif tiket per objek wisata</small>
                 </div>
             </div>
-            <div class="card-body d-flex align-items-end">
+            <div class="card-body d-flex flex-column gap-2">
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'harga_tikets']) }}" target="_blank"
                    class="btn btn-success btn-sm fw-bold w-100">
                     <i class="ti ti-printer me-1"></i> Cetak Harga Tiket
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'harga_tikets']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -247,15 +291,41 @@
                     <small class="text-muted">Seluruh berita & pengumuman</small>
                 </div>
             </div>
-            <div class="card-body d-flex align-items-end">
+            <div class="card-body d-flex flex-column gap-2">
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'beritas']) }}" target="_blank"
                    class="btn btn-sm fw-bold w-100 text-white" style="background:#d4600a">
                     <i class="ti ti-printer me-1"></i> Cetak Data Berita
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'beritas']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
                 </a>
             </div>
         </div>
     </div>
 
+    {{-- Banner --}}
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#7b2d8b"><i class="ti ti-photo fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Data Banner</h6>
+                    <small class="text-muted">Seluruh banner/slider website</small>
+                </div>
+            </div>
+            <div class="card-body d-flex flex-column gap-2">
+                <a href="{{ route('laporan.cetak-master', ['jenis' => 'banners']) }}" target="_blank"
+                   class="btn btn-sm fw-bold w-100 text-white" style="background:#7b2d8b">
+                    <i class="ti ti-printer me-1"></i> Cetak Data Banner
+                </a>
+                <a href="{{ route('laporan.export-master', ['jenis' => 'banners']) }}"
+                   class="btn btn-outline-success btn-sm fw-bold w-100">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                </a>
+            </div>
+        </div>
+    </div>
 
 </div>
 @endsection

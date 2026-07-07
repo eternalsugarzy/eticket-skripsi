@@ -336,10 +336,28 @@
                     <li class="pc-item pc-caption">
                         <label>Konten Website</label>
                     </li>
-                    <li class="pc-item {{ request()->is('berita*') ? 'active' : '' }}">
+                    <li class="pc-item {{ request()->is('kelola-berita*') ? 'active' : '' }}">
                         <a href="{{ route('kelola-berita.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-news"></i></span>
                             <span class="pc-mtext">Berita</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ request()->is('kelola-banner*') ? 'active' : '' }}">
+                        <a href="{{ route('kelola-banner.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-photo"></i></span>
+                            <span class="pc-mtext">Banner</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ request()->is('kelola-event*') ? 'active' : '' }}">
+                        <a href="{{ route('kelola-event.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-calendar-event"></i></span>
+                            <span class="pc-mtext">Event</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ request()->is('kelola-video*') ? 'active' : '' }}">
+                        <a href="{{ route('kelola-video.edit') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-brand-youtube"></i></span>
+                            <span class="pc-mtext">Video Terbaru</span>
                         </a>
                     </li>
                     @endif

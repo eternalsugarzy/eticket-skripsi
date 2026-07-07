@@ -95,11 +95,55 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="4" class="text-right">Total Pengguna</td>
-                <td class="text-center">{{ count($data) }} Akun</td>
+                <td colspan="6" class="text-right">Total Berita</td>
+                <td class="text-center">{{ count($data) }} Artikel</td>
             </tr>
         </tfoot>
     </table>
+
+    {{-- ============ TABEL BANNER ============ --}}
+    @elseif($jenis == 'banners')
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th width="5%">No</th>
+                <th>Judul Banner</th>
+                <th width="12%">Urutan</th>
+                <th width="18%">Mulai Tayang</th>
+                <th width="18%">Selesai Tayang</th>
+                <th width="17%">Diupload Oleh</th>
+                <th width="10%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($data as $i => $row)
+            <tr>
+                <td class="text-center">{{ $i + 1 }}</td>
+                <td>{{ $row->judul ?: '(Tanpa judul)' }}</td>
+                <td class="text-center">{{ $row->urutan }}</td>
+                <td class="text-center">{{ $row->tanggal_mulai ? date('d/m/Y', strtotime($row->tanggal_mulai)) : '—' }}</td>
+                <td class="text-center">{{ $row->tanggal_selesai ? date('d/m/Y', strtotime($row->tanggal_selesai)) : '—' }}</td>
+                <td>{{ $row->nama_uploader ?? '-' }}</td>
+                <td class="text-center">
+                    @if($row->status == 'aktif')
+                        <span class="badge-buka">Aktif</span>
+                    @else
+                        <span class="badge-tutup">Nonaktif</span>
+                    @endif
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="7" class="text-center">Tidak ada data.</td></tr>
+            @endforelse
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="6" class="text-right">Total Banner</td>
+                <td class="text-center">{{ count($data) }} Banner</td>
+            </tr>
+        </tfoot>
+    </table>
+    @endif
 
     {{-- ============ TABEL KABUPATENS ============ --}}
     @elseif($jenis == 'kabupatens')

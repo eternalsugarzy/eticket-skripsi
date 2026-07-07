@@ -470,6 +470,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('faq.index') ? 'active' : '' }}"
+                           href="{{ route('faq.index') }}">
+                            FAQ
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="btn-lacak ms-2" href="{{ route('cek-pesanan') }}">
                             <i class="bi bi-search"></i> Lacak Pesanan
                         </a>
