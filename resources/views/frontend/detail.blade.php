@@ -374,6 +374,25 @@ body {
                 {{ $wisata->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
             </div>
             <h1 class="hero-title">{{ $wisata->nama_objek }}</h1>
+            <div class="mt-2 d-flex align-items-center flex-wrap gap-2" style="position:relative; z-index:1;">
+                @if($wisata->jumlah_ulasan > 0)
+                <span style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); border-radius:50px; padding:6px 16px; color:#fff; font-size:.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="bi bi-star-fill" style="color:#F5D99A;"></i>
+                    {{ $wisata->rating_rata_rata }}
+                    <span style="color:rgba(255,255,255,.6); font-weight:500;">({{ $wisata->jumlah_ulasan }} ulasan)</span>
+                </span>
+                @endif
+
+                @auth('pengunjung')
+                <form action="{{ route('wishlist.toggle', $wisata->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" style="background:{{ $sudahWishlist ? '#dc2626' : 'rgba(255,255,255,.15)' }}; border:1px solid {{ $sudahWishlist ? '#dc2626' : 'rgba(255,255,255,.3)' }}; border-radius:50px; padding:6px 16px; color:#fff; font-size:.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer; transition:background .2s;">
+                        <i class="bi bi-heart{{ $sudahWishlist ? '-fill' : '' }}"></i>
+                        {{ $sudahWishlist ? 'Tersimpan' : 'Simpan ke Wishlist' }}
+                    </button>
+                </form>
+                @endauth
+            </div>
         </div>
     </div>
 </div>
@@ -535,10 +554,122 @@ body {
                 @endif
             </div>
 
+            {{-- Ulasan Pengunjung --}}
+            <div class="content-card mt-4" id="ulasan">
+                <div class="card-head d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="card-head-icon"><i class="bi bi-star-fill"></i></div>
+                        <h4 class="mb-0">Ulasan Pengunjung</h4>
+                    </div>
+                    @if($wisata->jumlah_ulasan > 0)
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="font-size:1.6rem; font-weight:700; color:var(--forest);">{{ $wisata->rating_rata_rata }}</span>
+                        <div>
+                            <div style="color:#f59e0b; font-size:.85rem;">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="bi bi-star{{ $i <= round($wisata->rating_rata_rata) ? '-fill' : '' }}"></i>
+                                @endfor
+                            </div>
+                            <div style="font-size:.72rem; color:var(--text-muted);">{{ $wisata->jumlah_ulasan }} ulasan</div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+
+                {{-- Alert sukses/gagal khusus ulasan --}}
+                @if(session('success'))
+                <div class="alert alert-success py-2 px-3 mb-3" style="font-size:13px;">{{ session('success') }}</div>
+                @endif
+                @if(session('error'))
+                <div class="alert alert-warning py-2 px-3 mb-3" style="font-size:13px;">{{ session('error') }}</div>
+                @endif
+
+                {{-- Form kirim ulasan --}}
+                @auth('pengunjung')
+                    @if($bisaUlasan)
+                    <div class="mb-4 p-3" style="background:var(--cream); border-radius:12px;">
+                        <p class="fw-bold mb-2" style="font-size:.9rem; color:var(--text-dark);">Bagikan pengalaman Anda</p>
+                        <form action="{{ route('ulasan.store', $wisata->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <div class="star-rating-input" id="starRatingInput" style="font-size:1.6rem; cursor:pointer; color:#d1d5db;">
+                                    <i class="bi bi-star" data-value="1"></i>
+                                    <i class="bi bi-star" data-value="2"></i>
+                                    <i class="bi bi-star" data-value="3"></i>
+                                    <i class="bi bi-star" data-value="4"></i>
+                                    <i class="bi bi-star" data-value="5"></i>
+                                </div>
+                                <input type="hidden" name="rating" id="inputRatingValue" value="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="komentar" class="form-control @error('komentar') is-invalid @enderror"
+                                          rows="3" placeholder="Ceritakan pengalaman kunjungan Anda (minimal 10 karakter)..." required>{{ old('komentar') }}</textarea>
+                                @error('komentar')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <button type="submit" class="btn btn-sm" style="background:var(--forest); color:#fff; font-weight:700; padding:8px 20px; border-radius:8px;">
+                                <i class="bi bi-send-fill me-1"></i> Kirim Ulasan
+                            </button>
+                        </form>
+                    </div>
+                    @endif
+                @else
+                <div class="mb-4 p-3 text-center" style="background:var(--cream); border-radius:12px; font-size:.85rem; color:var(--text-muted);">
+                    <a href="{{ route('pengunjung.login') }}" style="color:var(--forest); font-weight:700;">Masuk sebagai pengunjung</a>
+                    yang pernah membeli tiket ke sini untuk memberi ulasan.
+                </div>
+                @endauth
+
+                {{-- Daftar ulasan --}}
+                @forelse($ulasans as $u)
+                <div class="d-flex gap-3 py-3" style="border-top:1px solid var(--cream);">
+                    <div style="width:40px; height:40px; border-radius:50%; background:var(--forest); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;">
+                        {{ strtoupper(substr($u->pengunjung->nama ?? '?', 0, 1)) }}
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
+                            <div>
+                                <div style="font-weight:700; color:var(--text-dark); font-size:.9rem;">{{ $u->pengunjung->nama ?? 'Pengunjung' }}</div>
+                                <div style="color:#f59e0b; font-size:.78rem;">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="bi bi-star{{ $i <= $u->rating ? '-fill' : '' }}"></i>
+                                    @endfor
+                                </div>
+                            </div>
+                            <span style="font-size:.72rem; color:var(--text-muted);">{{ $u->created_at->translatedFormat('d M Y') }}</span>
+                        </div>
+                        <p class="mt-2 mb-0" style="font-size:.86rem; color:var(--text-muted); line-height:1.6;">{{ $u->komentar }}</p>
+
+                        @auth('pengunjung')
+                        @if(auth('pengunjung')->id() === $u->id_pengunjung)
+                        <form action="{{ route('ulasan.destroy', $u->id) }}" method="POST" class="mt-2" onsubmit="return confirm('Hapus ulasan Anda?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-link text-danger p-0" style="font-size:.75rem;">
+                                <i class="bi bi-trash me-1"></i>Hapus ulasan saya
+                            </button>
+                        </form>
+                        @endif
+                        @endauth
+                    </div>
+                </div>
+                @empty
+                <p class="text-center text-muted py-4 mb-0" style="font-size:.86rem;">
+                    Belum ada ulasan untuk destinasi ini. Jadilah yang pertama!
+                </p>
+                @endforelse
+
+                @if($ulasans->hasPages())
+                <div class="mt-3">
+                    {{ $ulasans->links() }}
+                </div>
+                @endif
+            </div>
+
         </div>
 
         {{-- ══════ KOLOM KANAN (4) ══════ --}}
         <div class="col-lg-4">
+
+            {{-- Booking Card --}}
 
             {{-- Booking Card --}}
             <div class="booking-card mb-4" style="z-index:1;">
@@ -628,6 +759,35 @@ body {
 @endsection
 
 @push('scripts')
+<script>
+(function () {
+    /* ── Interaksi Bintang Rating Ulasan ── */
+    var starWrap = document.getElementById('starRatingInput');
+    if (starWrap) {
+        var stars = starWrap.querySelectorAll('i');
+        var inputRating = document.getElementById('inputRatingValue');
+
+        stars.forEach(function (star) {
+            star.addEventListener('click', function () {
+                var val = parseInt(star.getAttribute('data-value'));
+                inputRating.value = val;
+                stars.forEach(function (s) {
+                    var sVal = parseInt(s.getAttribute('data-value'));
+                    if (sVal <= val) {
+                        s.classList.remove('bi-star');
+                        s.classList.add('bi-star-fill');
+                        s.style.color = '#f59e0b';
+                    } else {
+                        s.classList.remove('bi-star-fill');
+                        s.classList.add('bi-star');
+                        s.style.color = '#d1d5db';
+                    }
+                });
+            });
+        });
+    }
+})();
+</script>
 <script>
 (function () {
     /* ── Leaflet Map ── */

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\GaleriWisata;
 use App\Models\Kabupaten;
 use App\Models\HargaTiket;
+use App\Models\Ulasan;
 
 class ObjekWisata extends Model
 {
@@ -33,5 +34,23 @@ class ObjekWisata extends Model
     public function hargaTikets()
     {
         return $this->hasMany(HargaTiket::class, 'id_objek');
+    }
+
+    // Relasi ke Ulasan (HasMany)
+    public function ulasans()
+    {
+        return $this->hasMany(Ulasan::class, 'id_objek')->latest();
+    }
+
+    // Accessor: rata-rata rating (dibulatkan 1 desimal), 0 kalau belum ada ulasan
+    public function getRatingRataRataAttribute()
+    {
+        return round($this->ulasans()->avg('rating') ?? 0, 1);
+    }
+
+    // Accessor: jumlah total ulasan
+    public function getJumlahUlasanAttribute()
+    {
+        return $this->ulasans()->count();
     }
 }

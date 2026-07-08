@@ -23,6 +23,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventPublicController;
 use App\Http\Controllers\VideoTerbaruController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\UlasanAdminController;
+use App\Http\Controllers\WishlistController;
 
 
 // =========================================================================
@@ -68,6 +71,10 @@ Route::post('/keluar', [PengunjungAuthController::class, 'logout'])->name('pengu
 
 Route::middleware('pengunjung')->group(function () {
     Route::get('/riwayat-pesanan', [PengunjungAuthController::class, 'riwayat'])->name('pengunjung.riwayat');
+    Route::post('/wisata/{idObjek}/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
+    Route::delete('/ulasan/{ulasan}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
+    Route::post('/wisata/{idObjek}/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist-saya', [WishlistController::class, 'index'])->name('wishlist.index');
 });
 
 
@@ -123,6 +130,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('kelola-berita', BeritaController::class)
         ->except(['show'])
         ->parameters(['kelola-berita' => 'berita']);
+
+    // 4c. Moderasi Ulasan — hanya index & hapus (ulasan dibuat pengunjung, bukan admin)
+    Route::get('/kelola-ulasan', [UlasanAdminController::class, 'index'])->name('kelola-ulasan.index');
+    Route::delete('/kelola-ulasan/{ulasan}', [UlasanAdminController::class, 'destroy'])->name('kelola-ulasan.destroy');
 
     // 5. Operasional Loket & Transaksi
     Route::resource('transaksi', TransaksiController::class);

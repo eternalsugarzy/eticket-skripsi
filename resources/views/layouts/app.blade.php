@@ -342,6 +342,12 @@
                             <span class="pc-mtext">Berita</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ request()->is('kelola-ulasan*') ? 'active' : '' }}">
+                        <a href="{{ route('kelola-ulasan.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-star"></i></span>
+                            <span class="pc-mtext">Ulasan Pengunjung</span>
+                        </a>
+                    </li>
                     <li class="pc-item {{ request()->is('kelola-banner*') ? 'active' : '' }}">
                         <a href="{{ route('kelola-banner.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-photo"></i></span>

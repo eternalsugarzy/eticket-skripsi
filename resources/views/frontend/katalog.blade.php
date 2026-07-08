@@ -146,7 +146,26 @@
     transition: transform .4s ease;
 }
 .wisata-card:hover .card-img-top { transform: scale(1.04); }
-.wisata-card .img-wrap { overflow: hidden; }
+.wisata-card .img-wrap { overflow: hidden; position: relative; }
+.btn-wishlist-card {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #dc2626;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    transition: transform .15s;
+    z-index: 2;
+}
+.btn-wishlist-card:hover { transform: scale(1.1); }
 
 /* Badge kabupaten */
 .badge-kab {
@@ -313,6 +332,14 @@
             <div class="col-md-6 col-lg-4">
                 <div class="wisata-card shadow-sm">
                     <div class="img-wrap">
+                        @auth('pengunjung')
+                        <form action="{{ route('wishlist.toggle', $w->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn-wishlist-card" aria-label="Simpan ke Wishlist">
+                                <i class="bi bi-heart{{ in_array($w->id, $wishlistIds) ? '-fill' : '' }}"></i>
+                            </button>
+                        </form>
+                        @endauth
                         @if($w->foto && $w->foto !== 'default.jpg')
                             <img src="{{ asset('uploads/wisata/' . $w->foto) }}"
                                  class="card-img-top"

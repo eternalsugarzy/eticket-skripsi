@@ -506,6 +506,9 @@
                                 <a href="{{ route('pengunjung.riwayat') }}" class="nav-dropdown-item">
                                     <i class="bi bi-clock-history"></i> Riwayat Pesanan
                                 </a>
+                                <a href="{{ route('wishlist.index') }}" class="nav-dropdown-item">
+                                    <i class="bi bi-heart-fill"></i> Wishlist Saya
+                                </a>
                                 <hr class="nav-dropdown-divider">
                                 <form action="{{ route('pengunjung.logout') }}" method="POST">
                                     @csrf

@@ -20,4 +20,10 @@ class Pengunjung extends Authenticatable
     {
         return $this->hasMany(Pesanan::class, 'id_pengunjung');
     }
+
+    // Relasi ke wishlist/favorit wisata miliknya
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class, 'id_pengunjung');
+    }
 }

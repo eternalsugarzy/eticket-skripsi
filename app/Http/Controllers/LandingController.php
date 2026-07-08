@@ -57,7 +57,13 @@ class LandingController extends Controller
         // Data untuk dropdown filter kabupaten
         $kabupatens = Kabupaten::orderBy('nama_kabupaten')->get();
 
-        return view('frontend.katalog', compact('allWisata', 'kabupatens'));
+        // Daftar ID objek wisata yang sudah di-wishlist pengunjung yang login (kalau ada)
+        $pengunjungLogin = auth('pengunjung')->user();
+        $wishlistIds = $pengunjungLogin
+            ? \App\Models\Wishlist::where('id_pengunjung', $pengunjungLogin->id)->pluck('id_objek')->toArray()
+            : [];
+
+        return view('frontend.katalog', compact('allWisata', 'kabupatens', 'wishlistIds'));
     }
 
     // 3. Halaman Detail
@@ -72,7 +78,23 @@ class LandingController extends Controller
 
         $cuaca = $this->ambilCuaca($wisata->latitude, $wisata->longitude);
 
-        return view('frontend.detail', compact('wisata', 'hargaTiket', 'cuaca'));
+        // Ulasan & rating
+        $ulasans = \App\Models\Ulasan::with('pengunjung')
+            ->where('id_objek', $id)
+            ->latest()
+            ->paginate(5, ['*'], 'halaman_ulasan');
+
+        $pengunjungLogin = auth('pengunjung')->user();
+        $bisaUlasan = $pengunjungLogin
+            ? \App\Models\Ulasan::bisaUlasan($pengunjungLogin->id, $id)
+            : false;
+
+        // Status wishlist untuk pengunjung yang login
+        $sudahWishlist = $pengunjungLogin
+            ? \App\Models\Wishlist::where('id_pengunjung', $pengunjungLogin->id)->where('id_objek', $id)->exists()
+            : false;
+
+        return view('frontend.detail', compact('wisata', 'hargaTiket', 'cuaca', 'ulasans', 'bisaUlasan', 'sudahWishlist'));
     }
 
     // =========================================================
