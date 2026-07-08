@@ -119,6 +119,66 @@ class DashboardController extends Controller
             $chartValuesOnline[]  = (int) ($onlinePerBulan[$i]  ?? 0);
         }
 
+        // =========================================================
+        // 4. PERBANDINGAN ANTAR KABUPATEN (khusus admin & kadis_provinsi)
+        //    Bulan berjalan, gabungan offline + online
+        // =========================================================
+        $perbandinganKabupaten = collect();
+
+        if (!$idKabupaten) {
+            $bulanIni = Carbon::now()->month;
+
+            $offlineKab = DB::table('detail_transaksis')
+                ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+                ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+                ->join('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                ->whereMonth('transaksis.created_at', $bulanIni)
+                ->whereYear('transaksis.created_at', $tahunIni)
+                ->select(
+                    'kabupatens.nama_kabupaten',
+                    DB::raw('SUM(detail_transaksis.jumlah) as total_pengunjung'),
+                    DB::raw('SUM(detail_transaksis.subtotal) as total_pendapatan')
+                )
+                ->groupBy('kabupatens.nama_kabupaten');
+
+            $onlineKab = DB::table('pesanan_details')
+                ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+                ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+                ->join('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                ->where('pesanans.status_pembayaran', 'Paid')
+                ->whereMonth('pesanans.created_at', $bulanIni)
+                ->whereYear('pesanans.created_at', $tahunIni)
+                ->select(
+                    'kabupatens.nama_kabupaten',
+                    DB::raw('SUM(pesanan_details.jumlah) as total_pengunjung'),
+                    DB::raw('SUM(pesanan_details.subtotal) as total_pendapatan')
+                )
+                ->groupBy('kabupatens.nama_kabupaten');
+
+            $gabunganKab = $offlineKab->unionAll($onlineKab)->get();
+
+            $rekapKab = $gabunganKab->groupBy('nama_kabupaten')->map(function ($rows) {
+                return (object) [
+                    'total_pengunjung' => $rows->sum('total_pengunjung'),
+                    'total_pendapatan' => $rows->sum('total_pendapatan'),
+                ];
+            });
+
+            // Pastikan SEMUA kabupaten muncul walau belum ada transaksi bulan ini (isi 0)
+            $perbandinganKabupaten = \App\Models\Kabupaten::orderBy('nama_kabupaten')->get()
+                ->map(function ($kab) use ($rekapKab) {
+                    $data = $rekapKab->get($kab->nama_kabupaten);
+                    return (object) [
+                        'nama_kabupaten'   => $kab->nama_kabupaten,
+                        'jumlah_wisata'    => ObjekWisata::where('id_kabupaten', $kab->id)->count(),
+                        'total_pengunjung' => $data->total_pengunjung ?? 0,
+                        'total_pendapatan' => $data->total_pendapatan ?? 0,
+                    ];
+                })
+                ->sortByDesc('total_pendapatan')
+                ->values();
+        }
+
         return view('dashboard', compact(
             'totalPengunjung',
             'totalPendapatan',
@@ -127,7 +187,8 @@ class DashboardController extends Controller
             'chartLabels',
             'chartValuesOffline',
             'chartValuesOnline',
-            'topWisata'
+            'topWisata',
+            'perbandinganKabupaten'
         ));
     }
 }

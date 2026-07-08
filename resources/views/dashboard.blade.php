@@ -148,6 +148,67 @@
 
     </div>
 
+    {{-- Perbandingan Antar Kabupaten (khusus admin & kadis_provinsi) --}}
+    @if($perbandinganKabupaten->count() > 0)
+    <div class="row g-3 mt-1">
+        <div class="col-12">
+            <div class="card card-modern">
+                <div class="card-header card-header-modern">
+                    <div>
+                        <h5 class="card-title-modern mb-0">Perbandingan Antar Kabupaten/Kota</h5>
+                        <p class="text-muted mb-0 small">Rekap bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }} — gabungan transaksi offline & online</p>
+                    </div>
+                    <span class="badge badge-soft-primary"><i class="ti ti-map-2 me-1"></i>13 Wilayah</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle">
+                            <thead style="background:#f8f9fc;">
+                                <tr>
+                                    <th class="px-4 py-3" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Peringkat</th>
+                                    <th class="py-3" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Kabupaten/Kota</th>
+                                    <th class="py-3 text-center" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Objek Wisata</th>
+                                    <th class="py-3 text-center" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Pengunjung</th>
+                                    <th class="py-3" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em; width:220px;">Pendapatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $maxPendapatan = $perbandinganKabupaten->max('total_pendapatan'); @endphp
+                                @foreach($perbandinganKabupaten as $i => $kab)
+                                <tr style="border-bottom:1px solid #f0f2f8;">
+                                    <td class="px-4 py-3">
+                                        @if($i == 0) <span style="font-size:1.3rem;">🥇</span>
+                                        @elseif($i == 1) <span style="font-size:1.3rem;">🥈</span>
+                                        @elseif($i == 2) <span style="font-size:1.3rem;">🥉</span>
+                                        @else <span class="rank-num">#{{ $i + 1 }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="py-3" style="font-weight:700; color:#1e2742; font-size:13.5px;">
+                                        {{ $kab->nama_kabupaten }}
+                                    </td>
+                                    <td class="py-3 text-center" style="font-size:13px;">{{ $kab->jumlah_wisata }}</td>
+                                    <td class="py-3 text-center" style="font-size:13px;">{{ number_format($kab->total_pengunjung) }}</td>
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="top-wisata-bar-wrap flex-grow-1">
+                                                <div class="top-wisata-bar" style="width: {{ $maxPendapatan > 0 ? ($kab->total_pendapatan / $maxPendapatan * 100) : 0 }}%"></div>
+                                            </div>
+                                            <strong style="font-size:12.5px; white-space:nowrap; min-width:90px; text-align:right;">
+                                                Rp {{ number_format($kab->total_pendapatan, 0, ',', '.') }}
+                                            </strong>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
 </div>
 @endsection
 
