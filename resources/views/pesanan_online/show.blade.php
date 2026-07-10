@@ -119,20 +119,32 @@
                                 @endforeach
                             </tbody>
                             <tfoot class="border-top border-2">
-                                @if($pesanan->diskon_persen > 0)
                                 @php $subtotalMentah = $pesanan->details->sum('subtotal'); @endphp
+                                @if($pesanan->diskon_persen > 0 || $pesanan->diskon_voucher_nominal > 0)
                                 <tr>
                                     <td colspan="3" class="text-end py-2 text-muted" style="font-size:13px;">Subtotal</td>
                                     <td class="text-end py-2 pe-4 text-muted" style="font-size:13px;">
                                         Rp {{ number_format($subtotalMentah, 0, ',', '.') }}
                                     </td>
                                 </tr>
+                                @endif
+                                @if($pesanan->diskon_persen > 0)
                                 <tr style="background:#f0fdf4;">
                                     <td colspan="3" class="text-end py-2" style="color:#059669; font-weight:600; font-size:13px;">
                                         🏷️ Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)
                                     </td>
                                     <td class="text-end py-2 pe-4" style="color:#059669; font-weight:700; font-size:13px;">
                                         - Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @endif
+                                @if($pesanan->diskon_voucher_nominal > 0)
+                                <tr style="background:#f5f3ff;">
+                                    <td colspan="3" class="text-end py-2" style="color:#7c3aed; font-weight:600; font-size:13px;">
+                                        🎟️ Voucher {{ $pesanan->kode_voucher }}
+                                    </td>
+                                    <td class="text-end py-2 pe-4" style="color:#7c3aed; font-weight:700; font-size:13px;">
+                                        - Rp {{ number_format($pesanan->diskon_voucher_nominal, 0, ',', '.') }}
                                     </td>
                                 </tr>
                                 @endif

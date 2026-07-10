@@ -321,7 +321,7 @@
                 </li>
                 @endforeach
 
-                {{-- ── Baris diskon (hanya tampil jika ada) ── --}}
+                {{-- ── Baris diskon rombongan (hanya tampil jika ada) ── --}}
                 @if($pesanan->diskon_persen > 0)
                 <li style="background:#f0fdf4; border-radius:8px; padding:10px 4px; margin-top:4px;">
                     <div>
@@ -338,10 +338,25 @@
                     </div>
                 </li>
                 @endif
+
+                {{-- ── Baris diskon voucher (hanya tampil jika ada) ── --}}
+                @if($pesanan->diskon_voucher_nominal > 0)
+                <li style="background:#f5f3ff; border-radius:8px; padding:10px 4px; margin-top:4px;">
+                    <div>
+                        <div class="tiket-nama" style="color:#7c3aed;">
+                            <i class="bi bi-ticket-perforated-fill me-1"></i>
+                            Voucher {{ $pesanan->kode_voucher }}
+                        </div>
+                    </div>
+                    <div class="tiket-sub" style="color:#7c3aed;">
+                        - Rp {{ number_format($pesanan->diskon_voucher_nominal, 0, ',', '.') }}
+                    </div>
+                </li>
+                @endif
             </ul>
 
             {{-- Subtotal sebelum diskon (hanya tampil jika ada diskon) --}}
-            @if($pesanan->diskon_persen > 0)
+            @if($pesanan->diskon_persen > 0 || $pesanan->diskon_voucher_nominal > 0)
             <div style="display:flex; justify-content:space-between; padding:8px 0; color:#6B7280; font-size:.88rem;">
                 <span>Subtotal sebelum diskon</span>
                 <span>Rp {{ number_format($subtotalMentah, 0, ',', '.') }}</span>
@@ -355,23 +370,26 @@
 
             {{-- CTA --}}
             <div class="mt-4">
-                @if($pesanan->status_pembayaran == 'Unpaid')
-                    <button
-                        type="button"
-                        class="btn-bayar"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalPembayaran"
-                    >
-                        <i class="bi bi-qr-code-scan me-2"></i> Bayar dengan QRIS / E-Wallet
-                    </button>
-                    <p class="text-center text-muted mt-2 mb-0" style="font-size:12px;">
-                        Pembayaran diproses secara aman dan terenkripsi.
-                    </p>
-                @elseif($pesanan->status_pembayaran == 'Paid')
-                    <a href="{{ route('cetak.eticket', $pesanan->kode_pesanan) }}" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">
-                     <i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket
-                    </a>
-                @endif
+                <div id="area-pembayaran">
+                    @if($pesanan->status_pembayaran == 'Unpaid')
+                        @if($snapToken)
+                        <button type="button" id="btn-bayar-midtrans" class="btn-bayar">
+                            <i class="bi bi-credit-card-fill me-2"></i> Bayar Sekarang
+                        </button>
+                        <p class="text-center text-muted mt-2 mb-0" style="font-size:12px;">
+                            Pilih QRIS, E-Wallet, VA Bank, atau kartu — diproses aman oleh Midtrans.
+                        </p>
+                        @else
+                        <div class="alert alert-warning text-center mb-0" style="font-size:13px;">
+                            Gateway pembayaran sedang tidak tersedia. Silakan coba lagi nanti.
+                        </div>
+                        @endif
+                    @elseif($pesanan->status_pembayaran == 'Paid')
+                        <a href="{{ route('cetak.eticket', $pesanan->kode_pesanan) }}" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">
+                         <i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket
+                        </a>
+                    @endif
+                </div>
             </div>
 
         </div>
@@ -384,101 +402,73 @@
 </div>
 
 {{-- ══════════════════════════════════════════════
-     MODAL PEMBAYARAN
+     SCRIPT MIDTRANS SNAP + AUTO-POLLING STATUS
 ══════════════════════════════════════════════ --}}
-@if(isset($pesanan) && $pesanan)
-<div class="modal fade modal-qr" id="modalPembayaran" tabindex="-1" aria-labelledby="modalPembayaranLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-top-bar"></div>
+@if(isset($pesanan) && $pesanan && $pesanan->status_pembayaran == 'Unpaid' && $snapToken)
+<script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+        data-client-key="{{ config('midtrans.client_key') }}"></script>
 
-            <div class="modal-body text-center">
-                {{-- Header modal --}}
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="text-start">
-                        <h5 class="fw-bold mb-0">Pembayaran QRIS</h5>
-                        <p class="text-muted mb-0" style="font-size:.82rem;">
-                            Scan QR menggunakan aplikasi apapun
-                        </p>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                {{-- QR Code — 100% lokal, zero request eksternal --}}
-                <div class="qr-frame">
-                    <div id="qrcode-container" style="width:200px;height:200px;"></div>
-                </div>
-
-                {{-- Nominal --}}
-                <div class="mb-1">
-                    <span class="text-muted" style="font-size:.85rem;">Total yang harus dibayar</span>
-                </div>
-                <h3 class="fw-bold text-primary mb-3">
-                    Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}
-                </h3>
-
-                {{-- Logo e-wallet --}}
-                <div class="payment-logos">
-                    <span>GoPay</span>
-                    <span>OVO</span>
-                    <span>DANA</span>
-                    <span>ShopeePay</span>
-                    <span>LinkAja</span>
-                    <span>M-Banking</span>
-                </div>
-
-                <hr class="my-3">
-
-                {{-- Konfirmasi --}}
-                <form action="{{ route('simulasi.bayar', $pesanan->kode_pesanan) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn-konfirmasi">
-                        <i class="bi bi-check-circle-fill me-2"></i> Konfirmasi Pembayaran
-                    </button>
-                </form>
-                <small class="text-muted d-block mt-2">
-                    Sistem akan memverifikasi pembayaran Anda secara otomatis.
-                </small>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-
-{{-- ── Script: QR lokal + auto-open modal ── --}}
-{{-- Simpan file qr-local.js ke public/assets/js/qr-local.js --}}
-<script src="{{ asset('assets/js/qr-local.js') }}"></script>
 <script>
 (function () {
-    var rendered = false;
+    var urlCekStatus    = @json(route('checkout.cek-status-ajax', $pesanan->kode_pesanan));
+    var urlETicket       = @json(route('cetak.eticket', $pesanan->kode_pesanan));
+    var pollingInterval = null;
 
-    function doRender() {
-        if (rendered) return;
-        rendered = true;
-        if (typeof QRLocal !== 'undefined') {
-            QRLocal.render(
-                '{{ isset($pesanan) ? addslashes($pesanan->kode_pesanan) : "" }}',
-                'qrcode-container',
-                200,
-                '#1A3D2B'
-            );
-        }
+    function tampilkanTombolETicket() {
+        var area = document.getElementById('area-pembayaran');
+        if (!area) return;
+        area.innerHTML =
+            '<a href="' + urlETicket + '" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">' +
+                '<i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket' +
+            '</a>' +
+            '<p class="text-center mt-2 mb-0" style="font-size:13px; color:#059669;">' +
+                '<i class="bi bi-check-circle-fill me-1"></i>Pembayaran berhasil dikonfirmasi!' +
+            '</p>';
     }
 
-    var modalEl = document.getElementById('modalPembayaran');
-    if (modalEl) {
-        modalEl.addEventListener('show.bs.modal', doRender);
+    function mulaiPolling() {
+        if (pollingInterval) return;
+        pollingInterval = setInterval(function () {
+            fetch(urlCekStatus)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.status === 'Paid') {
+                        clearInterval(pollingInterval);
+                        tampilkanTombolETicket();
+                    }
+                })
+                .catch(function () {});
+        }, 4000); // cek tiap 4 detik
+
+        // Berhenti otomatis setelah 5 menit supaya tidak polling selamanya
+        setTimeout(function () { if (pollingInterval) clearInterval(pollingInterval); }, 5 * 60 * 1000);
     }
 
-    @if(session('success_checkout') && isset($pesanan) && $pesanan && $pesanan->status_pembayaran == 'Unpaid')
+    var btn = document.getElementById('btn-bayar-midtrans');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            snap.pay(@json($snapToken), {
+                onSuccess: function () { mulaiPolling(); },
+                onPending: function () { mulaiPolling(); },
+                onError: function () {
+                    alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
+                },
+                onClose: function () {
+                    // Popup ditutup manual — tetap mulai polling jaga-jaga kalau ternyata sudah kebayar
+                    mulaiPolling();
+                }
+            });
+        });
+    }
+
+    @if(session('success_checkout'))
+    // Baru saja selesai checkout — otomatis buka popup pembayaran
     document.addEventListener('DOMContentLoaded', function () {
-        var el = document.getElementById('modalPembayaran');
-        if (el && typeof bootstrap !== 'undefined') {
-            new bootstrap.Modal(el).show();
-        }
+        if (btn) btn.click();
     });
     @endif
 })();
 </script>
+@endif
 
 @endsection

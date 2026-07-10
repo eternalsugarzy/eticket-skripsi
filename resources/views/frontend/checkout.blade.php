@@ -10,6 +10,7 @@
         @csrf
         <input type="hidden" name="id_objek" value="{{ $wisata->id }}">
         <input type="hidden" name="total_bayar" id="input-total" value="0">
+        <input type="hidden" name="kode_voucher" id="input-kode-voucher" value="">
 
         <div class="row">
 
@@ -111,7 +112,6 @@
                         @forelse($hargaTikets as $ht)
                         <div class="tiket-row d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
                             <div>
-                                {{-- PERBAIKAN: nama kolom di tabel jenis_tikets adalah "nama_jenis", bukan "nama_tiket" --}}
                                 <h6 class="mb-0 fw-bold tiket-nama">{{ $ht->jenisTiket->nama_jenis ?? 'Tiket Reguler' }}</h6>
                                 <span class="text-muted" style="font-size: 14px;">
                                     Rp {{ number_format($ht->harga, 0, ',', '.') }} / orang
@@ -150,6 +150,22 @@
                             Harga tiket belum diatur oleh Admin.
                         </div>
                         @endforelse
+
+                        <hr class="text-muted">
+
+                        {{-- Kode Voucher --}}
+                        <h5 class="fw-bold mt-4 mb-3">
+                            <i class="bi bi-tag-fill text-primary me-2"></i>
+                            Punya Kode Voucher?
+                        </h5>
+                        <div class="input-group mb-2">
+                            <input type="text" id="input-kode-voucher-ketik" class="form-control text-uppercase"
+                                   placeholder="Masukkan kode voucher" style="font-family:monospace; letter-spacing:.05em;">
+                            <button type="button" id="btn-cek-voucher" class="btn btn-outline-primary fw-bold">
+                                Terapkan
+                            </button>
+                        </div>
+                        <div id="voucher-feedback"></div>
 
                     </div>{{-- /card-body --}}
                 </div>{{-- /card --}}
@@ -212,31 +228,38 @@
 
 {{-- =====================================================================
      SCRIPT: langsung di bawah konten, TIDAK di @section('scripts')
-     Ini memastikan script berjalan SETELAH semua elemen HTML ada di DOM,
-     tanpa bergantung pada apakah layout me-yield section 'scripts' atau tidak.
 ====================================================================== --}}
 
-{{-- Embed tier diskon --}}
+{{-- Embed tier diskon rombongan --}}
 <script>
     const DISKON_TIERS = @json($diskonTiers);
+    const URL_CEK_VOUCHER = "{{ route('voucher.cek') }}";
+    const CSRF_TOKEN = "{{ csrf_token() }}";
 </script>
 
 <script>
 (function () {
     function init() {
-        var displayTotal  = document.getElementById('display-total');
-        var inputTotal    = document.getElementById('input-total');
-        var btnSubmit     = document.getElementById('btn-submit');
-        var rincianBox    = document.getElementById('rincian-tiket');
+        var displayTotal      = document.getElementById('display-total');
+        var inputTotal         = document.getElementById('input-total');
+        var inputKodeVoucher   = document.getElementById('input-kode-voucher');
+        var inputKodeKetik     = document.getElementById('input-kode-voucher-ketik');
+        var btnSubmit          = document.getElementById('btn-submit');
+        var rincianBox         = document.getElementById('rincian-tiket');
+        var btnCekVoucher       = document.getElementById('btn-cek-voucher');
+        var voucherFeedbackBox = document.getElementById('voucher-feedback');
 
         if (!displayTotal || !inputTotal || !btnSubmit) return;
+
+        // Voucher yang sedang aktif diterapkan (null kalau belum ada)
+        var voucherAktif = null;
 
         function formatRupiah(angka) {
             return 'Rp ' + Number(angka).toLocaleString('id-ID');
         }
 
-        // Cari tier diskon tertinggi
-        function cariDiskon(totalQty) {
+        // Cari tier diskon rombongan tertinggi
+        function cariDiskonRombongan(totalQty) {
             var best = null;
             DISKON_TIERS.forEach(function(tier) {
                 if (totalQty >= tier.min_orang) {
@@ -244,6 +267,27 @@
                 }
             });
             return best;
+        }
+
+        // Hitung nominal diskon voucher berdasarkan subtotal SETELAH diskon rombongan
+        function hitungNominalVoucher(subtotalSetelahRombongan) {
+            if (!voucherAktif) return 0;
+
+            if (voucherAktif.minimal_pembelian && subtotalSetelahRombongan < voucherAktif.minimal_pembelian) {
+                return 0; // syarat minimal tidak lagi terpenuhi (jumlah tiket dikurangi)
+            }
+
+            var nominal;
+            if (voucherAktif.tipe_diskon === 'persen') {
+                nominal = Math.round(subtotalSetelahRombongan * voucherAktif.nilai_diskon / 100);
+                if (voucherAktif.maks_diskon && nominal > voucherAktif.maks_diskon) {
+                    nominal = voucherAktif.maks_diskon;
+                }
+            } else {
+                nominal = voucherAktif.nilai_diskon;
+            }
+
+            return Math.min(nominal, subtotalSetelahRombongan);
         }
 
         function calculateTotal() {
@@ -271,22 +315,36 @@
                 }
             });
 
-            // Hitung diskon
-            var tierAktif    = cariDiskon(totalQty);
-            var persen       = tierAktif ? parseFloat(tierAktif.persen_diskon) : 0;
-            var nominalDisk  = Math.round(subtotal * persen / 100);
-            var totalAkhir   = subtotal - nominalDisk;
+            // 1. Diskon rombongan
+            var tierAktif      = cariDiskonRombongan(totalQty);
+            var persenRombongan = tierAktif ? parseFloat(tierAktif.persen_diskon) : 0;
+            var nominalRombongan = Math.round(subtotal * persenRombongan / 100);
+            var subtotalSetelahRombongan = subtotal - nominalRombongan;
 
-            // Tampilkan rincian diskon
-            if (persen > 0) {
+            // 2. Diskon voucher (dihitung dari subtotal setelah rombongan)
+            var nominalVoucher = hitungNominalVoucher(subtotalSetelahRombongan);
+            var totalAkhir     = subtotalSetelahRombongan - nominalVoucher;
+
+            // Tampilkan rincian subtotal & diskon kalau ada salah satunya
+            if (persenRombongan > 0 || nominalVoucher > 0) {
                 rincian +=
                     '<div class="d-flex justify-content-between text-muted mb-1">' +
                         '<span>Subtotal</span>' +
                         '<span>' + formatRupiah(subtotal) + '</span>' +
-                    '</div>' +
+                    '</div>';
+            }
+            if (persenRombongan > 0) {
+                rincian +=
                     '<div class="d-flex justify-content-between mb-1" style="color:#059669; font-weight:600;">' +
-                        '<span><i class="bi bi-tag-fill me-1"></i>Diskon Rombongan (' + persen + '%)</span>' +
-                        '<span>- ' + formatRupiah(nominalDisk) + '</span>' +
+                        '<span><i class="bi bi-tag-fill me-1"></i>Diskon Rombongan (' + persenRombongan + '%)</span>' +
+                        '<span>- ' + formatRupiah(nominalRombongan) + '</span>' +
+                    '</div>';
+            }
+            if (nominalVoucher > 0) {
+                rincian +=
+                    '<div class="d-flex justify-content-between mb-1" style="color:#7c3aed; font-weight:600;">' +
+                        '<span><i class="bi bi-ticket-perforated-fill me-1"></i>Voucher ' + voucherAktif.kode + '</span>' +
+                        '<span>- ' + formatRupiah(nominalVoucher) + '</span>' +
                     '</div>';
             }
 
@@ -294,8 +352,11 @@
             inputTotal.value       = totalAkhir;
             rincianBox.innerHTML   = rincian;
             btnSubmit.disabled     = (totalQty === 0);
+
+            return subtotalSetelahRombongan;
         }
 
+        // ── Tombol +/- jumlah tiket ──
         document.addEventListener('click', function(e) {
             var target = e.target;
             if (target.tagName === 'I') target = target.parentElement;
@@ -314,6 +375,73 @@
                 if (input && parseInt(input.value, 10) > 0) { input.value -= 1; calculateTotal(); }
             }
         });
+
+        // ── Tombol Terapkan Voucher ──
+        if (btnCekVoucher) {
+            btnCekVoucher.addEventListener('click', function () {
+                var kode = inputKodeKetik.value.trim();
+                if (!kode) return;
+
+                var subtotalSetelahRombongan = calculateTotal(); // hitung ulang tanpa voucher dulu untuk dapat subtotal terkini
+
+                btnCekVoucher.disabled = true;
+                btnCekVoucher.innerText = 'Mengecek...';
+
+                fetch(URL_CEK_VOUCHER, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ kode: kode, subtotal: subtotalSetelahRombongan })
+                })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    btnCekVoucher.disabled = false;
+                    btnCekVoucher.innerText = 'Terapkan';
+
+                    if (data.valid) {
+                        voucherAktif = {
+                            kode: data.voucher.kode,
+                            tipe_diskon: data.voucher.tipe_diskon,
+                            nilai_diskon: parseFloat(data.voucher.nilai_diskon),
+                            maks_diskon: data.voucher.maks_diskon ? parseFloat(data.voucher.maks_diskon) : null,
+                            minimal_pembelian: data.voucher.minimal_pembelian ? parseFloat(data.voucher.minimal_pembelian) : null
+                        };
+                        inputKodeVoucher.value = voucherAktif.kode;
+                        voucherFeedbackBox.innerHTML =
+                            '<div class="alert alert-success py-2 px-3 mb-0 mt-2 d-flex justify-content-between align-items-center" style="font-size:13px;">' +
+                                '<span><i class="bi bi-check-circle-fill me-1"></i>' + data.pesan + '</span>' +
+                                '<button type="button" id="btn-hapus-voucher" class="btn btn-sm btn-link text-danger p-0" style="font-size:12px;">Hapus</button>' +
+                            '</div>';
+
+                        document.getElementById('btn-hapus-voucher').addEventListener('click', function () {
+                            voucherAktif = null;
+                            inputKodeVoucher.value = '';
+                            inputKodeKetik.value = '';
+                            voucherFeedbackBox.innerHTML = '';
+                            calculateTotal();
+                        });
+                    } else {
+                        voucherAktif = null;
+                        inputKodeVoucher.value = '';
+                        voucherFeedbackBox.innerHTML =
+                            '<div class="alert alert-danger py-2 px-3 mb-0 mt-2" style="font-size:13px;">' +
+                                '<i class="bi bi-x-circle-fill me-1"></i>' + data.pesan +
+                            '</div>';
+                    }
+
+                    calculateTotal();
+                })
+                .catch(function () {
+                    btnCekVoucher.disabled = false;
+                    btnCekVoucher.innerText = 'Terapkan';
+                    voucherFeedbackBox.innerHTML =
+                        '<div class="alert alert-danger py-2 px-3 mb-0 mt-2" style="font-size:13px;">Gagal memeriksa voucher, coba lagi.</div>';
+                });
+            });
+        }
 
         calculateTotal();
     }

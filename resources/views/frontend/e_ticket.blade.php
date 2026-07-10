@@ -230,6 +230,18 @@
                 </tr>
                 @endif
 
+                {{-- ── Baris diskon voucher ── --}}
+                @if($pesanan->diskon_voucher_nominal > 0)
+                <tr style="background:#f5f3ff;">
+                    <td colspan="2" style="color:#7c3aed; font-weight:600; font-size:13px;">
+                        🎟️ Voucher {{ $pesanan->kode_voucher }}
+                    </td>
+                    <td style="color:#7c3aed; font-weight:700; font-size:13px;">
+                        - Rp {{ number_format($pesanan->diskon_voucher_nominal, 0, ',', '.') }}
+                    </td>
+                </tr>
+                @endif
+
                 <tr class="total-row">
                     <td colspan="2" style="text-align:right; padding-right:20px;">Total Pembayaran</td>
                     <td style="font-weight:700;">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</td>

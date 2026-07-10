@@ -26,6 +26,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\UlasanAdminController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\VoucherController;
 
 
 // =========================================================================
@@ -45,12 +46,14 @@ Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 Route::get('/checkout/{id_objek}', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('checkout.proses');
 Route::get('/cek-pesanan', [CheckoutController::class, 'cekPesanan'])->name('cek-pesanan');
+Route::get('/cek-status-pembayaran/{kode}', [CheckoutController::class, 'cekStatusAjax'])->name('checkout.cek-status-ajax');
 
 Route::post('/simulasi-bayar/{kode_pesanan}', [CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
 Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->name('cetak.eticket');
 
 // API tier diskon (dipanggil JS, tidak perlu login)
 Route::get('/api/diskon-tiers', [DiskonRombonganController::class, 'apiTiers'])->name('diskon.tiers');
+Route::post('/api/cek-voucher', [CheckoutController::class, 'cekVoucher'])->name('voucher.cek');
 
 // Manajemen Pesanan Online (Admin)
 Route::get('/pesanan-online', [App\Http\Controllers\PesananOnlineController::class, 'index'])->name('pesanan-online.index');
@@ -86,13 +89,16 @@ Route::middleware('auth')->group(function () {
     // 1. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Manajemen User, Wilayah & Diskon Rombongan — hanya admin & kadis provinsi
+    // 2. Manajemen User, Wilayah, Diskon Rombongan & Voucher — hanya admin & kadis provinsi
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('kabupatens', KabupatenController::class);
         Route::resource('diskon-rombongan', DiskonRombonganController::class)->parameters([
             'diskon-rombongan' => 'diskonRombongan'
         ]);
+        Route::resource('kelola-voucher', VoucherController::class)
+            ->except(['show'])
+            ->parameters(['kelola-voucher' => 'voucher']);
     });
 
     // 2b. Manajemen Banner — semua role dinas (admin, kadis_provinsi, kadis_kabkota) boleh upload

@@ -326,6 +326,12 @@
                             <span class="pc-mtext">Diskon Rombongan</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ request()->is('kelola-voucher*') ? 'active' : '' }}">
+                        <a href="{{ route('kelola-voucher.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-ticket"></i></span>
+                            <span class="pc-mtext">Kode Voucher</span>
+                        </a>
+                    </li>
                     @endif
 
                     {{-- ── KONTEN WEBSITE — Berita, Banner, Galeri ──
