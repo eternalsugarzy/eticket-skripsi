@@ -164,6 +164,14 @@ Route::middleware('auth')->group(function () {
     // 9. Laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/cetak-pengunjung', [LaporanController::class, 'cetakPengunjung'])->name('laporan.cetak-pengunjung');
+    Route::get('/laporan/cetak-offline', [LaporanController::class, 'cetakOffline'])->name('laporan.cetak-offline');
+    Route::get('/laporan/cetak-online', [LaporanController::class, 'cetakOnline'])->name('laporan.cetak-online');
+    Route::get('/laporan/cetak-ulasan', [LaporanController::class, 'cetakUlasan'])->name('laporan.cetak-ulasan');
+    Route::get('/laporan/cetak-tren', [LaporanController::class, 'cetakTren'])->name('laporan.cetak-tren');
+    Route::get('/laporan/cetak-validasi', [LaporanController::class, 'cetakValidasi'])->name('laporan.cetak-validasi');
+    Route::get('/laporan/cetak-publikasi', [LaporanController::class, 'cetakPublikasi'])->name('laporan.cetak-publikasi');
+    Route::get('/laporan/cetak-voucher', [LaporanController::class, 'cetakVoucher'])->name('laporan.cetak-voucher');
+    Route::get('/laporan/cetak-wishlist', [LaporanController::class, 'cetakWishlist'])->name('laporan.cetak-wishlist');
     Route::get('/laporan/cetak-pendapatan', [LaporanController::class, 'cetakPendapatan'])->name('laporan.cetak-pendapatan');
     Route::get('/laporan/cetak-tiket', [LaporanController::class, 'cetakTiket'])->name('laporan.cetak-tiket');
     Route::get('/laporan/cetak-objek', [LaporanController::class, 'cetakObjek'])->name('laporan.cetak-objek');
@@ -171,6 +179,14 @@ Route::middleware('auth')->group(function () {
 
     // Export Excel
     Route::get('/laporan/export-pengunjung', [LaporanController::class, 'exportPengunjung'])->name('laporan.export-pengunjung');
+    Route::get('/laporan/export-offline', [LaporanController::class, 'exportOffline'])->name('laporan.export-offline');
+    Route::get('/laporan/export-online', [LaporanController::class, 'exportOnline'])->name('laporan.export-online');
+    Route::get('/laporan/export-ulasan', [LaporanController::class, 'exportUlasan'])->name('laporan.export-ulasan');
+    Route::get('/laporan/export-tren', [LaporanController::class, 'exportTren'])->name('laporan.export-tren');
+    Route::get('/laporan/export-validasi', [LaporanController::class, 'exportValidasi'])->name('laporan.export-validasi');
+    Route::get('/laporan/export-publikasi', [LaporanController::class, 'exportPublikasi'])->name('laporan.export-publikasi');
+    Route::get('/laporan/export-voucher', [LaporanController::class, 'exportVoucher'])->name('laporan.export-voucher');
+    Route::get('/laporan/export-wishlist', [LaporanController::class, 'exportWishlist'])->name('laporan.export-wishlist');
     Route::get('/laporan/export-pendapatan', [LaporanController::class, 'exportPendapatan'])->name('laporan.export-pendapatan');
     Route::get('/laporan/export-tiket', [LaporanController::class, 'exportTiket'])->name('laporan.export-tiket');
     Route::get('/laporan/export-objek', [LaporanController::class, 'exportObjek'])->name('laporan.export-objek');

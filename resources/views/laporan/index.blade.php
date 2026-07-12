@@ -160,6 +160,298 @@
 
 </div>
 
+{{-- ===== SECTION: LAPORAN TAMBAHAN ===== --}}
+<h6 class="text-muted text-uppercase fw-bold mb-3" style="font-size:11px; letter-spacing:.08em;">
+    <i class="ti ti-report me-1"></i> Laporan Tambahan
+</h6>
+<div class="row g-3 mb-4">
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#0d6efd"><i class="ti ti-device-desktop fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Penjualan Tiket Offline</h6>
+                    <small class="text-muted">Khusus transaksi kasir di loket</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-offline') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm fw-bold flex-fill">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-offline') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#0891b2"><i class="ti ti-world fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Penjualan Tiket Reservasi Online</h6>
+                    <small class="text-muted">Khusus pesanan via website</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-online') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#0891b2">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-online') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#f59e0b"><i class="ti ti-star fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Data Ulasan & Kepuasan Pengunjung</h6>
+                    <small class="text-muted">Rata-rata rating & detail ulasan</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-ulasan') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#f59e0b">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-ulasan') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#dc2626"><i class="ti ti-trending-up fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Analisis Tren Kunjungan Wisata</h6>
+                    <small class="text-muted">Rekap per bulan dalam 1 tahun</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-tren') }}" method="GET" target="_blank">
+                    <label class="form-label small fw-bold text-muted">Pilih Tahun</label>
+                    <select name="tahun" class="form-select form-select-sm" required>
+                        @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                            <option value="{{ $y }}" {{ $y == date('Y') ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#dc2626">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-tren') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#059669"><i class="ti ti-qrcode fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Data Validasi Tiket Gate</h6>
+                    <small class="text-muted">Riwayat tiket yang sudah discan masuk</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-validasi') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#059669">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-validasi') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#7c3aed"><i class="ti ti-speakerphone fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Publikasi Berita dan Promosi Wisata</h6>
+                    <small class="text-muted">Gabungan aktivitas Berita & Event</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-publikasi') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#7c3aed">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-publikasi') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#db2777"><i class="ti ti-ticket fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Penggunaan Voucher</h6>
+                    <small class="text-muted">Ringkasan & detail pemakaian kode promo</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-voucher') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#db2777">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-voucher') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#e11d48"><i class="ti ti-heart fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Wishlist Terpopuler</h6>
+                    <small class="text-muted">Ranking destinasi paling difavoritkan</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-wishlist') }}" method="GET" target="_blank">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Dari Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_awal" required value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Sampai Tanggal</label>
+                            <input type="date" class="form-control form-control-sm" name="tgl_akhir" required value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#e11d48">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-wishlist') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {{-- ===== SECTION: CETAK DATA MASTER ===== --}}
 <h6 class="text-muted text-uppercase fw-bold mb-3" style="font-size:11px; letter-spacing:.08em;">
     <i class="ti ti-database me-1"></i> Cetak Data Master
