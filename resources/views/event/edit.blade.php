@@ -2,9 +2,7 @@
 @section('title', 'Edit Event')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-6 mx-auto">
-        <div class="card card-modern">
+<div class="card card-modern">
             <div class="card-header-modern">
                 <h5 class="card-title-modern"><i class="ti ti-calendar-event me-2"></i> Edit Event</h5>
             </div>
@@ -67,6 +65,5 @@
                 </form>
             </div>
         </div>
-    </div>
 </div>
 @endsection

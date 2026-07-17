@@ -2,9 +2,7 @@
 @section('title', 'Kelola Video Terbaru')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-6 mx-auto">
-        <div class="card card-modern">
+<div class="card card-modern">
             <div class="card-header-modern">
                 <h5 class="card-title-modern"><i class="ti ti-brand-youtube me-2"></i> Kelola Video Terbaru</h5>
             </div>
@@ -52,6 +50,5 @@
                 </form>
             </div>
         </div>
-    </div>
 </div>
 @endsection

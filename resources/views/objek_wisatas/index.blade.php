@@ -65,6 +65,8 @@
                                 <th>Foto & Nama Objek</th>
                                 <th>Lokasi & Status</th>
                                 <th>Alamat</th>
+                                <th>Deskripsi</th>
+                                <th>Populer</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -80,12 +82,7 @@
                                              class="rounded me-3" 
                                              style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd; background-color: #f8f9fa;">
                                         <div>
-                                            <strong class="d-block mb-1">
-                                                {{ $ow->nama_objek }}
-                                                @if($ow->is_populer)
-                                                    <span class="text-warning ms-1" title="Destinasi Populer"><i class="ti ti-star-filled"></i></span>
-                                                @endif
-                                            </strong>
+                                            <strong class="d-block mb-1">{{ $ow->nama_objek }}</strong>
                                             <small class="text-muted"><i class="ti ti-clock"></i> {{ $ow->jam_operasional ?? '-' }}</small>
                                         </div>
                                     </div>
@@ -108,6 +105,16 @@
                                     <small class="text-muted" style="font-size: 0.75rem;">Lat: {{ $ow->latitude ?? '-' }}, Lon: {{ $ow->longitude ?? '-' }}</small>
                                 </td>
 
+                                <td>{{ $ow->deskripsi ? Str::limit($ow->deskripsi, 50) : '-' }}</td>
+
+                                <td>
+                                    @if($ow->is_populer)
+                                        <span class="badge bg-light-warning text-warning"><i class="ti ti-star-filled"></i> Ya</span>
+                                    @else
+                                        <span class="badge bg-light-secondary text-secondary">Tidak</span>
+                                    @endif
+                                </td>
+
                                 <td>
                                     <div class="d-flex">
                                         <a href="{{ route('objek-wisata.edit', $ow->id) }}" class="btn btn-icon btn-link-warning me-2" title="Edit Data">
@@ -124,7 +131,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center p-4">
+                                <td colspan="7" class="text-center p-4">
                                     <div class="text-muted">
                                         <i class="ti ti-search fs-2 mb-2"></i><br>
                                         Data tidak ditemukan.

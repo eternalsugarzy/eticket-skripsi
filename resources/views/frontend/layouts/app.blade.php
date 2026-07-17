@@ -542,19 +542,6 @@
 
                                 <hr class="masuk-divider">
 
-                                {{-- Pilihan 2: Petugas Dinas --}}
-                                <a href="{{ route('login') }}" class="masuk-option">
-                                    <div class="masuk-option-icon officer">
-                                        <i class="bi bi-shield-fill-check"></i>
-                                    </div>
-                                    <div>
-                                        <div class="masuk-option-label">Masuk sebagai Petugas Dinas</div>
-                                        <div class="masuk-option-sub">Kadis Provinsi / Kadis Kab-Kota</div>
-                                    </div>
-                                </a>
-
-                                <hr class="masuk-divider">
-
                                 <a href="{{ route('pengunjung.register.form') }}" class="masuk-register-link">
                                     Belum punya akun? <strong>Daftar di sini</strong>
                                 </a>
@@ -579,6 +566,11 @@
         <div class="container">
             <p>&copy; {{ date('Y') }} Dinas Pariwisata Provinsi Kalimantan Selatan. Hak Cipta Dilindungi.</p>
             <small>Sistem Informasi E-Tourism Terintegrasi</small>
+            <div class="mt-2">
+                <a href="{{ route('login') }}" style="color: rgba(255,255,255,.5); font-size: .75rem; text-decoration: none;">
+                    <i class="bi bi-shield-fill-check"></i> Masuk sebagai Petugas Dinas
+                </a>
+            </div>
         </div>
     </footer>
 

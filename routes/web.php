@@ -55,10 +55,6 @@ Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->
 Route::get('/api/diskon-tiers', [DiskonRombonganController::class, 'apiTiers'])->name('diskon.tiers');
 Route::post('/api/cek-voucher', [CheckoutController::class, 'cekVoucher'])->name('voucher.cek');
 
-// Manajemen Pesanan Online (Admin)
-Route::get('/pesanan-online', [App\Http\Controllers\PesananOnlineController::class, 'index'])->name('pesanan-online.index');
-Route::get('/pesanan-online/{id}', [App\Http\Controllers\PesananOnlineController::class, 'show'])->name('pesanan-online.show');
-
 // ── Auth Staff (Admin/Kadis/Kasir/Petugas) ──
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -153,6 +149,10 @@ Route::middleware('auth')->group(function () {
 
     // 7. Data Pengunjung
     Route::get('data-pengunjung', [DataPengunjungController::class, 'index'])->name('data_pengunjung.index');
+
+    // 7b. Manajemen Pesanan Online (wajib login staff — sebelumnya bocor di rute publik)
+    Route::get('/pesanan-online', [App\Http\Controllers\PesananOnlineController::class, 'index'])->name('pesanan-online.index');
+    Route::get('/pesanan-online/{id}', [App\Http\Controllers\PesananOnlineController::class, 'show'])->name('pesanan-online.show');
 
     // 8. Foto Wisata
     Route::get('/foto-wisata/{filename}', function ($filename) {

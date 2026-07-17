@@ -2,9 +2,7 @@
 @section('title', 'Tambah Tier Diskon Rombongan')
 
 @section('content')
-<div class="row">
-    <div class="col-md-6 mx-auto">
-        <div class="card card-modern">
+<div class="card card-modern">
             <div class="card-header-modern">
                 <h5 class="card-title-modern"><i class="ti ti-discount me-2"></i> Tambah Tier Diskon Rombongan</h5>
             </div>
@@ -60,6 +58,5 @@
                 </form>
             </div>
         </div>
-    </div>
 </div>
 @endsection

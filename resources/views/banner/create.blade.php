@@ -2,9 +2,7 @@
 @section('title', 'Tambah Banner')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-7 mx-auto">
-        <div class="card card-modern">
+<div class="card card-modern">
             <div class="card-header-modern">
                 <h5 class="card-title-modern"><i class="ti ti-photo me-2"></i> Tambah Banner Baru</h5>
             </div>
@@ -77,7 +75,6 @@
                 </form>
             </div>
         </div>
-    </div>
 </div>
 @endsection
 

@@ -2,9 +2,7 @@
 @section('title', 'Edit Voucher')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-7 mx-auto">
-        <div class="card card-modern">
+<div class="card card-modern">
             <div class="card-header-modern">
                 <h5 class="card-title-modern"><i class="ti ti-ticket me-2"></i> Edit Voucher</h5>
             </div>
@@ -88,7 +86,6 @@
                 </form>
             </div>
         </div>
-    </div>
 </div>
 @endsection
 

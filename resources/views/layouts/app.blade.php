@@ -9,13 +9,14 @@
 
     <link rel="icon" href="{{ asset('assets/images/logo1.png') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/fonts/material.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
     <link rel="stylesheet" href="{{ asset('assets/css/style-preset.css') }}">
+    @stack('styles')
 
     <style>
         :root {
@@ -38,13 +39,19 @@
             --shadow-card:     0 2px 16px rgba(0,0,0,0.07);
         }
 
-        body { font-family: 'Public Sans', sans-serif; background: #f5f6fa; color: #1e2742; }
-        h1,h2,h3,h4,h5,h6 { font-family: 'Plus Jakarta Sans', 'Public Sans', sans-serif; font-weight: 600; }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: #f5f6fa;
+            color: #333d52;
+            line-height: 1.6;
+            letter-spacing: 0.001em;
+        }
+        h1,h2,h3,h4,h5,h6 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; color: #1e2742; letter-spacing: -0.01em; }
 
         .pc-sidebar {
             background: var(--sidebar-bg) !important;
             width: var(--sidebar-width);
-            box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+            box-shadow: none;
             border-right: 1px solid #ede9e3;
         }
         .pc-sidebar .navbar-wrapper { background: var(--sidebar-bg); }
@@ -63,9 +70,17 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: #b0b8cc;
-            padding: 20px 20px 6px;
+            padding: 22px 20px 8px;
+            display: block;
         }
+        .pc-sidebar .pc-navbar .pc-item.pc-caption:not(:first-child) > label {
+            margin-top: 6px;
+            border-top: 1px solid #ede9e3;
+            padding-top: 18px;
+        }
+        .pc-sidebar .pc-navbar .pc-item { position: relative; }
         .pc-sidebar .pc-navbar .pc-item .pc-link {
+            position: relative;
             color: var(--sidebar-text);
             padding: 10px 18px;
             margin: 2px 10px;
@@ -73,7 +88,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s ease;
+            transition: background 0.15s ease, color 0.15s ease;
             font-weight: 500;
             font-size: 14px;
         }
@@ -85,36 +100,43 @@
             box-shadow: none;
             font-weight: 600;
         }
+        .pc-sidebar .pc-navbar .pc-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 18px;
+            background: var(--brand-primary);
+            border-radius: 0 3px 3px 0;
+        }
         .pc-sidebar .pc-navbar .pc-item.active .pc-link .pc-micon i,
         .pc-sidebar .pc-navbar .pc-item .pc-link.active .pc-micon i { color: var(--brand-primary); }
-        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-micon i { font-size: 18px; line-height: 1; }
+        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-micon {
+            width: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .pc-sidebar .pc-navbar .pc-item .pc-link .pc-micon i { font-size: 18px; line-height: 1; transition: color 0.15s ease; }
         .pc-sidebar .pc-navbar .pc-item .pc-link .pc-mtext { font-size: 13.5px; }
         .pc-sidebar .pc-navbar .btn-primary {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, #7b2ff7 100%) !important;
+            background: var(--brand-primary) !important;
             border: none !important;
+            border-radius: 10px;
+            padding: 11px 16px;
             font-size: 13px !important;
+            font-weight: 600;
             letter-spacing: 0.01em;
-            box-shadow: 0 4px 14px rgba(67,97,238,0.35) !important;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 2px 8px rgba(67,97,238,0.25) !important;
+            transition: background 0.15s ease, box-shadow 0.15s ease;
         }
         .pc-sidebar .pc-navbar .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(67,97,238,0.45) !important;
+            background: #3a52d1 !important;
+            box-shadow: 0 4px 12px rgba(67,97,238,0.3) !important;
         }
-
-        /* Role badge di sidebar */
-        .role-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 50px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-        .role-badge.provinsi { background: #eef0fd; color: #4361ee; }
-        .role-badge.kabkota  { background: #e8faf8; color: #0a9396; }
-        .role-badge.admin    { background: #fdecea; color: #e63946; }
 
         .pc-header {
             background: #fff;
@@ -128,8 +150,12 @@
             display: flex;
             align-items: center;
         }
-        .pc-header .pc-head-link { color: #6b7280; transition: color 0.2s; }
-        .pc-header .pc-head-link:hover { color: var(--brand-primary); }
+        .pc-header .pc-head-link {
+            color: #6b7280;
+            transition: background 0.2s, color 0.2s;
+            border-radius: 10px;
+        }
+        .pc-header .pc-head-link:hover { color: var(--brand-primary); background: var(--brand-primary-light); }
         .pc-header .user-avtar {
             width: 36px;
             height: 36px;
@@ -158,8 +184,78 @@
         }
         .pc-header .dropdown-item:hover { background: var(--brand-primary-light); color: var(--brand-primary); }
 
-        .pc-container { background: #f5f6fa; min-height: 100vh; }
+        .pc-container {
+            background:
+                radial-gradient(circle at 12% 0%, rgba(67,97,238,0.06), transparent 42%),
+                radial-gradient(circle at 88% 0%, rgba(123,47,247,0.05), transparent 38%),
+                #f5f6fa;
+            min-height: 100vh;
+        }
         .pc-content { padding: 28px 28px; }
+
+        /* ── Elevate base Bootstrap components to the same modern language as
+              .card-modern, so pages that haven't been individually restyled
+              still look consistent. ── */
+        .pc-content .card {
+            border: 1px solid #eef0f6;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+        }
+        .pc-content .card-header {
+            background: transparent;
+            border-bottom: 1px solid #f0f2f8;
+            padding: 18px 22px;
+        }
+        .pc-content .card-header h5,
+        .pc-content .card-header h6 { font-size: 15px; font-weight: 700; color: #1e2742; margin: 0; }
+        .pc-content .card-body { padding: 22px; }
+
+        .pc-content .page-header { margin-bottom: 22px; }
+        .pc-content .page-header-title h5 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2742;
+            letter-spacing: -0.01em;
+        }
+        .pc-content .breadcrumb { font-size: 12.5px; }
+        .pc-content .breadcrumb-item a { color: var(--brand-primary); text-decoration: none; }
+        .pc-content .breadcrumb-item.active { color: #9aa1b1; }
+
+        .pc-content .table thead th {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #8a92a6;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid #eef0f6;
+            background: #fafbfd;
+        }
+        .pc-content .table td { font-size: 13.5px; vertical-align: middle; }
+        .pc-content .table-hover tbody tr:hover { background: #f8f9fd; }
+
+        .pc-content .form-label { font-size: 13px; font-weight: 600; color: #333d52; margin-bottom: 6px; }
+        .pc-content .form-control,
+        .pc-content .form-select {
+            border-radius: 9px;
+            border-color: #e2e5ec;
+            font-size: 13.5px;
+            padding: 9px 13px;
+        }
+        .pc-content .form-control:focus,
+        .pc-content .form-select:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-light);
+        }
+
+        .pc-content .btn { border-radius: 9px; font-weight: 600; font-size: 13.5px; }
+        .pc-content .btn-primary {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            box-shadow: 0 2px 8px rgba(67,97,238,0.22);
+        }
+        .pc-content .btn-primary:hover { background: #3a52d1; border-color: #3a52d1; }
+
+        .pc-content .badge { font-weight: 600; letter-spacing: 0.01em; }
 
         .dash-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
         .dash-greeting { font-size: 13.5px; }
@@ -402,7 +498,7 @@
                     {{-- Menu berikut tampil untuk semua role --}}
                     <li class="pc-item {{ request()->is('data-pengunjung*') ? 'active' : '' }}">
                         <a href="{{ route('data_pengunjung.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-users"></i></span>
+                            <span class="pc-micon"><i class="ti ti-user-check"></i></span>
                             <span class="pc-mtext">Data Pengunjung</span>
                         </a>
                     </li>
@@ -424,7 +520,7 @@
                     <li class="pc-item pc-caption">
                         <label>Laporan</label>
                     </li>
-                    <li class="pc-item {{ Request::routeIs('laporan*') ? 'active' : '' }}">
+                    <li class="pc-item {{ request()->routeIs('laporan*') ? 'active' : '' }}">
                         <a href="{{ route('laporan.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-file-analytics"></i></span>
                             <span class="pc-mtext">Laporan</span>
@@ -435,9 +531,8 @@
                     {{-- ── CTA Halaman Publik ── --}}
                     <li class="pc-item mt-4 mb-3" style="padding: 0 14px;">
                         <a href="{{ route('landing') }}" target="_blank"
-                           class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
-                           style="border-radius: 10px; padding: 11px 16px; font-size: 13px; font-weight: 600;">
-                            <i class="ti ti-world fs-5"></i> Halaman Publik
+                           class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                            <i class="ti ti-world"></i> Halaman Publik
                         </a>
                     </li>
 
@@ -564,5 +659,6 @@
         }
     </script>
     @yield('scripts')
+    @stack('scripts')
 </body>
 </html>

@@ -23,7 +23,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5>Form Edit User</h5>
+                <h5><i class="ti ti-user-edit me-2"></i> Form Edit User</h5>
             </div>
             <div class="card-body">
                 <form action="{{ route('users.update', $user->id) }}" method="POST">

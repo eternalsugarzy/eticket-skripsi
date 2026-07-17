@@ -2,11 +2,11 @@
 @section('title', 'Tambah Jenis Tiket')
 
 @section('content')
-<div class="row">
-    <div class="col-md-6 mx-auto">
-        <div class="card">
-            <div class="card-header"><h5>Tambah Jenis Tiket</h5></div>
-            <div class="card-body">
+<div class="card card-modern">
+    <div class="card-header-modern">
+        <h5 class="card-title-modern"><i class="ti ti-tag me-2"></i> Tambah Jenis Tiket</h5>
+    </div>
+    <div class="card-body p-4">
                 <form action="{{ route('jenis-tiket.store') }}" method="POST">
                     @csrf
                     <div class="form-group mb-3">
@@ -16,8 +16,6 @@
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('jenis-tiket.index') }}" class="btn btn-secondary">Batal</a>
                 </form>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

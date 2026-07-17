@@ -5,6 +5,39 @@
 @section('content')
 <div class="dashboard-wrapper">
 
+    <style>
+        /* Scoped overrides: dashboard-only, neutral palette + single accent */
+        .dashboard-wrapper .stat-card {
+            background: #fff;
+            border: 1px solid #eef0f4;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+        }
+        .dashboard-wrapper .stat-card:hover {
+            transform: none;
+            box-shadow: 0 4px 14px rgba(16, 24, 40, .08);
+            border-color: #e2e5ec;
+        }
+        .dashboard-wrapper .stat-card--blue,
+        .dashboard-wrapper .stat-card--green,
+        .dashboard-wrapper .stat-card--orange,
+        .dashboard-wrapper .stat-card--purple {
+            background: #fff;
+        }
+        .dashboard-wrapper .stat-card__icon { background: var(--brand-primary-light); }
+        .dashboard-wrapper .stat-card__icon i { color: var(--brand-primary); }
+        .dashboard-wrapper .stat-card__label { color: #8a92a6; }
+        .dashboard-wrapper .stat-card__value { color: #1e2742; }
+        .dashboard-wrapper .stat-card__sub { color: #9aa1b1; }
+        .dashboard-wrapper .badge-soft-warning { background: #f3f4f6; color: #4b5563; }
+        .dashboard-wrapper .top-wisata-bar { background: var(--brand-primary); }
+        .dashboard-wrapper .table-head-cell {
+            font-size: 12px; color: #8a92a6; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .dashboard-wrapper .kab-row { border-bottom: 1px solid #f0f2f8; }
+        .dashboard-wrapper .kab-name { font-size: 13.5px; font-weight: 600; color: #1e2742; }
+    </style>
+
     {{-- Page Header --}}
     <div class="dash-header mb-4">
         <div>
@@ -18,7 +51,7 @@
     </div>
 
     {{-- Stat Cards --}}
-    <div class="row g-3 mb-4">
+    <div class="row g-4 mb-4">
 
         <div class="col-md-6 col-xl-3">
             <div class="stat-card stat-card--blue">
@@ -29,9 +62,6 @@
                     <p class="stat-card__label">Pengunjung Hari Ini</p>
                     <h3 class="stat-card__value">{{ number_format($totalPengunjung) }}</h3>
                     <span class="stat-card__sub">Kunjungan tgl {{ date('d/m/Y') }}</span>
-                </div>
-                <div class="stat-card__bg-icon">
-                    <i class="ti ti-users"></i>
                 </div>
             </div>
         </div>
@@ -46,9 +76,6 @@
                     <h3 class="stat-card__value">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
                     <span class="stat-card__sub">Pemasukan tgl {{ date('d/m/Y') }}</span>
                 </div>
-                <div class="stat-card__bg-icon">
-                    <i class="ti ti-wallet"></i>
-                </div>
             </div>
         </div>
 
@@ -61,9 +88,6 @@
                     <p class="stat-card__label">Tiket Terjual</p>
                     <h3 class="stat-card__value">{{ number_format($tiketTerjual) }}</h3>
                     <span class="stat-card__sub">Terjual tgl {{ date('d/m/Y') }}</span>
-                </div>
-                <div class="stat-card__bg-icon">
-                    <i class="ti ti-ticket"></i>
                 </div>
             </div>
         </div>
@@ -78,16 +102,13 @@
                     <h3 class="stat-card__value">{{ $totalObjekWisata }}</h3>
                     <span class="stat-card__sub">Lokasi aktif</span>
                 </div>
-                <div class="stat-card__bg-icon">
-                    <i class="ti ti-map-pin"></i>
-                </div>
             </div>
         </div>
 
     </div>
 
     {{-- Chart & Top Wisata --}}
-    <div class="row g-3">
+    <div class="row g-4">
 
         {{-- Chart --}}
         <div class="col-xl-8">
@@ -150,7 +171,7 @@
 
     {{-- Perbandingan Antar Kabupaten (khusus admin & kadis_provinsi) --}}
     @if($perbandinganKabupaten->count() > 0)
-    <div class="row g-3 mt-1">
+    <div class="row g-4 mt-2">
         <div class="col-12">
             <div class="card card-modern">
                 <div class="card-header card-header-modern">
@@ -165,17 +186,17 @@
                         <table class="table mb-0 align-middle">
                             <thead style="background:#f8f9fc;">
                                 <tr>
-                                    <th class="px-4 py-3" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Peringkat</th>
-                                    <th class="py-3" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Kabupaten/Kota</th>
-                                    <th class="py-3 text-center" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Objek Wisata</th>
-                                    <th class="py-3 text-center" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Pengunjung</th>
-                                    <th class="py-3" style="font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em; width:220px;">Pendapatan</th>
+                                    <th class="px-4 py-3 table-head-cell">Peringkat</th>
+                                    <th class="py-3 table-head-cell">Kabupaten/Kota</th>
+                                    <th class="py-3 text-center table-head-cell">Objek Wisata</th>
+                                    <th class="py-3 text-center table-head-cell">Pengunjung</th>
+                                    <th class="py-3 table-head-cell" style="width:220px;">Pendapatan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php $maxPendapatan = $perbandinganKabupaten->max('total_pendapatan'); @endphp
                                 @foreach($perbandinganKabupaten as $i => $kab)
-                                <tr style="border-bottom:1px solid #f0f2f8;">
+                                <tr class="kab-row">
                                     <td class="px-4 py-3">
                                         @if($i == 0) <span style="font-size:1.3rem;">🥇</span>
                                         @elseif($i == 1) <span style="font-size:1.3rem;">🥈</span>
@@ -183,7 +204,7 @@
                                         @else <span class="rank-num">#{{ $i + 1 }}</span>
                                         @endif
                                     </td>
-                                    <td class="py-3" style="font-weight:700; color:#1e2742; font-size:13.5px;">
+                                    <td class="py-3 kab-name">
                                         {{ $kab->nama_kabupaten }}
                                     </td>
                                     <td class="py-3 text-center" style="font-size:13px;">{{ $kab->jumlah_wisata }}</td>
@@ -260,7 +281,7 @@
                 borderColor: '#f0f0f0',
                 strokeDashArray: 4,
             },
-            colors: ['#4361ee', '#198754'], 
+            colors: ['#a3a9b7', '#4361ee'],
             tooltip: {
                 y: { formatter: val => val.toLocaleString('id-ID') + " Pengunjung" },
                 theme: 'light'
