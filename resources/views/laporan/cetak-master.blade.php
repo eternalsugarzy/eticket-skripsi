@@ -143,7 +143,6 @@
             </tr>
         </tfoot>
     </table>
-    @endif
 
     {{-- ============ TABEL KABUPATENS ============ --}}
     @elseif($jenis == 'kabupatens')
