@@ -31,12 +31,24 @@
         }
 
         *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-body);
             background: var(--cream);
             color: var(--text-dark);
             margin: 0;
         }
+
+        /* ── Scroll-reveal: fade + rise into view, IntersectionObserver-driven ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+        .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* ── Section heading (replaces repeated inline color styles) ── */
+        .section-title { color: var(--text-dark); }
 
         /* ── Navbar ── */
         .navbar-custom {
@@ -395,6 +407,8 @@
             transform: translateY(-6px);
             box-shadow: 0 16px 40px rgba(15, 28, 20, 0.12);
         }
+        .wisata-card img { transition: transform 0.5s ease; }
+        .wisata-card:hover img { transform: scale(1.06); }
 
         /* ── Peta ── */
         #map-sig { height: 500px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,.06); z-index: 1; }
@@ -420,7 +434,9 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .wisata-card, .btn-lacak, .btn-masuk { transition: none; }
+            html { scroll-behavior: auto; }
+            .wisata-card, .wisata-card img, .btn-lacak, .btn-masuk, .reveal { transition: none; }
+            .reveal { opacity: 1; transform: none; }
         }
     </style>
 
@@ -618,6 +634,28 @@
             document.addEventListener('click', function () {
                 dd.classList.remove('show');
             });
+        })();
+
+        /* ── Scroll-reveal: fade elemen .reveal begitu masuk viewport ── */
+        (function () {
+            var els = document.querySelectorAll('.reveal');
+            if (!els.length) return;
+
+            if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                els.forEach(function (el) { el.classList.add('is-visible'); });
+                return;
+            }
+
+            var observer = new IntersectionObserver(function (entries, obs) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+            els.forEach(function (el) { observer.observe(el); });
         })();
     </script>
 

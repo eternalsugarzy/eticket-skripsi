@@ -22,7 +22,7 @@ class DataPengunjungController extends Controller
         $queryOffline = DB::table('transaksis')
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
-            ->where('transaksis.status', 'used')
+            ->where('transaksis.status_tiket', 'used')
             ->whereNotNull('transaksis.waktu_validasi')
             ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(

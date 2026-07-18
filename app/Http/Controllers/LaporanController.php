@@ -21,6 +21,18 @@ class LaporanController extends Controller
         return $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
     }
 
+    // Helper: ambil nama & NIP Kadis Provinsi untuk TTD laporan cetak.
+    // Semua laporan (termasuk yang di-scope per kabupaten) ditandatangani kadis_provinsi,
+    // jadi $idKabupaten sengaja diabaikan di sini — parameter dipertahankan supaya
+    // seluruh caller di controller ini tidak perlu diubah.
+    private function getKadis($idKabupaten = null)
+    {
+        return DB::table('users')
+            ->where('role', 'kadis_provinsi')
+            ->select('nama', 'nip')
+            ->first();
+    }
+
     // =========================================================
     // CETAK LAPORAN DATA PENGUNJUNG (OFFLINE + ONLINE)
     // =========================================================
@@ -43,7 +55,8 @@ class LaporanController extends Controller
                 'transaksis.total_bayar as total_harga',
                 'users.nama as nama_kasir',
                 'objek_wisatas.nama_objek',
-                DB::raw("'Offline' as sumber")
+                DB::raw("'Offline' as sumber"),
+                DB::raw('(SELECT COALESCE(SUM(jumlah),0) FROM detail_transaksis WHERE detail_transaksis.id_transaksi = transaksis.id) as jumlah_orang')
             );
 
         $queryOnline = DB::table('pesanans')
@@ -58,13 +71,16 @@ class LaporanController extends Controller
                 'pesanans.total_bayar as total_harga',
                 DB::raw("'Sistem Web' as nama_kasir"),
                 'objek_wisatas.nama_objek',
-                DB::raw("'Online' as sumber")
+                DB::raw("'Online' as sumber"),
+                DB::raw('(SELECT COALESCE(SUM(jumlah),0) FROM pesanan_details WHERE pesanan_details.id_pesanan = pesanans.id) as jumlah_orang')
             );
 
         $laporan_pengunjung = $queryOffline->unionAll($queryOnline)
             ->orderBy('waktu_transaksi', 'ASC')->get();
 
-        return view('laporan.cetak_pengunjung', compact('laporan_pengunjung', 'tgl_mulai', 'tgl_selesai'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak_pengunjung', compact('laporan_pengunjung', 'tgl_mulai', 'tgl_selesai', 'kadis'));
     }
 
     // =========================================================
@@ -150,7 +166,9 @@ class LaporanController extends Controller
             ->orderBy('transaksis.tgl_transaksi', 'ASC')
             ->get();
 
-        return view('laporan.cetak-offline', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-offline', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportOffline(Request $request)
@@ -218,7 +236,9 @@ class LaporanController extends Controller
             ->orderBy('pesanans.created_at', 'ASC')
             ->get();
 
-        return view('laporan.cetak-online', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-online', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportOnline(Request $request)
@@ -304,7 +324,9 @@ class LaporanController extends Controller
             ];
         })->sortBy('nama_objek')->values();
 
-        return view('laporan.cetak-pendapatan', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-pendapatan', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     // =========================================================
@@ -397,7 +419,9 @@ class LaporanController extends Controller
             ->orderByDesc('ulasans.created_at')
             ->get();
 
-        return view('laporan.cetak-ulasan', compact('ringkasan', 'detail', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-ulasan', compact('ringkasan', 'detail', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportUlasan(Request $request)
@@ -483,7 +507,9 @@ class LaporanController extends Controller
                 'total_uang'    => $rows->sum('total_uang'),
             ])->sortBy('nama_objek')->values();
 
-        return view('laporan.cetak-tiket', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-tiket', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     // =========================================================
@@ -615,8 +641,41 @@ class LaporanController extends Controller
         $idKabupaten = $this->scopeKabupaten();
 
         $laporan = $this->hitungTrenKunjungan($tahun, $idKabupaten);
+        $kadis   = $this->getKadis($idKabupaten);
 
-        return view('laporan.cetak-tren', compact('laporan', 'tahun'));
+        return view('laporan.cetak-tren', compact('laporan', 'tahun', 'kadis'));
+    }
+
+    // =========================================================
+    // LAPORAN #9 — REKAPITULASI DATA PENGUNJUNG TAHUNAN (PER BULAN)
+    // =========================================================
+    public function cetakRekapTahunan(Request $request)
+    {
+        $tahun       = $request->tahun ?? date('Y');
+        $idKabupaten = $this->scopeKabupaten();
+
+        // Pakai ulang perhitungan bulanan yang sudah ada di hitungTrenKunjungan()
+        $laporan = $this->hitungTrenKunjungan($tahun, $idKabupaten);
+        $kadis   = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-rekap-tahunan', compact('laporan', 'tahun', 'kadis'));
+    }
+
+    public function exportRekapTahunan(Request $request)
+    {
+        $tahun       = $request->tahun ?? date('Y');
+        $idKabupaten = $this->scopeKabupaten();
+
+        $laporan = $this->hitungTrenKunjungan($tahun, $idKabupaten);
+
+        $rows = $laporan->map(fn($r) => [
+            $r->bulan,
+            $r->total_pengunjung,
+        ])->toArray();
+
+        $headings = ['Bulan', 'Jumlah Pengunjung'];
+
+        return Excel::download(new GenericExport($rows, $headings, 'Rekap Pengunjung Tahunan ' . $tahun), 'rekap-pengunjung-tahunan-' . $tahun . '.xlsx');
     }
 
     public function exportTren(Request $request)
@@ -681,7 +740,9 @@ class LaporanController extends Controller
             'total_pengunjung' => $rows->sum('total_pengunjung'),
         ])->sortByDesc('total_pengunjung')->values();
 
-        return view('laporan.cetak-objek', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-objek', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     // =========================================================
@@ -745,7 +806,9 @@ class LaporanController extends Controller
 
         $laporan = $this->queryValidasi($tgl_awal, $tgl_akhir, $idKabupaten)->get();
 
-        return view('laporan.cetak-validasi', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-validasi', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportValidasi(Request $request)
@@ -819,7 +882,9 @@ class LaporanController extends Controller
 
         $laporan = $this->queryPublikasi($tgl_awal, $tgl_akhir, $idKabupaten)->get();
 
-        return view('laporan.cetak-publikasi', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-publikasi', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportPublikasi(Request $request)
@@ -895,7 +960,9 @@ class LaporanController extends Controller
         $ringkasan = $this->ringkasanVoucher($tgl_awal, $tgl_akhir, $idKabupaten);
         $detail    = $this->detailVoucher($tgl_awal, $tgl_akhir, $idKabupaten);
 
-        return view('laporan.cetak-voucher', compact('ringkasan', 'detail', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-voucher', compact('ringkasan', 'detail', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportVoucher(Request $request)
@@ -975,7 +1042,9 @@ class LaporanController extends Controller
 
         $laporan = $this->queryWishlist($tgl_awal, $tgl_akhir, $idKabupaten);
 
-        return view('laporan.cetak-wishlist', compact('laporan', 'tgl_awal', 'tgl_akhir'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-wishlist', compact('laporan', 'tgl_awal', 'tgl_akhir', 'kadis'));
     }
 
     public function exportWishlist(Request $request)
@@ -1103,7 +1172,9 @@ class LaporanController extends Controller
                 break;
         }
 
-        return view('laporan.cetak-master', compact('data', 'judul', 'jenis'));
+        $kadis = $this->getKadis($idKabupaten);
+
+        return view('laporan.cetak-master', compact('data', 'judul', 'jenis', 'kadis'));
     }
 
     // =========================================================

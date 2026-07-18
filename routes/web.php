@@ -168,6 +168,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/cetak-online', [LaporanController::class, 'cetakOnline'])->name('laporan.cetak-online');
     Route::get('/laporan/cetak-ulasan', [LaporanController::class, 'cetakUlasan'])->name('laporan.cetak-ulasan');
     Route::get('/laporan/cetak-tren', [LaporanController::class, 'cetakTren'])->name('laporan.cetak-tren');
+    Route::get('/laporan/cetak-rekap-tahunan', [LaporanController::class, 'cetakRekapTahunan'])->name('laporan.cetak-rekap-tahunan');
     Route::get('/laporan/cetak-validasi', [LaporanController::class, 'cetakValidasi'])->name('laporan.cetak-validasi');
     Route::get('/laporan/cetak-publikasi', [LaporanController::class, 'cetakPublikasi'])->name('laporan.cetak-publikasi');
     Route::get('/laporan/cetak-voucher', [LaporanController::class, 'cetakVoucher'])->name('laporan.cetak-voucher');
@@ -183,6 +184,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/export-online', [LaporanController::class, 'exportOnline'])->name('laporan.export-online');
     Route::get('/laporan/export-ulasan', [LaporanController::class, 'exportUlasan'])->name('laporan.export-ulasan');
     Route::get('/laporan/export-tren', [LaporanController::class, 'exportTren'])->name('laporan.export-tren');
+    Route::get('/laporan/export-rekap-tahunan', [LaporanController::class, 'exportRekapTahunan'])->name('laporan.export-rekap-tahunan');
     Route::get('/laporan/export-validasi', [LaporanController::class, 'exportValidasi'])->name('laporan.export-validasi');
     Route::get('/laporan/export-publikasi', [LaporanController::class, 'exportPublikasi'])->name('laporan.export-publikasi');
     Route::get('/laporan/export-voucher', [LaporanController::class, 'exportVoucher'])->name('laporan.export-voucher');

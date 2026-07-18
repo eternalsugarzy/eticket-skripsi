@@ -69,9 +69,30 @@
                 <h5 class="mb-0 text-white fw-bold">
                     <i class="ti ti-history me-2"></i>Riwayat Penjualan Tiket Gabungan
                 </h5>
-                <a href="{{ route('transaksi.create') }}" class="btn btn-light text-primary fw-bold btn-sm shadow-sm">
-                    <i class="ti ti-plus me-1"></i> Transaksi Kasir Baru
-                </a>
+                <div class="d-flex gap-2">
+                    <div class="dropdown">
+                        <button class="btn btn-light text-primary fw-bold btn-sm shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="ti ti-printer me-1"></i> Cetak Laporan
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" target="_blank"
+                                   href="{{ route('laporan.cetak-offline', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}">
+                                    <i class="ti ti-device-desktop me-2"></i> Penjualan Offline (Bulan Ini)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" target="_blank"
+                                   href="{{ route('laporan.cetak-online', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}">
+                                    <i class="ti ti-world me-2"></i> Penjualan Online (Bulan Ini)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="{{ route('transaksi.create') }}" class="btn btn-light text-primary fw-bold btn-sm shadow-sm">
+                        <i class="ti ti-plus me-1"></i> Transaksi Kasir Baru
+                    </a>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">

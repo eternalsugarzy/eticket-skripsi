@@ -3,8 +3,12 @@
 
 @section('content')
 <div class="card card-modern">
-    <div class="card-header-modern">
-        <h5 class="card-title-modern"><i class="ti ti-world me-2"></i> Manajemen Pesanan Online</h5>
+    <div class="card-header-modern d-flex justify-content-between align-items-center">
+        <h5 class="card-title-modern mb-0"><i class="ti ti-world me-2"></i> Manajemen Pesanan Online</h5>
+        <a href="{{ route('laporan.cetak-online', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}"
+           target="_blank" class="btn btn-outline-secondary btn-sm">
+            <i class="ti ti-printer"></i> Cetak Laporan
+        </a>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">

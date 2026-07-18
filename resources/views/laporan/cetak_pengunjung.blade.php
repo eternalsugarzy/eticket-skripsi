@@ -66,6 +66,7 @@
                 <th width="20%">No. Referensi</th>
                 <th>Objek Wisata</th>
                 <th width="12%">Petugas/Operator</th>
+                <th width="9%" class="text-center">Jumlah Pengunjung</th>
                 <th width="15%" class="text-right">Total Bayar</th>
             </tr>
         </thead>
@@ -77,28 +78,33 @@
                 <td class="text-center">{{ $no++ }}</td>
                 <td class="text-center">
                     @if($row->sumber == 'Online')
-                        <span class="badge-online">🌐 Online</span>
+                        <span class="badge-online">Online</span>
                     @else
-                        <span class="badge-offline">🖥️ Kasir</span>
+                        <span class="badge-offline">Kasir</span>
                     @endif
                 </td>
                 <td class="text-center">{{ date('d/m/y H:i', strtotime($row->waktu_transaksi)) }}</td>
                 <td class="text-center">{{ $row->id_transaksi }}</td>
                 <td>{{ $row->nama_objek ?? '-' }}</td>
                 <td class="text-center">{{ $row->nama_kasir ?? '-' }}</td>
+                <td class="text-center">{{ $row->jumlah_orang ?? 0 }}</td>
                 <td class="text-right">Rp {{ number_format($row->total_harga, 0, ',', '.') }}</td>
             </tr>
-            @php $grand_total += $row->total_harga; @endphp
+            @php
+                $grand_total += $row->total_harga;
+                $grand_total_orang = ($grand_total_orang ?? 0) + $row->jumlah_orang;
+            @endphp
 
             @empty
             <tr>
-                <td colspan="7" class="text-center">Tidak ada data pengunjung pada periode ini.</td>
+                <td colspan="8" class="text-center">Tidak ada data pengunjung pada periode ini.</td>
             </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr class="total-row">
                 <td colspan="6" class="text-right"><strong>GRAND TOTAL</strong></td>
+                <td class="text-center"><strong>{{ $grand_total_orang ?? 0 }}</strong></td>
                 <td class="text-right"><strong>Rp {{ number_format($grand_total, 0, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
@@ -117,8 +123,8 @@
                 <p>Banjarmasin, {{ date('d F Y') }}</p>
                 <p>Kepala Dinas</p>
                 <div class="ttd-spacer"></div>
-                <p><strong>IWAN FITRIADI, SH.,MH</strong></p>
-                <p>NIP 19612251998031004</p>
+                <p><strong>{{ strtoupper($kadis->nama ?? '-') }}</strong></p>
+                <p>NIP {{ $kadis->nip ?? '-' }}</p>
             </div>
         </div>
     </div>

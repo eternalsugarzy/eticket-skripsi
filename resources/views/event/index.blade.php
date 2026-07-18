@@ -12,9 +12,15 @@
                     Kelola daftar event/acara yang tampil di halaman utama website.
                 </p>
             </div>
-            <a href="{{ route('kelola-event.create') }}" class="btn btn-primary">
-                <i class="ti ti-plus me-1"></i> Tambah Event
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ route('laporan.cetak-publikasi', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}"
+                   target="_blank" class="btn btn-outline-secondary">
+                    <i class="ti ti-printer me-1"></i> Cetak Laporan
+                </a>
+                <a href="{{ route('kelola-event.create') }}" class="btn btn-primary">
+                    <i class="ti ti-plus me-1"></i> Tambah Event
+                </a>
+            </div>
         </div>
 
         <div class="card card-modern">

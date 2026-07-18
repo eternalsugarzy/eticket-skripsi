@@ -271,7 +271,7 @@
 
     {{-- ── Detail Pesanan ── --}}
     @if($pesanan)
-    <div class="detail-card">
+    <div class="detail-card reveal">
         <div class="card-top-bar"></div>
         <div class="card-inner">
 

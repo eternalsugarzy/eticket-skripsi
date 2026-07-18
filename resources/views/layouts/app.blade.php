@@ -257,6 +257,35 @@
 
         .pc-content .badge { font-weight: 600; letter-spacing: 0.01em; }
 
+        /* ── Interaksi halus: hover kartu, transisi tabel/tombol, fade masuk ── */
+        .pc-content .card,
+        .pc-content .card-modern {
+            transition: box-shadow 0.2s ease;
+        }
+        .pc-content .card:hover,
+        .pc-content .card-modern:hover {
+            box-shadow: 0 8px 24px rgba(16, 24, 40, 0.09);
+        }
+        .pc-content .table-hover tbody tr { transition: background 0.15s ease; }
+        .pc-content .btn {
+            transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+        }
+        .pc-content .btn-primary:hover { transform: translateY(-1px); }
+
+        @keyframes pcCardIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .pc-content .card,
+        .pc-content .card-modern,
+        .pc-content .stat-card {
+            animation: pcCardIn 0.4s ease both;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pc-content .card, .pc-content .card-modern, .pc-content .stat-card { animation: none; }
+            .pc-content .btn-primary:hover { transform: none; }
+        }
+
         .dash-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
         .dash-greeting { font-size: 13.5px; }
         .dash-title { font-size: 22px; font-weight: 700; color: #1e2742; }

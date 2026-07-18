@@ -6,8 +6,27 @@
     <div class="col-12">
         
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white py-3">
+            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-white fw-bold"><i class="ti ti-users me-2"></i>Data Pengunjung Masuk (Scan Tiket)</h5>
+                <div class="dropdown">
+                    <button class="btn btn-light btn-sm fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="ti ti-printer"></i> Cetak Laporan
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" target="_blank"
+                               href="{{ route('laporan.cetak-pengunjung', ['tgl_awal' => request('tgl_awal', date('Y-m-01')), 'tgl_akhir' => request('tgl_akhir', date('Y-m-d'))]) }}">
+                                <i class="ti ti-list-details me-2"></i> Detail Transaksi (Filter Aktif)
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" target="_blank"
+                               href="{{ route('laporan.cetak-rekap-tahunan', ['tahun' => date('Y')]) }}">
+                                <i class="ti ti-calendar-stats me-2"></i> Rekap Tahunan ({{ date('Y') }})
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="card-body">
                 

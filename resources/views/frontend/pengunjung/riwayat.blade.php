@@ -387,7 +387,7 @@ body { background: var(--cream); }
         </div>
 
         @forelse($pesanans as $pesanan)
-        <div class="pesanan-card">
+        <div class="pesanan-card reveal" style="transition-delay: {{ min($loop->index, 6) * 0.06 }}s;">
 
             {{-- Header --}}
             <div class="pesanan-header">

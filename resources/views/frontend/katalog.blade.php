@@ -329,7 +329,7 @@
         {{-- ── Grid Wisata ── --}}
         <div class="row g-4">
             @forelse($allWisata as $w)
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 reveal" style="transition-delay: {{ ($loop->index % 3) * 0.08 }}s;">
                 <div class="wisata-card shadow-sm">
                     <div class="img-wrap">
                         @auth('pengunjung')

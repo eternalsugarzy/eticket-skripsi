@@ -66,7 +66,7 @@ body { background: var(--cream); }
         <div class="col-lg-8">
             <div class="event-list">
                 @forelse($events as $ev)
-                <a href="{{ $ev->link_url ?: '#' }}" class="event-item" @if($ev->link_url) target="_blank" @endif>
+                <a href="{{ $ev->link_url ?: '#' }}" class="event-item reveal" style="transition-delay: {{ min($loop->index, 6) * 0.06 }}s;" @if($ev->link_url) target="_blank" @endif>
                     <div class="event-icon"><i class="bi bi-calendar-event-fill"></i></div>
                     <div>
                         <div class="event-tanggal"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($ev->tanggal_event)->translatedFormat('d F Y') }}</div>

@@ -42,7 +42,11 @@ body { background: var(--cream); }
     transform: translateY(-6px);
     box-shadow: 0 16px 40px rgba(15,28,20,.12);
 }
-.wishlist-card img { width:100%; height:190px; object-fit:cover; display:block; }
+.wishlist-card img { width:100%; height:190px; object-fit:cover; display:block; transition: transform .5s ease; }
+.wishlist-card:hover img { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+    .wishlist-card, .wishlist-card img { transition: none; }
+}
 .btn-hapus-wishlist {
     position: absolute;
     top: 12px;
@@ -93,7 +97,7 @@ body { background: var(--cream); }
         @forelse($wishlists as $item)
         @php $w = $item->objekWisata; @endphp
         @if($w)
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4 reveal" style="transition-delay: {{ ($loop->index % 3) * 0.08 }}s;">
             <div class="wishlist-card">
                 <form action="{{ route('wishlist.toggle', $w->id) }}" method="POST">
                     @csrf

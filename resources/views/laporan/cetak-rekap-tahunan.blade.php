@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Penjualan Tiket Reservasi Online</title>
+    <title>Rekapitulasi Data Pengunjung Tahunan</title>
     <style>
         @page { size: A4 portrait; margin: 15mm 20mm; }
         body { font-family: 'Times New Roman', Times, serif; font-size: 12px; margin: 0; }
@@ -24,7 +24,6 @@
         .total-row td { font-weight: bold; background-color: #f2f2f2; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
-        .badge-voucher { background: #ede9fe; padding: 2px 6px; border-radius: 3px; font-size: 10px; color: #6d28d9; }
         .tanda-tangan { margin-top: 40px; width: 100%; font-family: Arial, sans-serif; page-break-inside: avoid; }
         .ttd-wrapper { display: table; width: 100%; }
         .ttd-kiri, .ttd-kanan { display: table-cell; width: 50%; text-align: center; vertical-align: top; }
@@ -50,56 +49,42 @@
 
     <hr class="hr-separator">
 
-    <h1>Laporan Penjualan Tiket Reservasi Online</h1>
+    <h1>Rekapitulasi Data Pengunjung Tahunan</h1>
 
     <div class="info">
-        <strong>Periode:</strong> {{ date('d M Y', strtotime($tgl_awal)) }} s/d {{ date('d M Y', strtotime($tgl_akhir)) }}
+        <strong>Tahun:</strong> {{ $tahun }}
     </div>
 
     <table class="data-table">
         <thead>
             <tr>
-                <th width="4%">No</th>
-                <th width="16%">Kode Pesanan</th>
-                <th width="12%">Waktu</th>
-                <th width="15%">Pengunjung</th>
-                <th>Objek Wisata</th>
-                <th width="8%">Jml Tiket</th>
-                <th width="10%">Voucher</th>
-                <th width="15%" class="text-right">Total Bayar</th>
+                <th width="8%">No</th>
+                <th>Bulan</th>
+                <th width="25%">Jumlah Pengunjung</th>
             </tr>
         </thead>
         <tbody>
-            @php $grand_total = 0; @endphp
-            @forelse($laporan as $i => $row)
+            @php $totalTahun = 0; @endphp
+            @foreach($laporan as $i => $row)
             <tr>
                 <td class="text-center">{{ $i + 1 }}</td>
-                <td class="text-center">{{ $row->kode_pesanan }}</td>
-                <td class="text-center">{{ date('d/m/y H:i', strtotime($row->waktu_pesanan)) }}</td>
-                <td>{{ $row->nama_pengunjung }}</td>
-                <td>{{ $row->nama_objek ?? '-' }}</td>
-                <td class="text-center">{{ $row->jumlah_tiket }}</td>
-                <td class="text-center">
-                    @if($row->kode_voucher)
-                        <span class="badge-voucher">{{ $row->kode_voucher }}</span>
-                    @else
-                        -
-                    @endif
-                </td>
-                <td class="text-right">Rp {{ number_format($row->total_bayar, 0, ',', '.') }}</td>
+                <td>{{ $row->bulan }}</td>
+                <td class="text-center">{{ number_format($row->total_pengunjung) }}</td>
             </tr>
-            @php $grand_total += $row->total_bayar; @endphp
-            @empty
-            <tr><td colspan="8" class="text-center">Tidak ada reservasi online pada periode ini.</td></tr>
-            @endforelse
+            @php $totalTahun += $row->total_pengunjung; @endphp
+            @endforeach
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="7" class="text-right">GRAND TOTAL</td>
-                <td class="text-right">Rp {{ number_format($grand_total, 0, ',', '.') }}</td>
+                <td colspan="2" class="text-right">TOTAL PENGUNJUNG TAHUN {{ $tahun }}</td>
+                <td class="text-center">{{ number_format($totalTahun) }}</td>
             </tr>
         </tfoot>
     </table>
+
+    <p style="font-family: Arial, sans-serif; font-size: 10px; color: #555; margin-top: 8px;">
+        Keterangan: Jumlah pengunjung merupakan gabungan transaksi tiket offline (loket) dan online (website) per bulan.
+    </p>
 
     <div class="tanda-tangan">
         <div class="ttd-wrapper">

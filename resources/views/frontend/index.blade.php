@@ -23,7 +23,41 @@
         box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
     }
     .bg-index-gray {
-        background-color: #f1f5f9; 
+        background-color: #f1f5f9;
+    }
+
+    /* ── Hero: fade + rise saat halaman terbuka, staggered ── */
+    @keyframes heroRise {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-section h1,
+    .hero-section p,
+    .hero-section a {
+        opacity: 0;
+        animation: heroRise .7s ease forwards;
+    }
+    .hero-section h1 { animation-delay: .05s; }
+    .hero-section p  { animation-delay: .18s; }
+    .hero-section a  { animation-delay: .3s; }
+    @media (prefers-reduced-motion: reduce) {
+        .hero-section h1, .hero-section p, .hero-section a { animation: none; opacity: 1; }
+    }
+
+    /* ── Kartu berita: transisi hover yang tadinya tak pernah terpakai ── */
+    .berita-card {
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .berita-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+    }
+    .berita-card img { transition: transform 0.5s ease; }
+    .berita-card:hover img { transform: scale(1.06); }
+    @media (prefers-reduced-motion: reduce) {
+        .berita-card, .berita-card img { transition: none; }
     }
 
     /* ── Section 3 Kolom: Banner | Event | Video ── */
@@ -126,10 +160,10 @@
             <div class="row g-4">
 
                 {{-- ══════ KOLOM 1: BANNER (Carousel Tunggal) ══════ --}}
-                <div class="col-lg-4">
+                <div class="col-lg-4 reveal">
                     <div class="info-col-inner">
                         @if($banners->count() > 0)
-                        <div id="bannerCarousel" class="carousel slide banner-carousel-single h-100" data-bs-ride="carousel">
+                        <div id="bannerCarousel" class="carousel slide carousel-fade banner-carousel-single h-100" data-bs-ride="carousel">
                             <div class="carousel-inner h-100">
                                 @foreach($banners as $i => $banner)
                                 <div class="carousel-item h-100 {{ $i === 0 ? 'active' : '' }}">
@@ -169,7 +203,7 @@
                 </div>
 
                 {{-- ══════ KOLOM 2: EVENT TERBARU ══════ --}}
-                <div class="col-lg-4">
+                <div class="col-lg-4 reveal" style="transition-delay:.08s;">
                     <div class="info-col-inner event-panel d-flex flex-column">
                         <div class="event-panel-header">
                             <h6 class="mb-0">Event Terbaru</h6>
@@ -207,7 +241,7 @@
                 </div>
 
                 {{-- ══════ KOLOM 3: VIDEO TERBARU ══════ --}}
-                <div class="col-lg-4">
+                <div class="col-lg-4 reveal" style="transition-delay:.16s;">
                     <div class="info-col-inner d-flex flex-column">
                         <h6 class="fw-bold mb-3" style="color:#0f172a;">Video Terbaru</h6>
                         @if($videoTerbaru && $videoTerbaru->embed_url)
@@ -236,24 +270,24 @@
 
     <section id="sig" class="py-5 bg-index-gray">
         <div class="container">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold" style="color: #0f172a;">Peta Persebaran Objek Wisata</h2>
+            <div class="text-center mb-4 reveal">
+                <h2 class="fw-bold section-title">Peta Persebaran Objek Wisata</h2>
                 <p class="text-muted">Peta interaktif destinasi wisata di seluruh wilayah provinsi.</p>
             </div>
-            <div id="map-sig"></div>
+            <div id="map-sig" class="reveal"></div>
         </div>
     </section>
 
     <section id="katalog-singkat" class="py-5 bg-index-gray pb-5">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold" style="color: #0f172a;">Destinasi Pilihan</h2>
+            <div class="text-center mb-5 reveal">
+                <h2 class="fw-bold section-title">Destinasi Pilihan</h2>
                 <p class="text-muted">Rekomendasi destinasi wisata terbaik untuk Anda kunjungi.</p>
             </div>
 
             <div class="row g-4 mb-5">
                 @forelse($allWisata as $w)
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-6 col-lg-4 reveal" style="transition-delay: {{ ($loop->index % 3) * 0.08 }}s;">
                     <div class="card h-100 wisata-card border-0 shadow-sm bg-white">
                         <img src="{{ $w->foto ? asset('uploads/wisata/' . $w->foto) : 'https://via.placeholder.com/600x400?text=Tidak+Ada+Foto' }}" 
                              class="card-img-top" alt="{{ $w->nama_objek }}" style="height: 200px; object-fit: cover;">
@@ -261,7 +295,7 @@
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title fw-bold mb-1" style="color: #0f172a;">{{ $w->nama_objek }}</h5>
                             <p class="text-primary small mb-3">
-                                <i class="bi bi-geo-alt-fill"></i> Kabupaten {{ $w->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
+                                <i class="bi bi-geo-alt-fill"></i> {{ $w->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
                             </p>
                             <p class="card-text text-muted small" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                                 {{ $w->deskripsi ?? 'Informasi destinasi belum tersedia.' }}
@@ -279,7 +313,7 @@
                 @endforelse
             </div>
 
-            <div class="text-center mt-4">
+            <div class="text-center mt-4 reveal">
                 <a href="{{ route('wisata.katalog') }}" class="btn btn-outline-primary btn-lg px-5 rounded-pill fw-bold shadow-sm" style="border-width: 2px;">
                     Lihat Semua Destinasi <i class="bi bi-arrow-right ms-2"></i>
                 </a>
@@ -291,9 +325,9 @@
     @if($beritaTerbaru->count() > 0)
     <section class="py-5" style="background:#fff;">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2">
+            <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2 reveal">
                 <div>
-                    <h2 class="fw-bold mb-1" style="color: #0f172a;">Berita & Informasi Terbaru</h2>
+                    <h2 class="fw-bold mb-1 section-title">Berita & Informasi Terbaru</h2>
                     <p class="text-muted mb-0">Update terkini seputar pariwisata Kalimantan Selatan.</p>
                 </div>
                 <a href="{{ route('berita.index') }}" class="btn btn-outline-primary rounded-pill fw-bold px-4">
@@ -303,16 +337,16 @@
 
             <div class="row g-4">
                 @foreach($beritaTerbaru as $b)
-                <div class="col-md-4">
+                <div class="col-md-4 reveal" style="transition-delay: {{ ($loop->index % 3) * 0.08 }}s;">
                     <a href="{{ route('berita.detail', $b->slug) }}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm bg-white" style="border-radius:14px; overflow:hidden; transition: transform .25s ease;">
+                        <div class="card berita-card h-100 border-0 shadow-sm bg-white">
                             <img src="{{ $b->gambar ? asset('uploads/berita/' . $b->gambar) : asset('assets/images/logo1.png') }}"
                                  class="card-img-top" alt="{{ $b->judul }}" style="height:180px; object-fit:cover;">
                             <div class="card-body">
                                 <span class="badge rounded-pill mb-2" style="background:#F5E6C8; color:#8a611f; font-weight:700; font-size:.7rem; text-transform:uppercase;">
                                     {{ $b->kategori }}
                                 </span>
-                                <h6 class="fw-bold mb-2" style="color:#0f172a; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                                <h6 class="fw-bold mb-2 section-title" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
                                     {{ $b->judul }}
                                 </h6>
                                 <p class="text-muted small mb-0">

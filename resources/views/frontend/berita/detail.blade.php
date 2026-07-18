@@ -101,7 +101,7 @@ body { background: var(--cream); }
                 <i class="bi bi-arrow-left"></i> Kembali ke Daftar Berita
             </a>
 
-            <div class="content-card">
+            <div class="content-card reveal">
                 <div class="konten-berita">
                     {!! nl2br(e($berita->konten)) !!}
                 </div>
@@ -109,7 +109,7 @@ body { background: var(--cream); }
         </div>
 
         <div class="col-lg-4">
-            <div class="content-card">
+            <div class="content-card reveal" style="transition-delay:.1s;">
                 <h6 class="fw-bold mb-3" style="color:var(--text-dark);">
                     <i class="bi bi-newspaper me-1" style="color:var(--gold);"></i> Berita Terkait
                 </h6>

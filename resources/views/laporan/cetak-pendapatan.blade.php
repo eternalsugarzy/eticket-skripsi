@@ -115,8 +115,8 @@
                 <p>Banjarmasin, {{ date('d F Y') }}</p>
                 <p>Kepala Dinas</p>
                 <div class="ttd-spacer"></div>
-                <p><strong>IWAN FITRIADY, SH., MH.</strong></p>
-                <p>NIP 19612251998031004</p>
+                <p><strong>{{ strtoupper($kadis->nama ?? '-') }}</strong></p>
+                <p>NIP {{ $kadis->nip ?? '-' }}</p>
             </div>
         </div>
     </div>

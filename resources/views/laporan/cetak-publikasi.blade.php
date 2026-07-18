@@ -76,9 +76,9 @@
                 <td class="text-center">{{ $i + 1 }}</td>
                 <td class="text-center">
                     @if($row->jenis == 'Berita')
-                        <span class="badge-berita">📰 Berita</span>
+                        <span class="badge-berita">Berita</span>
                     @else
-                        <span class="badge-event">📅 Event</span>
+                        <span class="badge-event">Event</span>
                     @endif
                 </td>
                 <td>{{ $row->judul }}</td>
@@ -113,8 +113,8 @@
                 <p>Banjarmasin, {{ date('d F Y') }}</p>
                 <p>Kepala Dinas</p>
                 <div class="ttd-spacer"></div>
-                <p><strong>IWAN FITRIADI, SH.,MH</strong></p>
-                <p>NIP 19612251998031004</p>
+                <p><strong>{{ strtoupper($kadis->nama ?? '-') }}</strong></p>
+                <p>NIP {{ $kadis->nip ?? '-' }}</p>
             </div>
         </div>
     </div>

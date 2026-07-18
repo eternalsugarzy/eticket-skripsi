@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\ObjekWisata;
 use App\Models\Transaksi;
-use App\Models\Pesanan;
-use App\Models\PesananDetail;
 
 class DashboardController extends Controller
 {
@@ -25,14 +22,23 @@ class DashboardController extends Controller
         // 1. KARTU INFO (HARI INI)
         // =========================================================
 
-        // Jumlah transaksi kasir hari ini
-        $totalPengunjung = Transaksi::whereDate('created_at', $hariIni)
-            ->when($idKabupaten, function ($q) use ($idKabupaten) {
-                $q->whereHas('objekWisata', function ($q2) use ($idKabupaten) {
-                    $q2->where('id_kabupaten', $idKabupaten);
-                });
-            })
-            ->count();
+        // Jumlah pengunjung hari ini = jumlah tiket terjual (gabungan offline + online),
+        // selaras dengan definisi "pengunjung" yang dipakai di Data Pengunjung & Laporan.
+        $totalPengunjung = DB::table('detail_transaksis')
+            ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
+            ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+            ->where('transaksis.status_tiket', '!=', 'batal')
+            ->whereDate('transaksis.created_at', $hariIni)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->sum('detail_transaksis.jumlah');
+
+        $totalPengunjung += DB::table('pesanan_details')
+            ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+            ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', $hariIni)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->sum('pesanan_details.jumlah');
 
         // Total pendapatan kasir hari ini
         $totalPendapatan = Transaksi::whereDate('created_at', $hariIni)

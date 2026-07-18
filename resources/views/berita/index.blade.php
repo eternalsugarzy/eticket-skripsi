@@ -13,9 +13,25 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('laporan.cetak-master', ['jenis' => 'beritas']) }}" target="_blank" class="btn btn-outline-secondary">
-                    <i class="ti ti-printer me-1"></i> Cetak Laporan
-                </a>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="ti ti-printer me-1"></i> Cetak Laporan
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" target="_blank"
+                               href="{{ route('laporan.cetak-master', ['jenis' => 'beritas']) }}">
+                                <i class="ti ti-list me-2"></i> Data Master Berita
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" target="_blank"
+                               href="{{ route('laporan.cetak-publikasi', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}">
+                                <i class="ti ti-speakerphone me-2"></i> Publikasi Berita & Event (Bulan Ini)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
                 <a href="{{ route('kelola-berita.create') }}" class="btn btn-primary">
                     <i class="ti ti-plus me-1"></i> Tambah Berita
                 </a>

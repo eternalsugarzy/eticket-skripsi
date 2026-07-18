@@ -406,7 +406,7 @@ body {
         <div class="col-lg-8">
 
             {{-- Tentang Destinasi --}}
-            <div class="content-card mb-4">
+            <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-file-text-fill"></i></div>
                     <h4>Tentang Destinasi</h4>
@@ -417,7 +417,7 @@ body {
             </div>
 
             {{-- Detail Lokasi --}}
-            <div class="content-card mb-4">
+            <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-geo-fill"></i></div>
                     <h4>Detail Lokasi</h4>
@@ -440,7 +440,7 @@ body {
 
             {{-- ===== FASILITAS TERSEDIA ===== --}}
             @if(!empty($wisata->fasilitas))
-            <div class="content-card mb-4">
+            <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-stars"></i></div>
                     <h4>Fasilitas Tersedia</h4>
@@ -484,7 +484,7 @@ body {
             {{-- ===== END FASILITAS ===== --}}
 
             {{-- Retribusi Masuk --}}
-            <div class="content-card mb-4">
+            <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-ticket-perforated-fill"></i></div>
                     <h4>Retribusi Masuk</h4>
@@ -516,7 +516,7 @@ body {
             </div>
 
             {{-- Galeri Foto --}}
-            <div class="content-card">
+            <div class="content-card reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-images"></i></div>
                     <h4>Galeri Foto</h4>
@@ -555,7 +555,7 @@ body {
             </div>
 
             {{-- Ulasan Pengunjung --}}
-            <div class="content-card mt-4" id="ulasan">
+            <div class="content-card mt-4 reveal" id="ulasan">
                 <div class="card-head d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div class="d-flex align-items-center gap-3">
                         <div class="card-head-icon"><i class="bi bi-star-fill"></i></div>
@@ -700,7 +700,7 @@ body {
 
             {{-- Widget Cuaca --}}
             @if($cuaca)
-            <div class="content-card mb-4">
+            <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-cloud-sun-fill"></i></div>
                     <h5>Cuaca Hari Ini</h5>

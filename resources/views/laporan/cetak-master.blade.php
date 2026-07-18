@@ -202,7 +202,7 @@
                         <span class="badge-tutup">Tutup</span>
                     @endif
                 </td>
-                <td class="text-center">{{ $row->is_populer ? '⭐ Ya' : '-' }}</td>
+                <td class="text-center">{{ $row->is_populer ? 'Ya' : '-' }}</td>
             </tr>
             @empty
             <tr><td colspan="7" class="text-center">Tidak ada data.</td></tr>
@@ -334,8 +334,8 @@
                 <p>Banjarmasin, {{ date('d F Y') }}</p>
                 <p>Kepala Dinas</p>
                 <div class="ttd-spacer"></div>
-                <p><strong>IWAN FITRIADI, SH.,MH</strong></p>
-                <p>NIP 19612251998031004</p>
+                <p><strong>{{ strtoupper($kadis->nama ?? '-') }}</strong></p>
+                <p>NIP {{ $kadis->nip ?? '-' }}</p>
             </div>
         </div>
     </div>

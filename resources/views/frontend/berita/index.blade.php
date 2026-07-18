@@ -94,6 +94,11 @@ body { background: var(--cream); }
 }
 .berita-card img {
     width: 100%; height: 190px; object-fit: cover;
+    transition: transform .5s ease;
+}
+.berita-card:hover img { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+    .berita-card, .berita-card img { transition: none; }
 }
 .berita-card .body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
 .berita-kategori {
@@ -171,7 +176,7 @@ body { background: var(--cream); }
 <div class="container py-5">
     <div class="row g-4">
         @forelse($beritas as $b)
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4 reveal" style="transition-delay: {{ ($loop->index % 3) * 0.08 }}s;">
             <a href="{{ route('berita.detail', $b->slug) }}" class="berita-card">
                 <img src="{{ $b->gambar ? asset('uploads/berita/' . $b->gambar) : asset('assets/images/logo1.png') }}" alt="{{ $b->judul }}">
                 <div class="body">

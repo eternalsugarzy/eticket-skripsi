@@ -3,32 +3,15 @@
 @section('title', 'Edit User')
 
 @section('content')
-<div class="page-header">
-    <div class="page-block">
-        <div class="row align-items-center">
-            <div class="col-md-12">
-                <div class="page-header-title">
-                    <h5 class="m-b-10">Manajemen User</h5>
-                </div>
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">User</a></li>
-                    <li class="breadcrumb-item" aria-current="page">Edit User</li>
-                </ul>
-            </div>
-        </div>
+<div class="card card-modern">
+    <div class="card-header-modern">
+        <h5 class="card-title-modern mb-0"><i class="ti ti-user-edit me-2"></i> Form Edit User</h5>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="ti ti-user-edit me-2"></i> Form Edit User</h5>
-            </div>
-            <div class="card-body">
+    <div class="card-body p-4">
                 <form action="{{ route('users.update', $user->id) }}" method="POST">
                     @csrf
-                    @method('PUT') <div class="row">
+                    @method('PUT')
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label class="form-label">Nama Lengkap</label>
@@ -51,10 +34,30 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label class="form-label">Level Akses (Role)</label>
-                                <select name="role" class="form-select">
+                                <select name="role" id="role" class="form-select">
                                     <option value="petugas" {{ $user->role == 'petugas' ? 'selected' : '' }}>Petugas</option>
                                     <option value="kasir" {{ $user->role == 'kasir' ? 'selected' : '' }}>Kasir</option>
                                     <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <option value="kadis_provinsi" {{ $user->role == 'kadis_provinsi' ? 'selected' : '' }}>Kadis Provinsi</option>
+                                    <option value="kadis_kabkota" {{ $user->role == 'kadis_kabkota' ? 'selected' : '' }}>Kadis Kab/Kota</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">NIP</label>
+                                <input type="text" name="nip" class="form-control" value="{{ $user->nip }}" placeholder="Contoh: 19612251998031004">
+                                <small class="text-muted">Wajib untuk Kadis — dipakai untuk TTD di laporan cetak.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="wrapper-kabupaten" style="{{ $user->role == 'kadis_kabkota' ? '' : 'display:none;' }}">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Kabupaten/Kota (khusus Kadis Kab/Kota)</label>
+                                <select name="id_kabupaten" class="form-select">
+                                    <option value="">-- Pilih Kabupaten --</option>
+                                    @foreach($kabupatens as $kab)
+                                        <option value="{{ $kab->id }}" {{ $user->id_kabupaten == $kab->id ? 'selected' : '' }}>{{ $kab->nama_kabupaten }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -65,8 +68,12 @@
                         <a href="{{ route('users.index') }}" class="btn btn-secondary">Batal</a>
                     </div>
                 </form>
-            </div>
-        </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('role').addEventListener('change', function () {
+        document.getElementById('wrapper-kabupaten').style.display = this.value === 'kadis_kabkota' ? 'block' : 'none';
+    });
+</script>
 @endsection

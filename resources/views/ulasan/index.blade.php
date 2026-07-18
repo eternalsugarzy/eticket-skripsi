@@ -12,6 +12,10 @@
                     Pantau dan moderasi ulasan yang diberikan pengunjung terverifikasi.
                 </p>
             </div>
+            <a href="{{ route('laporan.cetak-ulasan', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}"
+               target="_blank" class="btn btn-outline-secondary">
+                <i class="ti ti-printer me-1"></i> Cetak Laporan
+            </a>
         </div>
 
         <div class="card card-modern mb-3">

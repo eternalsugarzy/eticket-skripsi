@@ -8,8 +8,12 @@
     <div class="col-md-6">
 
         <div class="card text-center shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
-            <div class="card-header bg-dark text-white py-3">
+            <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="text-white mb-0 fw-bold"><i class="ti ti-scan me-2"></i> SCANNER PINTU MASUK</h5>
+                <a href="{{ route('laporan.cetak-validasi', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}"
+                   target="_blank" class="btn btn-outline-light btn-sm">
+                    <i class="ti ti-printer"></i> Cetak Laporan
+                </a>
             </div>
             <div class="card-body p-4">
 

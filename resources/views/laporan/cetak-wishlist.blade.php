@@ -24,7 +24,6 @@
         .total-row td { font-weight: bold; background-color: #f2f2f2; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
-        .medali { font-size: 14px; }
         .tanda-tangan { margin-top: 40px; width: 100%; font-family: Arial, sans-serif; page-break-inside: avoid; }
         .ttd-wrapper { display: table; width: 100%; }
         .ttd-kiri, .ttd-kanan { display: table-cell; width: 50%; text-align: center; vertical-align: top; }
@@ -69,13 +68,7 @@
             @php $total_wishlist = 0; @endphp
             @forelse($laporan as $i => $row)
             <tr>
-                <td class="text-center">
-                    @if($i == 0) <span class="medali">🥇</span>
-                    @elseif($i == 1) <span class="medali">🥈</span>
-                    @elseif($i == 2) <span class="medali">🥉</span>
-                    @else #{{ $i + 1 }}
-                    @endif
-                </td>
+                <td class="text-center">#{{ $i + 1 }}</td>
                 <td>{{ $row->nama_objek }}</td>
                 <td>{{ $row->nama_kabupaten ?? '-' }}</td>
                 <td class="text-center">{{ $row->jumlah_wishlist }}</td>
@@ -106,8 +99,8 @@
                 <p>Banjarmasin, {{ date('d F Y') }}</p>
                 <p>Kepala Dinas</p>
                 <div class="ttd-spacer"></div>
-                <p><strong>IWAN FITRIADI, SH.,MH</strong></p>
-                <p>NIP 19612251998031004</p>
+                <p><strong>{{ strtoupper($kadis->nama ?? '-') }}</strong></p>
+                <p>NIP {{ $kadis->nip ?? '-' }}</p>
             </div>
         </div>
     </div>

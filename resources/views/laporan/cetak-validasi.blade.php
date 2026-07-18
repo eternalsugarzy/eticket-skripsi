@@ -76,9 +76,9 @@
                 <td class="text-center">{{ $i + 1 }}</td>
                 <td class="text-center">
                     @if($row->sumber == 'Online')
-                        <span class="badge-online">🌐 Online</span>
+                        <span class="badge-online">Online</span>
                     @else
-                        <span class="badge-offline">🖥️ Kasir</span>
+                        <span class="badge-offline">Kasir</span>
                     @endif
                 </td>
                 <td class="text-center">{{ $row->no_referensi }}</td>
@@ -117,8 +117,8 @@
                 <p>Banjarmasin, {{ date('d F Y') }}</p>
                 <p>Kepala Dinas</p>
                 <div class="ttd-spacer"></div>
-                <p><strong>IWAN FITRIADI, SH.,MH</strong></p>
-                <p>NIP 19612251998031004</p>
+                <p><strong>{{ strtoupper($kadis->nama ?? '-') }}</strong></p>
+                <p>NIP {{ $kadis->nip ?? '-' }}</p>
             </div>
         </div>
     </div>

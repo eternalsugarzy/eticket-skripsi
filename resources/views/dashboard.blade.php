@@ -44,9 +44,39 @@
             <p class="dash-greeting text-muted mb-1">Selamat datang kembali, <strong>{{ Auth::user()->nama ?? 'Admin' }}</strong> 👋</p>
             <h4 class="dash-title mb-0">Dashboard Harian</h4>
         </div>
-        <div class="dash-date-badge">
-            <i class="ti ti-calendar-event me-2"></i>
-            {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}
+        <div class="d-flex align-items-center gap-2">
+            <div class="dash-date-badge">
+                <i class="ti ti-calendar-event me-2"></i>
+                {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}
+                <span class="mx-2 text-muted">•</span>
+                <i class="ti ti-clock me-1"></i>
+                <span id="liveClock">--:--:--</span> <small class="text-muted">WITA (GMT+8)</small>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="ti ti-printer"></i> Cetak Laporan
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" target="_blank"
+                           href="{{ route('laporan.cetak-pendapatan', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}">
+                            <i class="ti ti-cash me-2"></i> Laporan Pendapatan (Bulan Ini)
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" target="_blank"
+                           href="{{ route('laporan.cetak-tren', ['tahun' => date('Y')]) }}">
+                            <i class="ti ti-trending-up me-2"></i> Tren Kunjungan ({{ date('Y') }})
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" target="_blank"
+                           href="{{ route('laporan.cetak-rekap-tahunan', ['tahun' => date('Y')]) }}">
+                            <i class="ti ti-calendar-stats me-2"></i> Rekap Pengunjung Tahunan ({{ date('Y') }})
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -237,6 +267,22 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+        /* ── Jam aktif GMT+8 (WITA) — dihitung dari UTC device, bukan timezone lokal browser ── */
+        (function () {
+            var el = document.getElementById('liveClock');
+            if (!el) return;
+            function tick() {
+                var now  = new Date();
+                var utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+                var wita = new Date(utcMs + 8 * 3600000);
+                var pad  = n => String(n).padStart(2, '0');
+                el.textContent = pad(wita.getHours()) + ':' + pad(wita.getMinutes()) + ':' + pad(wita.getSeconds());
+            }
+            tick();
+            setInterval(tick, 1000);
+        })();
+
         // Menggunakan json_encode() asli agar aman dari bug Blade Compiler
         var labels      = {!! json_encode($chartLabels ?? []) !!};
         var dataOffline = {!! json_encode($chartValuesOffline ?? []) !!};

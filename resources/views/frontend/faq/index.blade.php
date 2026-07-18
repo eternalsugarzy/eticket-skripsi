@@ -112,7 +112,7 @@ body { background: var(--cream); }
         <div class="col-lg-8">
 
             {{-- ═══════ KATEGORI: PEMESANAN TIKET ═══════ --}}
-            <div class="faq-card">
+            <div class="faq-card reveal">
                 <div class="faq-card-header">
                     <h5><i class="bi bi-ticket-perforated-fill"></i> Pemesanan Tiket</h5>
                 </div>
@@ -167,7 +167,7 @@ body { background: var(--cream); }
             </div>
 
             {{-- ═══════ KATEGORI: PEMBAYARAN ═══════ --}}
-            <div class="faq-card">
+            <div class="faq-card reveal" style="transition-delay:.08s;">
                 <div class="faq-card-header">
                     <h5><i class="bi bi-credit-card-fill"></i> Pembayaran</h5>
                 </div>
@@ -219,7 +219,7 @@ body { background: var(--cream); }
             </div>
 
             {{-- ═══════ KATEGORI: E-TICKET & KUNJUNGAN ═══════ --}}
-            <div class="faq-card">
+            <div class="faq-card reveal" style="transition-delay:.16s;">
                 <div class="faq-card-header">
                     <h5><i class="bi bi-qr-code"></i> E-Ticket & Kunjungan</h5>
                 </div>
@@ -272,7 +272,7 @@ body { background: var(--cream); }
             </div>
 
             {{-- CTA lacak pesanan --}}
-            <div class="cta-box">
+            <div class="cta-box reveal">
                 <h5>Masih Ada Pertanyaan Lain?</h5>
                 <p>Cek status pesanan Anda kapan saja, atau hubungi kami langsung.</p>
                 <a href="{{ route('cek-pesanan') }}" class="btn-cta">

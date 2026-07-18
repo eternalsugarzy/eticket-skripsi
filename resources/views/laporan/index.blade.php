@@ -277,6 +277,38 @@
     <div class="col-md-6">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="badge p-2" style="background:#0ea5e9"><i class="ti ti-calendar-stats fs-5"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Rekapitulasi Data Pengunjung Tahunan</h6>
+                    <small class="text-muted">Total pengunjung per bulan selama 1 tahun</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('laporan.cetak-rekap-tahunan') }}" method="GET" target="_blank">
+                    <label class="form-label small fw-bold text-muted">Pilih Tahun</label>
+                    <select name="tahun" class="form-select form-select-sm" required>
+                        @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                            <option value="{{ $y }}" {{ $y == date('Y') ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    <hr class="my-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm fw-bold flex-fill text-white" style="background:#0ea5e9">
+                            <i class="ti ti-printer me-1"></i> Cetak
+                        </button>
+                        <button type="submit" formaction="{{ route('laporan.export-rekap-tahunan') }}" formtarget="_self"
+                                class="btn btn-outline-success btn-sm fw-bold flex-fill">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
                 <span class="badge p-2" style="background:#dc2626"><i class="ti ti-trending-up fs-5"></i></span>
                 <div>
                     <h6 class="mb-0 fw-bold">Analisis Tren Kunjungan Wisata</h6>
