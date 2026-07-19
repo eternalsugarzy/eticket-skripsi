@@ -34,6 +34,13 @@
     overflow: hidden;
     margin-bottom: 28px;
 }
+
+/* ── Layout dua kolom: samakan tinggi kartu kiri (Cek Status) & kanan (Hasil) di desktop ── */
+@media (min-width: 992px) {
+    .lacak-col { display: flex; flex-direction: column; }
+    .lacak-col > .search-hero { margin-bottom: 0; flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+    .lacak-col > .detail-card { flex: 1 1 auto; }
+}
 .search-hero::before {
     content: "";
     position: absolute;
@@ -209,8 +216,10 @@
 
 <div class="lacak-page">
 <div class="container">
-<div class="row justify-content-center">
-<div class="col-lg-7 col-xl-6">
+<div class="row g-4 justify-content-center align-items-start">
+
+    {{-- ══════ KOLOM KIRI: Form Cek Pesanan ══════ --}}
+    <div class="col-lg-5 lacak-col">
 
     {{-- ── Alert: Pesanan berhasil dibuat ── --}}
     @if(session('success_kode'))
@@ -268,6 +277,10 @@
         </div>
         @endif
     </div>
+    </div>{{-- /kolom kiri --}}
+
+    {{-- ══════ KOLOM KANAN: Hasil Cek Pesanan ══════ --}}
+    <div class="col-lg-7 lacak-col">
 
     {{-- ── Detail Pesanan ── --}}
     @if($pesanan)
@@ -279,11 +292,11 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="fw-bold mb-0">Detail Pesanan</h5>
                 @if($pesanan->status_pembayaran == 'Paid')
-                    <span class="status-badge paid"><i class="bi bi-patch-check-fill"></i> LUNAS</span>
+                    <span id="status-badge" class="status-badge paid"><i class="bi bi-patch-check-fill"></i> LUNAS</span>
                 @elseif($pesanan->status_pembayaran == 'Cancelled')
-                    <span class="status-badge cancelled"><i class="bi bi-x-circle-fill"></i> DIBATALKAN</span>
+                    <span id="status-badge" class="status-badge cancelled"><i class="bi bi-x-circle-fill"></i> DIBATALKAN</span>
                 @else
-                    <span class="status-badge unpaid"><i class="bi bi-clock-fill"></i> BELUM BAYAR</span>
+                    <span id="status-badge" class="status-badge unpaid"><i class="bi bi-clock-fill"></i> BELUM BAYAR</span>
                 @endif
             </div>
 
@@ -315,9 +328,9 @@
                 <li>
                     <div>
                         <div class="tiket-nama">{{ $detail->jenisTiket->nama_jenis ?? 'Tiket' }}</div>
-                        <div class="tiket-qty">{{ $detail->jumlah }} × Rp {{ number_format($detail->harga, 0, ',', '.') }}</div>
+                        <div class="tiket-qty">{{ $detail->jumlah }} × @rupiah($detail->harga)</div>
                     </div>
-                    <div class="tiket-sub">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</div>
+                    <div class="tiket-sub">@rupiah($detail->subtotal)</div>
                 </li>
                 @endforeach
 
@@ -365,25 +378,23 @@
 
             <div class="tiket-total">
                 <span class="label">Total Pembayaran</span>
-                <span class="amount">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</span>
+                <span class="amount">@rupiah($pesanan->total_bayar)</span>
             </div>
 
             {{-- CTA --}}
             <div class="mt-4">
                 <div id="area-pembayaran">
                     @if($pesanan->status_pembayaran == 'Unpaid')
-                        @if($snapToken)
-                        <button type="button" id="btn-bayar-midtrans" class="btn-bayar">
-                            <i class="bi bi-credit-card-fill me-2"></i> Bayar Sekarang
+                        <button type="button" id="btn-bayar-midtrans" class="btn-bayar" disabled>
+                            <i class="bi bi-credit-card-fill me-2"></i>
+                            <span id="btn-bayar-label">Menyiapkan pembayaran…</span>
                         </button>
                         <p class="text-center text-muted mt-2 mb-0" style="font-size:12px;">
                             Pilih QRIS, E-Wallet, VA Bank, atau kartu — diproses aman oleh Midtrans.
                         </p>
-                        @else
-                        <div class="alert alert-warning text-center mb-0" style="font-size:13px;">
+                        <div id="gateway-error" class="alert alert-warning text-center mb-0 mt-2" style="font-size:13px; display:none;">
                             Gateway pembayaran sedang tidak tersedia. Silakan coba lagi nanti.
                         </div>
-                        @endif
                     @elseif($pesanan->status_pembayaran == 'Paid')
                         <a href="{{ route('cetak.eticket', $pesanan->kode_pesanan) }}" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">
                          <i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket
@@ -394,9 +405,18 @@
 
         </div>
     </div>
+    @else
+    {{-- Placeholder saat belum ada hasil pencarian --}}
+    <div class="detail-card">
+        <div class="card-top-bar"></div>
+        <div class="card-inner text-center" style="padding:64px 32px; color:#6B7280;">
+            <i class="bi bi-receipt-cutoff" style="font-size:3rem; color:#D1D5DB;"></i>
+            <p class="mt-3 mb-0" style="font-size:.95rem;">Detail pesanan akan tampil di sini<br>setelah Anda memasukkan kode pesanan.</p>
+        </div>
+    </div>
     @endif
 
-</div>
+    </div>{{-- /kolom kanan --}}
 </div>
 </div>
 </div>
@@ -404,17 +424,31 @@
 {{-- ══════════════════════════════════════════════
      SCRIPT MIDTRANS SNAP + AUTO-POLLING STATUS
 ══════════════════════════════════════════════ --}}
-@if(isset($pesanan) && $pesanan && $pesanan->status_pembayaran == 'Unpaid' && $snapToken)
+@if(isset($pesanan) && $pesanan && $pesanan->status_pembayaran == 'Unpaid')
 <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
 
 <script>
 (function () {
     var urlCekStatus    = @json(route('checkout.cek-status-ajax', $pesanan->kode_pesanan));
-    var urlETicket       = @json(route('cetak.eticket', $pesanan->kode_pesanan));
+    var urlSnapToken    = @json(route('checkout.snap-token', $pesanan->kode_pesanan));
+    var urlETicket      = @json(route('cetak.eticket', $pesanan->kode_pesanan));
+    var autoOpen        = @json((bool) session('success_checkout'));
+    var snapToken       = null;
     var pollingInterval = null;
 
+    var btn          = document.getElementById('btn-bayar-midtrans');
+    var btnLabel     = document.getElementById('btn-bayar-label');
+    var gatewayError = document.getElementById('gateway-error');
+
     function tampilkanTombolETicket() {
+        // Ubah badge status di header dari "Belum Bayar" menjadi "Lunas"
+        var badge = document.getElementById('status-badge');
+        if (badge) {
+            badge.className = 'status-badge paid';
+            badge.innerHTML = '<i class="bi bi-patch-check-fill"></i> LUNAS';
+        }
+
         var area = document.getElementById('area-pembayaran');
         if (!area) return;
         area.innerHTML =
@@ -426,47 +460,65 @@
             '</p>';
     }
 
+    function cekStatusSekali() {
+        fetch(urlCekStatus)
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data.status === 'Paid') {
+                    if (pollingInterval) clearInterval(pollingInterval);
+                    tampilkanTombolETicket();
+                }
+            })
+            .catch(function () {});
+    }
+
     function mulaiPolling() {
         if (pollingInterval) return;
-        pollingInterval = setInterval(function () {
-            fetch(urlCekStatus)
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.status === 'Paid') {
-                        clearInterval(pollingInterval);
-                        tampilkanTombolETicket();
-                    }
-                })
-                .catch(function () {});
-        }, 4000); // cek tiap 4 detik
-
+        cekStatusSekali(); // cek segera sekali
+        pollingInterval = setInterval(cekStatusSekali, 4000); // lalu tiap 4 detik
         // Berhenti otomatis setelah 5 menit supaya tidak polling selamanya
         setTimeout(function () { if (pollingInterval) clearInterval(pollingInterval); }, 5 * 60 * 1000);
     }
 
-    var btn = document.getElementById('btn-bayar-midtrans');
-    if (btn) {
-        btn.addEventListener('click', function () {
-            snap.pay(@json($snapToken), {
-                onSuccess: function () { mulaiPolling(); },
-                onPending: function () { mulaiPolling(); },
-                onError: function () {
-                    alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
-                },
-                onClose: function () {
-                    // Popup ditutup manual — tetap mulai polling jaga-jaga kalau ternyata sudah kebayar
-                    mulaiPolling();
-                }
-            });
+    function bukaPopup() {
+        if (!snapToken) return;
+        snap.pay(snapToken, {
+            onSuccess: function () { mulaiPolling(); },
+            onPending: function () { mulaiPolling(); },
+            onError: function () {
+                alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
+            },
+            onClose: function () {
+                // Popup ditutup manual — tetap mulai polling jaga-jaga kalau ternyata sudah kebayar
+                mulaiPolling();
+            }
         });
     }
 
-    @if(session('success_checkout'))
-    // Baru saja selesai checkout — otomatis buka popup pembayaran
-    document.addEventListener('DOMContentLoaded', function () {
-        if (btn) btn.click();
-    });
-    @endif
+    if (btn) btn.addEventListener('click', bukaPopup);
+
+    // Ambil Snap Token via AJAX SETELAH halaman tampil — tidak memblokir render halaman.
+    fetch(urlSnapToken)
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.token) {
+                snapToken = data.token;
+                if (btn) { btn.disabled = false; }
+                if (btnLabel) { btnLabel.textContent = 'Bayar Sekarang'; }
+                if (autoOpen) { bukaPopup(); } // baru selesai checkout → buka popup otomatis
+            } else {
+                if (btn) { btn.style.display = 'none'; }
+                if (gatewayError) { gatewayError.style.display = 'block'; }
+            }
+        })
+        .catch(function () {
+            if (btn) { btn.style.display = 'none'; }
+            if (gatewayError) { gatewayError.style.display = 'block'; }
+        });
+
+    // Sinkronkan status di latar belakang (menangkap pesanan yang ternyata sudah dibayar
+    // saat pengunjung kembali membuka halaman ini) — tanpa memblokir render.
+    mulaiPolling();
 })();
 </script>
 @endif

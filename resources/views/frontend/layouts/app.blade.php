@@ -6,8 +6,11 @@
     <title>@yield('title', 'E-Tourism Kalimantan Selatan')</title>
 
     <link rel="icon" href="{{ asset('assets/images/logo1.png') }}" type="image/x-icon">
+    {{-- Preconnect ke semua origin CDN supaya handshake DNS/TLS jalan lebih awal (mempercepat load CSS/JS) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

@@ -501,7 +501,7 @@ body {
                             @forelse($hargaTiket as $tiket)
                             <tr>
                                 <td class="fw-semibold" style="color:var(--text-dark);">{{ $tiket->nama_jenis }}</td>
-                                <td class="text-end tiket-harga">Rp {{ number_format($tiket->harga, 0, ',', '.') }}</td>
+                                <td class="text-end tiket-harga">@rupiah($tiket->harga)</td>
                             </tr>
                             @empty
                             <tr>
@@ -678,11 +678,10 @@ body {
                     <span style="color:rgba(255,255,255,.55); font-size:.75rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase;">E-Tourism Kalsel</span>
                 </div>
                 <hr class="divider">
+                @php $hargaMin = $hargaTiket->min('harga') ?? 0; @endphp
                 <p class="price-from mb-1">Mulai dari</p>
-                <div class="price-main">
-                    Rp {{ number_format($hargaTiket->min('harga') ?? 0, 0, ',', '.') }}
-                </div>
-                <p class="price-sub mb-0">per orang</p>
+                <div class="price-main">@rupiah($hargaMin)</div>
+                <p class="price-sub mb-0">{{ $hargaMin > 0 ? 'per orang' : 'tidak dipungut biaya' }}</p>
                 <hr class="divider">
                 <ul class="feature-list">
                     <li><i class="bi bi-check-circle-fill"></i> Tiket langsung via QR Code</li>

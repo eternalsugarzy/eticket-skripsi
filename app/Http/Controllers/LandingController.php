@@ -9,31 +9,37 @@ use App\Models\Berita;
 use App\Models\Banner;
 use App\Models\Event;
 use App\Models\VideoTerbaru;
+use Illuminate\Support\Facades\Cache;
 
 class LandingController extends Controller
 {
     // 1. Halaman Utama
     public function index()
     {
-        $allWisata = ObjekWisata::with('kabupaten')->take(6)->get();
+        // Semua data homepage adalah konten bersama (tidak bergantung user) yang jarang
+        // berubah, jadi di-cache 10 menit dalam satu key supaya tidak query DB tiap kunjungan.
+        // Konten baru dari admin muncul maksimal ~10 menit kemudian.
+        $data = Cache::remember('landing_home_bundle', now()->addMinutes(10), function () {
+            return [
+                'allWisata' => ObjekWisata::with('kabupaten')->take(6)->get(),
 
-        $wisataMarkers = ObjekWisata::whereNotNull('latitude')
+                'wisataMarkers' => ObjekWisata::whereNotNull('latitude')
                                     ->whereNotNull('longitude')
                                     ->where('latitude', '!=', '')
                                     ->where('longitude', '!=', '')
-                                    ->get();
+                                    ->get(),
 
-        $beritaTerbaru = Berita::published()->orderByDesc('tanggal_publish')->take(3)->get();
+                'beritaTerbaru' => Berita::published()->orderByDesc('tanggal_publish')->take(3)->get(),
 
-        $banners = Banner::aktifSaatIni()->orderBy('urutan')->get();
+                'banners' => Banner::aktifSaatIni()->orderBy('urutan')->get(),
 
-        $eventTerbaru = Event::aktif()->with('objekWisata')->orderByDesc('tanggal_event')->take(5)->get();
+                'eventTerbaru' => Event::aktif()->with('objekWisata')->orderByDesc('tanggal_event')->take(5)->get(),
 
-        $videoTerbaru = VideoTerbaru::first();
+                'videoTerbaru' => VideoTerbaru::first(),
+            ];
+        });
 
-        return view('frontend.index', compact(
-            'allWisata', 'wisataMarkers', 'beritaTerbaru', 'banners', 'eventTerbaru', 'videoTerbaru'
-        ));
+        return view('frontend.index', $data);
     }
 
     // 2. Halaman Katalog (dengan Search & Filter)
@@ -54,8 +60,8 @@ class LandingController extends Controller
         // Paginate 12 per halaman, pertahankan query string di link pagination
         $allWisata  = $query->paginate(12)->withQueryString();
 
-        // Data untuk dropdown filter kabupaten
-        $kabupatens = Kabupaten::orderBy('nama_kabupaten')->get();
+        // Data untuk dropdown filter kabupaten (daftar 13 wilayah, hampir statis — di-cache)
+        $kabupatens = Kabupaten::cached();
 
         // Daftar ID objek wisata yang sudah di-wishlist pengunjung yang login (kalau ada)
         $pengunjungLogin = auth('pengunjung')->user();

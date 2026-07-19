@@ -170,13 +170,19 @@ class DashboardController extends Controller
                 ];
             });
 
+            // Jumlah objek wisata per kabupaten — SATU query GROUP BY (bukan 1 COUNT per
+            // kabupaten seperti sebelumnya, yang menimbulkan N+1 = 13 query per load).
+            $wisataCounts = ObjekWisata::select('id_kabupaten', DB::raw('COUNT(*) as total'))
+                ->groupBy('id_kabupaten')
+                ->pluck('total', 'id_kabupaten');
+
             // Pastikan SEMUA kabupaten muncul walau belum ada transaksi bulan ini (isi 0)
             $perbandinganKabupaten = \App\Models\Kabupaten::orderBy('nama_kabupaten')->get()
-                ->map(function ($kab) use ($rekapKab) {
+                ->map(function ($kab) use ($rekapKab, $wisataCounts) {
                     $data = $rekapKab->get($kab->nama_kabupaten);
                     return (object) [
                         'nama_kabupaten'   => $kab->nama_kabupaten,
-                        'jumlah_wisata'    => ObjekWisata::where('id_kabupaten', $kab->id)->count(),
+                        'jumlah_wisata'    => $wisataCounts[$kab->id] ?? 0,
                         'total_pengunjung' => $data->total_pengunjung ?? 0,
                         'total_pendapatan' => $data->total_pendapatan ?? 0,
                     ];

@@ -114,7 +114,7 @@
                             <div>
                                 <h6 class="mb-0 fw-bold tiket-nama">{{ $ht->jenisTiket->nama_jenis ?? 'Tiket Reguler' }}</h6>
                                 <span class="text-muted" style="font-size: 14px;">
-                                    Rp {{ number_format($ht->harga, 0, ',', '.') }} / orang
+                                    @rupiah($ht->harga){{ $ht->harga > 0 ? ' / orang' : '' }}
                                 </span>
                             </div>
                             <div style="width: 130px;">
@@ -211,10 +211,10 @@
                             id="btn-submit"
                             disabled
                         >
-                            Lanjutkan Pembayaran <i class="bi bi-shield-lock-fill ms-1"></i>
+                            <span id="btn-submit-label">Lanjutkan Pembayaran</span> <i class="bi bi-shield-lock-fill ms-1"></i>
                         </button>
 
-                        <p class="text-center text-muted mt-3 mb-0" style="font-size: 12px;">
+                        <p class="text-center text-muted mt-3 mb-0" id="submit-note" style="font-size: 12px;">
                             Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).
                         </p>
                     </div>
@@ -255,7 +255,8 @@
         var voucherAktif = null;
 
         function formatRupiah(angka) {
-            return 'Rp ' + Number(angka).toLocaleString('id-ID');
+            // Rp 0 ditampilkan sebagai "Gratis" (objek wisata gratis)
+            return Number(angka) > 0 ? 'Rp ' + Number(angka).toLocaleString('id-ID') : 'Gratis';
         }
 
         // Cari tier diskon rombongan tertinggi
@@ -348,10 +349,20 @@
                     '</div>';
             }
 
-            displayTotal.innerText = formatRupiah(totalAkhir);
+            // Belum pilih tiket → "Rp 0"; sudah pilih tapi harga 0 → "Gratis"; selain itu nominal.
+            displayTotal.innerText = (totalQty === 0) ? 'Rp 0' : formatRupiah(totalAkhir);
             inputTotal.value       = totalAkhir;
             rincianBox.innerHTML   = rincian;
             btnSubmit.disabled     = (totalQty === 0);
+
+            // Ubah label tombol & catatan kalau pesanannya gratis (total 0 tapi ada tiket dipilih)
+            var gratis = (totalQty > 0 && totalAkhir <= 0);
+            var lblEl  = document.getElementById('btn-submit-label');
+            var noteEl = document.getElementById('submit-note');
+            if (lblEl)  lblEl.textContent  = gratis ? 'Dapatkan E-Ticket (Gratis)' : 'Lanjutkan Pembayaran';
+            if (noteEl) noteEl.textContent = gratis
+                ? 'Objek wisata ini gratis — E-Ticket langsung terbit tanpa pembayaran.'
+                : 'Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).';
 
             return subtotalSetelahRombongan;
         }

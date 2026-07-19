@@ -210,7 +210,7 @@
                 <tr>
                     <td>{{ $detail->jenisTiket->nama_jenis ?? 'Tiket' }}</td>
                     <td>{{ $detail->jumlah }} Orang</td>
-                    <td>Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                    <td>@rupiah($detail->subtotal)</td>
                 </tr>
                 @endforeach
 
@@ -244,7 +244,7 @@
 
                 <tr class="total-row">
                     <td colspan="2" style="text-align:right; padding-right:20px;">Total Pembayaran</td>
-                    <td style="font-weight:700;">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</td>
+                    <td style="font-weight:700;">@rupiah($pesanan->total_bayar)</td>
                 </tr>
             </tbody>
         </table>

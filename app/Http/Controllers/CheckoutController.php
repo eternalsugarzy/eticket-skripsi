@@ -42,7 +42,7 @@ class CheckoutController extends Controller
             'email'             => 'required|email|max:255',
             'tanggal_kunjungan' => 'required|date',
             'tiket'             => 'required|array',
-            'total_bayar'       => 'required|numeric|min:1',
+            'total_bayar'       => 'required|numeric|min:0', // 0 = objek wisata gratis
         ]);
 
         $kode_pesanan = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(5));
@@ -97,6 +97,9 @@ class CheckoutController extends Controller
 
         $totalBayar = $subtotalSetelahRombongan - $diskonVoucherNominal;
 
+        // Objek wisata gratis (total Rp 0) → langsung LUNAS, tidak lewat pembayaran Midtrans
+        $isGratis = $totalBayar <= 0;
+
         $pesanan = Pesanan::create([
             'id_pengunjung'          => $idPengunjung,
             'kode_pesanan'           => $kode_pesanan,
@@ -111,7 +114,7 @@ class CheckoutController extends Controller
             'id_voucher'             => $idVoucherDipakai,
             'kode_voucher'           => $kodeVoucherDipakai,
             'diskon_voucher_nominal' => $diskonVoucherNominal,
-            'status_pembayaran'      => 'Unpaid',
+            'status_pembayaran'      => $isGratis ? 'Paid' : 'Unpaid',
         ]);
 
         foreach ($detailTikets as $detail) {
@@ -129,12 +132,30 @@ class CheckoutController extends Controller
             \App\Models\Voucher::where('id', $idVoucherDipakai)->increment('jumlah_terpakai');
         }
 
-        // Kirim email notifikasi pesanan dibuat (jangan sampai gagal kirim email menggagalkan checkout)
-        try {
-            Mail::to($pesanan->email)->send(new PesananDibuat($pesanan));
-        } catch (\Throwable $e) {
-            // Email gagal terkirim (misal SMTP belum diatur) — checkout tetap lanjut normal
+        // ── Objek GRATIS: E-Ticket langsung terbit, tidak perlu pembayaran ──
+        if ($isGratis) {
+            $pesananEmail = $pesanan->fresh(['details.jenisTiket', 'objekWisata']);
+            defer(function () use ($pesananEmail) {
+                try {
+                    Mail::to($pesananEmail->email)->send(new PembayaranBerhasil($pesananEmail));
+                } catch (\Throwable $e) {
+                    // Email gagal terkirim — pesanan gratis tetap sah
+                }
+            });
+
+            return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])
+                ->with('success_pembayaran', 'Pesanan gratis berhasil dibuat & E-Ticket langsung terbit. Selamat berkunjung!');
         }
+
+        // ── Objek BERBAYAR: kirim notifikasi pesanan dibuat, lalu lanjut ke pembayaran ──
+        // Email dikirim SETELAH response (defer) supaya pengunjung tidak menunggu SMTP.
+        defer(function () use ($pesanan) {
+            try {
+                Mail::to($pesanan->email)->send(new PesananDibuat($pesanan));
+            } catch (\Throwable $e) {
+                // Email gagal terkirim (misal SMTP belum diatur) — checkout tetap lanjut normal
+            }
+        });
 
         $pesanKeterangan = [];
         if ($diskonPersen > 0) $pesanKeterangan[] = "diskon rombongan {$diskonPersen}%";
@@ -159,37 +180,20 @@ class CheckoutController extends Controller
     // 3. Halaman cek status pesanan
     public function cekPesanan(Request $request)
     {
-        $pesanan   = null;
-        $snapToken = null;
+        $pesanan = null;
 
         if ($request->has('kode')) {
             $pesanan = Pesanan::query()
                         ->with(['details.jenisTiket', 'objekWisata'])
                         ->where('kode_pesanan', $request->kode)
                         ->first();
-
-            if ($pesanan) {
-                // Cek ke Midtrans dulu — siapa tahu sudah lunas tapi status lokal belum ke-update
-                $pesanan = $this->syncStatusMidtrans($pesanan);
-
-                // Kalau masih belum bayar, pakai Snap Token yang SUDAH ADA (kalau ada) —
-                // supaya QR/popup yang ditampilkan konsisten setiap refresh, tidak generate baru terus.
-                if ($pesanan->status_pembayaran === 'Unpaid') {
-                    if ($pesanan->snap_token) {
-                        $snapToken = $pesanan->snap_token;
-                    } else {
-                        try {
-                            $snapToken = $this->generateSnapToken($pesanan);
-                            $pesanan->update(['snap_token' => $snapToken]);
-                        } catch (\Throwable $e) {
-                            // Gagal generate token (misal server key belum diisi) — tombol bayar otomatis sembunyi di view
-                        }
-                    }
-                }
-            }
         }
 
-        return view('frontend.cek_pesanan', compact('pesanan', 'snapToken'));
+        // TIDAK ada panggilan Midtrans di sini supaya halaman langsung tampil (TTFB cepat,
+        // tidak menunggu koneksi ke gateway). Keduanya dipindah ke AJAX setelah halaman render:
+        //   - Snap token diambil via snapTokenAjax()
+        //   - Status pembayaran disinkronkan via cekStatusAjax() (polling)
+        return view('frontend.cek_pesanan', compact('pesanan'));
     }
 
     // 3b. AJAX — dipanggil JS tiap beberapa detik untuk polling status pembayaran
@@ -204,6 +208,28 @@ class CheckoutController extends Controller
         $pesanan = $this->syncStatusMidtrans($pesanan);
 
         return response()->json(['status' => $pesanan->status_pembayaran]);
+    }
+
+    // 3c. AJAX — Ambil/generate Snap Token SETELAH halaman tampil (tidak memblokir render).
+    // Token disimpan di DB supaya konsisten & tidak generate ulang tiap kali.
+    public function snapTokenAjax($kode_pesanan)
+    {
+        $pesanan = Pesanan::where('kode_pesanan', $kode_pesanan)->first();
+
+        if (!$pesanan || $pesanan->status_pembayaran !== 'Unpaid') {
+            return response()->json(['token' => null]);
+        }
+
+        if (!$pesanan->snap_token) {
+            try {
+                $token = $this->generateSnapToken($pesanan);
+                $pesanan->update(['snap_token' => $token]);
+            } catch (\Throwable $e) {
+                return response()->json(['token' => null]);
+            }
+        }
+
+        return response()->json(['token' => $pesanan->snap_token]);
     }
 
     // =========================================================
@@ -241,6 +267,13 @@ class CheckoutController extends Controller
             return $pesanan;
         }
 
+        // Belum punya snap_token = pengunjung belum pernah diarahkan ke Midtrans,
+        // jadi tidak ada transaksi yang bisa dicek. Panggilan status() pada pesanan
+        // baru selalu gagal setelah round-trip penuh — lewati saja supaya cepat.
+        if (!$pesanan->snap_token) {
+            return $pesanan;
+        }
+
         \Midtrans\Config::$serverKey    = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = config('midtrans.is_production');
 
@@ -253,13 +286,16 @@ class CheckoutController extends Controller
             if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
                 $pesanan->update(['status_pembayaran' => 'Paid']);
 
-                // Kirim email E-Ticket — hanya terpicu sekali karena baris di atas mengubah status
-                // dari Unpaid, jadi panggilan berikutnya akan berhenti di guard clause paling atas
-                try {
-                    Mail::to($pesanan->email)->send(new PembayaranBerhasil($pesanan->fresh(['details.jenisTiket', 'objekWisata'])));
-                } catch (\Throwable $e) {
-                    // Email gagal terkirim — tidak masalah, status pembayaran tetap ter-update
-                }
+                // Kirim email E-Ticket SETELAH response (defer) — hanya terpicu sekali karena baris
+                // di atas mengubah status dari Unpaid, jadi panggilan berikutnya berhenti di guard clause
+                $pesananEmail = $pesanan->fresh(['details.jenisTiket', 'objekWisata']);
+                defer(function () use ($pesananEmail) {
+                    try {
+                        Mail::to($pesananEmail->email)->send(new PembayaranBerhasil($pesananEmail));
+                    } catch (\Throwable $e) {
+                        // Email gagal terkirim — tidak masalah, status pembayaran tetap ter-update
+                    }
+                });
             } elseif (in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure'])) {
                 $pesanan->update(['status_pembayaran' => 'Cancelled']);
             }
@@ -281,11 +317,14 @@ class CheckoutController extends Controller
                 'status_pembayaran' => 'Paid',
             ]);
 
-            try {
-                Mail::to($pesanan->email)->send(new PembayaranBerhasil($pesanan->fresh(['details.jenisTiket', 'objekWisata'])));
-            } catch (\Throwable $e) {
-                // Email gagal terkirim — tidak masalah, status pembayaran tetap ter-update
-            }
+            $pesananEmail = $pesanan->fresh(['details.jenisTiket', 'objekWisata']);
+            defer(function () use ($pesananEmail) {
+                try {
+                    Mail::to($pesananEmail->email)->send(new PembayaranBerhasil($pesananEmail));
+                } catch (\Throwable $e) {
+                    // Email gagal terkirim — tidak masalah, status pembayaran tetap ter-update
+                }
+            });
 
             return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])
                              ->with('success_pembayaran', 'Pembayaran berhasil dikonfirmasi. E-Ticket Anda telah diterbitkan.');

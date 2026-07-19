@@ -47,6 +47,7 @@ Route::get('/checkout/{id_objek}', [CheckoutController::class, 'index'])->name('
 Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('checkout.proses');
 Route::get('/cek-pesanan', [CheckoutController::class, 'cekPesanan'])->name('cek-pesanan');
 Route::get('/cek-status-pembayaran/{kode}', [CheckoutController::class, 'cekStatusAjax'])->name('checkout.cek-status-ajax');
+Route::get('/snap-token/{kode}', [CheckoutController::class, 'snapTokenAjax'])->name('checkout.snap-token');
 
 Route::post('/simulasi-bayar/{kode_pesanan}', [CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
 Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->name('cetak.eticket');
