@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 11, 2026 at 05:42 AM
+-- Generation Time: Jul 20, 2026 at 10:29 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.31
 
@@ -46,8 +46,9 @@ CREATE TABLE `banners` (
 --
 
 INSERT INTO `banners` (`id`, `judul`, `gambar`, `link_url`, `urutan`, `status`, `tanggal_mulai`, `tanggal_selesai`, `id_user`, `created_at`, `updated_at`) VALUES
-(1, 'Bandung Menjelang Pagi', '1783416268_523f4a4f403dc0e2af06bf2eae68d350.jpg', NULL, 1, 'aktif', NULL, NULL, 1, '2026-07-07 01:24:28', '2026-07-07 01:24:28'),
-(2, 'TESTING', '1783417296_68e760fd6fb9e79a8460a16f446411b2.jpg', NULL, 2, 'aktif', NULL, NULL, 1, '2026-07-07 01:41:36', '2026-07-07 01:41:36');
+(1, 'Suka Travel Mart', '1784027576_poster.jpeg', NULL, 1, 'aktif', NULL, NULL, 1, '2026-07-07 01:24:28', '2026-07-14 03:12:56'),
+(2, 'Desa Bunglai', '1784027592_poster2.jpg', NULL, 2, 'aktif', NULL, NULL, 1, '2026-07-07 01:41:36', '2026-07-14 03:13:12'),
+(3, 'Ramadhan EXPO Tanah Laut', '1784043564_tala-ramadhan1.jpg', NULL, 1, 'aktif', '2026-07-14', '2026-07-20', 22, '2026-07-14 07:39:24', '2026-07-17 09:53:45');
 
 -- --------------------------------------------------------
 
@@ -77,7 +78,8 @@ CREATE TABLE `beritas` (
 --
 
 INSERT INTO `beritas` (`id`, `judul`, `slug`, `kategori`, `gambar`, `ringkasan`, `konten`, `tanggal_publish`, `status`, `id_kabupaten`, `id_user`, `dilihat`, `created_at`, `updated_at`) VALUES
-(1, 'Festival Pasar Terapung Banjarmasin 2026', 'festival-pasar-terapung-banjarmasin-2026', 'Event', '1783304527_Screenshot 2025-12-25 212536.png', 'Festival Pasar Terapung', 'Festival Pasar Terapung Banjarmasin 2026', '2026-07-06', 'published', 1, 1, 2, '2026-07-05 18:22:07', '2026-07-06 09:49:27');
+(1, 'Festival Pasar Terapung Banjarmasin 2026', 'festival-pasar-terapung-banjarmasin-2026', 'Event', '1784027534_pasarterapung.jpg', 'Festival Pasar Terapung', 'Festival Pasar Terapung Banjarmasin merupakan salah satu agenda wisata budaya yang menjadi daya tarik utama di Kalimantan Selatan. Festival ini diselenggarakan untuk melestarikan tradisi masyarakat Banjar yang telah berlangsung sejak ratusan tahun lalu, yaitu aktivitas jual beli di atas perahu atau jukung di kawasan sungai. Melalui penyelenggaraan festival, pengunjung dapat menyaksikan secara langsung keunikan budaya sungai yang menjadi identitas masyarakat Banjarmasin, sekaligus menikmati berbagai pertunjukan seni, kuliner khas, dan produk unggulan daerah.\r\n\r\nSelain menjadi sarana pelestarian budaya, Festival Pasar Terapung juga berperan penting dalam meningkatkan sektor pariwisata dan perekonomian masyarakat. Kehadiran wisatawan dari berbagai daerah memberikan peluang bagi pelaku usaha lokal, seperti pedagang, pengrajin, dan pelaku UMKM, untuk memasarkan produk mereka. Beragam kegiatan yang diselenggarakan, seperti parade jukung hias, pertunjukan seni tradisional, lomba budaya, serta promosi kuliner khas Banjar, menjadikan festival ini sebagai media promosi yang efektif bagi potensi wisata Kalimantan Selatan.\r\n\r\nFestival Pasar Terapung Banjarmasin tidak hanya menjadi hiburan bagi masyarakat, tetapi juga menjadi upaya memperkenalkan warisan budaya Banjar kepada generasi muda dan wisatawan mancanegara. Dengan dukungan pemerintah, komunitas lokal, dan masyarakat, festival ini terus berkembang sebagai salah satu ikon pariwisata unggulan daerah. Keberlangsungan festival diharapkan mampu menjaga kelestarian budaya sungai sekaligus memperkuat citra Banjarmasin sebagai \"Kota Seribu Sungai\" yang kaya akan nilai sejarah, budaya, dan potensi wisata.', '2026-07-06', 'published', 1, 1, 7, '2026-07-05 18:22:07', '2026-07-17 21:51:05'),
+(2, 'Pasar Ramadhan Tanah Laut 2026', 'pasar-ramadhan-tanah-laut-2026', 'Event', '1784043412_tala-ramadhan.jpg', 'Pasar Ramadhan 2026', 'Pasar Ramadan Tanah Laut 2026, yang diselenggarakan dalam rangka Ramadan Expo 1447 H di kawasan Jalan H. Boedjasin (Pal-Palan), Pelaihari, merupakan pusat kegiatan ekonomi dan wisata kuliner selama bulan Ramadan. Acara ini menghadirkan sekitar 126 pelaku UMKM yang menawarkan beragam menu berbuka puasa, makanan khas daerah, minuman, serta produk lokal. Selain menjadi destinasi masyarakat untuk berbelanja kebutuhan berbuka, kegiatan ini juga bertujuan mendukung pertumbuhan UMKM, meningkatkan perputaran ekonomi daerah, serta menjadi sarana promosi pariwisata dan ekonomi kreatif di Kabupaten Tanah Laut.', '2026-07-14', 'published', 4, 22, 2, '2026-07-14 07:36:52', '2026-07-17 09:52:31');
 
 -- --------------------------------------------------------
 
@@ -90,22 +92,6 @@ CREATE TABLE `cache` (
   `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-cuaca_-2.79_115.49', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:115.4853;s:3:\"lat\";d:-2.7936;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:803;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:10:\"awan pecah\";s:4:\"icon\";s:3:\"04n\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:21.42;s:10:\"feels_like\";d:21.86;s:8:\"temp_min\";d:21.42;s:8:\"temp_max\";d:21.42;s:8:\"pressure\";i:1014;s:8:\"humidity\";i:86;s:9:\"sea_level\";i:1014;s:10:\"grnd_level\";i:969;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:2.3;s:3:\"deg\";i:114;s:4:\"gust\";d:3.68;}s:6:\"clouds\";a:1:{s:3:\"all\";i:58;}s:2:\"dt\";i:1783695240;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783635848;s:6:\"sunset\";i:1783678929;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1650064;s:4:\"name\";s:7:\"Barabai\";s:3:\"cod\";i:200;}', 1783697040),
-('laravel-cache-cuaca_-2.79_115.5', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:115.5022;s:3:\"lat\";d:-2.7911;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:802;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:13:\"awan tersebar\";s:4:\"icon\";s:3:\"03d\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:31.96;s:10:\"feels_like\";d:32.05;s:8:\"temp_min\";d:31.96;s:8:\"temp_max\";d:31.96;s:8:\"pressure\";i:1010;s:8:\"humidity\";i:39;s:9:\"sea_level\";i:1010;s:10:\"grnd_level\";i:960;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:1.43;s:3:\"deg\";i:189;s:4:\"gust\";d:1.11;}s:6:\"clouds\";a:1:{s:3:\"all\";i:29;}s:2:\"dt\";i:1783581127;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783549437;s:6:\"sunset\";i:1783592515;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1650064;s:4:\"name\";s:7:\"Barabai\";s:3:\"cod\";i:200;}', 1783582927),
-('laravel-cache-cuaca_-3.28_115.71', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:115.7124;s:3:\"lat\";d:-3.2842;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:804;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:12:\"awan mendung\";s:4:\"icon\";s:3:\"04n\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:21.73;s:10:\"feels_like\";d:22.23;s:8:\"temp_min\";d:21.73;s:8:\"temp_max\";d:21.73;s:8:\"pressure\";i:1014;s:8:\"humidity\";i:87;s:9:\"sea_level\";i:1014;s:10:\"grnd_level\";i:1002;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:0.48;s:3:\"deg\";i:360;s:4:\"gust\";d:0.99;}s:6:\"clouds\";a:1:{s:3:\"all\";i:100;}s:2:\"dt\";i:1783692850;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783635842;s:6:\"sunset\";i:1783678826;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1625995;s:4:\"name\";s:9:\"Sungaidua\";s:3:\"cod\";i:200;}', 1783694648),
-('laravel-cache-cuaca_-3.29_116.27', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:116.2711;s:3:\"lat\";d:-3.2872;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:803;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:10:\"awan pecah\";s:4:\"icon\";s:3:\"04n\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:22.19;s:10:\"feels_like\";d:22.58;s:8:\"temp_min\";d:22.19;s:8:\"temp_max\";d:22.19;s:8:\"pressure\";i:1014;s:8:\"humidity\";i:81;s:9:\"sea_level\";i:1014;s:10:\"grnd_level\";i:1005;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:2.38;s:3:\"deg\";i:169;s:4:\"gust\";d:3.01;}s:6:\"clouds\";a:1:{s:3:\"all\";i:53;}s:2:\"dt\";i:1783694332;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783635708;s:6:\"sunset\";i:1783678692;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1627520;s:4:\"name\";s:7:\"Seratak\";s:3:\"cod\";i:200;}', 1783696132),
-('laravel-cache-cuaca_-3.45_114.84', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:114.8389;s:3:\"lat\";d:-3.4522;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:803;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:10:\"awan pecah\";s:4:\"icon\";s:3:\"04n\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:22.32;s:10:\"feels_like\";d:22.67;s:8:\"temp_min\";d:22.32;s:8:\"temp_max\";d:22.32;s:8:\"pressure\";i:1013;s:8:\"humidity\";i:79;s:9:\"sea_level\";i:1013;s:10:\"grnd_level\";i:1009;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:0.92;s:3:\"deg\";i:100;s:4:\"gust\";d:2.64;}s:6:\"clouds\";a:1:{s:3:\"all\";i:74;}s:2:\"dt\";i:1783694219;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783636068;s:6:\"sunset\";i:1783679020;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1636022;s:4:\"name\";s:9:\"Martapura\";s:3:\"cod\";i:200;}', 1783696019),
-('laravel-cache-cuaca_-3.47_114.81', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:114.8115;s:3:\"lat\";d:-3.4731;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:803;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:10:\"awan pecah\";s:4:\"icon\";s:3:\"04n\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:22.23;s:10:\"feels_like\";d:22.57;s:8:\"temp_min\";d:22.23;s:8:\"temp_max\";d:22.23;s:8:\"pressure\";i:1013;s:8:\"humidity\";i:79;s:9:\"sea_level\";i:1013;s:10:\"grnd_level\";i:1010;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:0.76;s:3:\"deg\";i:91;s:4:\"gust\";d:1.89;}s:6:\"clouds\";a:1:{s:3:\"all\";i:72;}s:2:\"dt\";i:1783694782;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783636077;s:6:\"sunset\";i:1783679024;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1630540;s:4:\"name\";s:12:\"Pulaubiruang\";s:3:\"cod\";i:200;}', 1783696582),
-('laravel-cache-cuaca_-3.53_114.9', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:114.8964;s:3:\"lat\";d:-3.5283;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:803;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:10:\"awan pecah\";s:4:\"icon\";s:3:\"04n\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:22.38;s:10:\"feels_like\";d:22.71;s:8:\"temp_min\";d:22.38;s:8:\"temp_max\";d:22.38;s:8:\"pressure\";i:1013;s:8:\"humidity\";i:78;s:9:\"sea_level\";i:1013;s:10:\"grnd_level\";i:1005;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:1.13;s:3:\"deg\";i:112;s:4:\"gust\";d:2.51;}s:6:\"clouds\";a:1:{s:3:\"all\";i:82;}s:2:\"dt\";i:1783693109;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783636062;s:6:\"sunset\";i:1783678998;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1636022;s:4:\"name\";s:9:\"Martapura\";s:3:\"cod\";i:200;}', 1783694909),
-('laravel-cache-cuaca_-3.72_-965.25', 'N;', 1783579576),
-('laravel-cache-cuaca_-3.9_114.85', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:114.8524;s:3:\"lat\";d:-3.9011;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:802;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:13:\"awan tersebar\";s:4:\"icon\";s:3:\"03d\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:31.15;s:10:\"feels_like\";d:31.75;s:8:\"temp_min\";d:31.15;s:8:\"temp_max\";d:31.15;s:8:\"pressure\";i:1011;s:8:\"humidity\";i:44;s:9:\"sea_level\";i:1011;s:10:\"grnd_level\";i:1004;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:4.55;s:3:\"deg\";i:138;s:4:\"gust\";d:3.56;}s:6:\"clouds\";a:1:{s:3:\"all\";i:26;}s:2:\"dt\";i:1783577753;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783549703;s:6:\"sunset\";i:1783592561;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1625010;s:4:\"name\";s:7:\"Tanjung\";s:3:\"cod\";i:200;}', 1783579552),
-('laravel-cache-cuaca_-4_114.69', 'a:13:{s:5:\"coord\";a:2:{s:3:\"lon\";d:114.6853;s:3:\"lat\";d:-4.0019;}s:7:\"weather\";a:1:{i:0;a:4:{s:2:\"id\";i:801;s:4:\"main\";s:6:\"Clouds\";s:11:\"description\";s:15:\"sedikit berawan\";s:4:\"icon\";s:3:\"02d\";}}s:4:\"base\";s:8:\"stations\";s:4:\"main\";a:8:{s:4:\"temp\";d:30.26;s:10:\"feels_like\";d:31.61;s:8:\"temp_min\";d:30.26;s:8:\"temp_max\";d:30.26;s:8:\"pressure\";i:1011;s:8:\"humidity\";i:51;s:9:\"sea_level\";i:1011;s:10:\"grnd_level\";i:1010;}s:10:\"visibility\";i:10000;s:4:\"wind\";a:3:{s:5:\"speed\";d:5.83;s:3:\"deg\";i:138;s:4:\"gust\";d:5.57;}s:6:\"clouds\";a:1:{s:3:\"all\";i:22;}s:2:\"dt\";i:1783577795;s:3:\"sys\";a:3:{s:7:\"country\";s:2:\"ID\";s:7:\"sunrise\";i:1783549753;s:6:\"sunset\";i:1783592592;}s:8:\"timezone\";i:28800;s:2:\"id\";i:1625010;s:4:\"name\";s:7:\"Tanjung\";s:3:\"cod\";i:200;}', 1783579595);
 
 -- --------------------------------------------------------
 
@@ -160,7 +146,12 @@ INSERT INTO `detail_transaksis` (`id`, `id_transaksi`, `id_jenis_tiket`, `jumlah
 (17, 14, 1, 2, '10000.00', '20000.00', '2026-02-05 09:10:38', '2026-02-05 09:10:38'),
 (18, 15, 1, 1, '10000.00', '10000.00', '2026-06-22 00:14:35', '2026-06-22 00:14:35'),
 (19, 16, 1, 5, '10000.00', '50000.00', '2026-07-01 19:52:00', '2026-07-01 19:52:00'),
-(20, 16, 2, 20, '8000.00', '160000.00', '2026-07-01 19:52:00', '2026-07-01 19:52:00');
+(20, 16, 2, 20, '8000.00', '160000.00', '2026-07-01 19:52:00', '2026-07-01 19:52:00'),
+(21, 17, 1, 1, '10000.00', '10000.00', '2026-07-14 03:46:10', '2026-07-14 03:46:10'),
+(22, 17, 2, 1, '8000.00', '8000.00', '2026-07-14 03:46:10', '2026-07-14 03:46:10'),
+(23, 18, 1, 10, '10000.00', '100000.00', '2026-07-14 07:51:40', '2026-07-14 07:51:40'),
+(24, 19, 1, 10, '10000.00', '100000.00', '2026-07-17 22:04:12', '2026-07-17 22:04:12'),
+(25, 20, 1, 10, '10000.00', '100000.00', '2026-07-17 22:25:02', '2026-07-17 22:25:02');
 
 -- --------------------------------------------------------
 
@@ -184,7 +175,8 @@ CREATE TABLE `diskon_rombongans` (
 
 INSERT INTO `diskon_rombongans` (`id`, `min_orang`, `persen_diskon`, `keterangan`, `aktif`, `created_at`, `updated_at`) VALUES
 (1, 10, '10.00', 'Diskon Rombongan Pelajar SD', 1, '2026-07-01 19:50:04', '2026-07-01 19:50:04'),
-(2, 20, '15.00', 'Diskon Rombongan Pelajar SMP', 1, '2026-07-01 19:50:37', '2026-07-01 19:50:37');
+(2, 20, '15.00', 'Diskon Rombongan Pelajar SMP', 1, '2026-07-01 19:50:37', '2026-07-01 19:50:37'),
+(3, 50, '20.00', 'Diskon Study Tour', 1, '2026-07-14 07:28:33', '2026-07-14 07:28:33');
 
 -- --------------------------------------------------------
 
@@ -209,7 +201,8 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`id`, `judul`, `tanggal_event`, `id_objek`, `link_url`, `status`, `id_user`, `created_at`, `updated_at`) VALUES
-(1, 'Festival Kembang Api', '2026-07-11', 1, NULL, 'aktif', 1, '2026-07-07 02:21:53', '2026-07-07 02:37:15');
+(1, 'Festival Kembang Api', '2026-07-11', 1, NULL, 'aktif', 1, '2026-07-07 02:21:53', '2026-07-07 02:37:15'),
+(2, 'Ramadhan EXPO Tanah Laut', '2026-07-14', NULL, NULL, 'aktif', 22, '2026-07-14 07:40:16', '2026-07-14 07:40:16');
 
 -- --------------------------------------------------------
 
@@ -246,8 +239,7 @@ CREATE TABLE `galeri_wisatas` (
 --
 
 INSERT INTO `galeri_wisatas` (`id`, `id_objek`, `foto`, `created_at`, `updated_at`) VALUES
-(1, 22, '1781177583_6a2a9cefae4f8.jpg', '2026-06-11 03:33:03', '2026-06-11 03:33:03'),
-(2, 22, '1781177583_6a2a9cefc34e8.jpg', '2026-06-11 03:33:03', '2026-06-11 03:33:03');
+(4, 8, '1784027905_6a561b01f0354.jpg', '2026-07-14 03:18:25', '2026-07-14 03:18:25');
 
 -- --------------------------------------------------------
 
@@ -269,12 +261,12 @@ CREATE TABLE `harga_tikets` (
 --
 
 INSERT INTO `harga_tikets` (`id`, `id_objek`, `id_jenis_tiket`, `harga`, `created_at`, `updated_at`) VALUES
-(4, 2, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(4, 2, 1, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (6, 3, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(7, 2, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(8, 1, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(9, 1, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(10, 2, 3, '50000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(7, 2, 2, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(8, 1, 1, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(9, 1, 2, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(10, 2, 3, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (11, 3, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (12, 4, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (13, 4, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
@@ -284,9 +276,9 @@ INSERT INTO `harga_tikets` (`id`, `id_objek`, `id_jenis_tiket`, `harga`, `create
 (17, 6, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (18, 7, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (19, 7, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(20, 8, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(21, 8, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(22, 8, 3, '50000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(20, 8, 1, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(21, 8, 2, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(22, 8, 3, '0.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (23, 9, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (24, 9, 2, '8000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (25, 10, 1, '10000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
@@ -309,12 +301,9 @@ INSERT INTO `harga_tikets` (`id`, `id_objek`, `id_jenis_tiket`, `harga`, `create
 (42, 17, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (43, 18, 1, '5000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (44, 18, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(45, 19, 1, '5000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(46, 19, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (47, 20, 1, '5000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (48, 20, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(49, 7, 5, '2000.00', '2026-06-23 19:22:25', '2026-06-23 19:22:25'),
-(50, 22, 1, '10000.00', '2026-06-29 02:50:11', '2026-06-29 02:50:26');
+(50, 22, 1, '0.00', '2026-06-29 02:50:11', '2026-06-29 02:50:26');
 
 -- --------------------------------------------------------
 
@@ -337,7 +326,7 @@ INSERT INTO `jenis_tikets` (`id`, `nama_jenis`, `created_at`, `updated_at`) VALU
 (1, 'Dewasa', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (2, 'Anak-anak', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (3, 'Mancanegara', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(5, 'Rombongan', '2025-12-17 10:29:06', '2025-12-17 10:29:06');
+(6, 'Lansia', '2026-07-14 07:18:54', '2026-07-14 07:18:54');
 
 -- --------------------------------------------------------
 
@@ -437,7 +426,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (14, '2025_12_19_141809_add_deskripsi_to_objek_wisatas_table', 4),
 (15, '2026_06_10_183023_add_front_end_fields_to_objek_wisatas_table', 5),
 (16, '2026_06_11_104919_create_galeri_wisatas_table', 6),
-(17, '2026_06_21_131638_create_pesanans_table', 7);
+(17, '2026_06_21_131638_create_pesanans_table', 7),
+(19, '2026_07_18_132448_add_nip_to_users_table', 8);
 
 -- --------------------------------------------------------
 
@@ -467,27 +457,27 @@ CREATE TABLE `objek_wisatas` (
 --
 
 INSERT INTO `objek_wisatas` (`id`, `id_kabupaten`, `nama_objek`, `foto`, `deskripsi`, `fasilitas`, `alamat`, `latitude`, `longitude`, `jam_operasional`, `status`, `is_populer`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Menara Pandang Siring', '1781119777_concordia.jpg', 'Ikon wisata sungai di tengah kota Banjarmasin dengan view sungai Martapura.', '[\"ATM / Money Changer\"]', 'Jl. Kapten Pierre Tendean, Gadang, Kec. Banjarmasin Tengah', '-3.3194', '114.5936', '06:00 - 22:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-06-29 02:47:27'),
-(2, 1, 'Pasar Terapung Siring', '1781117916_flame.png', 'Pasar tradisional unik di atas jukung yang beroperasi setiap akhir pekan.', NULL, 'Jl. Kapten Pierre Tendean, Sungai Martapura', '-3.3188', '114.5939', '06:00 - 10:00 WITA (Sabtu-Minggu)', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:58:36'),
-(3, 2, 'Amanah Borneo Park', '1781118888_concordia.jpg', 'Wahana rekreasi dan edukasi keluarga terbesar dengan fasilitas agrowisata.', NULL, 'Jl. Taruna Bhakti, Palam, Kec. Cempaka', '-3.4731', '114.8115', '09:00 - 17:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 11:14:48'),
-(4, 2, 'Kebun Raya Banjarbaru', 'default.jpg', 'Kawasan konservasi tumbuhan, area jogging, dan taman labirin.', NULL, 'Kawasan Perkantoran Pemprov Kalsel, Cempaka', '-3.4522', '114.8389', '08:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(5, 2, 'Danau Seran', 'default.jpg', 'Danau eks galian tambang intan dengan air jernih dan pulau buatan.', NULL, 'Jl. Danau Seran, Guntung Manggis, Kec. Landasan Ulin', '-3.4678', '114.7944', '08:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(6, 3, 'Tahura Sultan Adam', 'default.jpg', 'Taman hutan raya dengan pemandangan perbukitan dan kolam Belanda.', NULL, 'Jl. Ir. P. M. Noor, Mandiangin Timur, Karang Intan', '-3.5042', '114.9083', '08:00 - 17:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(7, 3, 'Kiram Park', 'default.jpg', 'Wisata alam pegunungan dengan spot foto instagramable dan villa.', NULL, 'Desa Kiram, Kec. Karang Intan', '-3.5283', '114.8964', '24 Jam', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(8, 3, 'Pasar Terapung Lok Baintan', 'default.jpg', 'Pasar terapung alami dan legendaris yang beroperasi saat subuh hari.', NULL, 'Desa Lok Baintan, Kec. Sungai Tabuk', '-3.2981', '114.6642', '05:00 - 09:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(1, 1, 'Menara Pandang Siring', '1784027408_menarapandang.png', 'Ikon wisata sungai di tengah kota Banjarmasin dengan view sungai Martapura.', '[\"Parkir Motor\", \"Toilet\", \"Spot Foto\", \"WiFi\", \"Pusat Informasi\", \"ATM / Money Changer\"]', 'Jl. Kapten Pierre Tendean, Gadang, Kec. Banjarmasin Tengah', '-3.3194', '114.5936', '06:00 - 22:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:10:08'),
+(2, 1, 'Pasar Terapung Siring', '1784027428_pasarterapung.jpg', 'Pasar tradisional unik di atas jukung yang beroperasi setiap akhir pekan.', '[]', 'Jl. Kapten Pierre Tendean, Sungai Martapura', '-3.3188', '114.5939', '06:00 - 10:00 WITA (Sabtu-Minggu)', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:10:28'),
+(3, 2, 'Amanah Borneo Park', '1784027455_tugu-amanah-borneo-park.jpg', 'Wahana rekreasi dan edukasi keluarga terbesar dengan fasilitas agrowisata.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Mushola\", \"Pusat Informasi\", \"Pos Keamanan\"]', 'Jl. Taruna Bhakti, Palam, Kec. Cempaka', '-3.4731', '114.8115', '09:00 - 17:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:10:55'),
+(4, 2, 'Kebun Raya Banjarbaru', '1784027481_kebunraya.jpg', 'Kawasan konservasi tumbuhan, area jogging, dan taman labirin.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Gazebo\", \"Spot Foto\", \"Penyewaan Alat (Sewa Perahu/Sepeda)\"]', 'Kawasan Perkantoran Pemprov Kalsel, Cempaka', '-3.4522', '114.8389', '08:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:11:21'),
+(5, 2, 'Danau Seran', '1784027492_seran.jpg', 'Danau eks galian tambang intan dengan air jernih dan pulau buatan.', '[]', 'Jl. Danau Seran, Guntung Manggis, Kec. Landasan Ulin', '-3.4678', '114.7944', '08:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:11:32'),
+(6, 3, 'Tahura Sultan Adam', '1784027512_tahura.jpg', 'Taman hutan raya dengan pemandangan perbukitan dan kolam Belanda.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Spot Foto\"]', 'Jl. Ir. P. M. Noor, Mandiangin Timur, Karang Intan', '-3.5042', '114.9083', '08:00 - 17:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:11:52'),
+(7, 3, 'Kiram Park', '1784027894_Bukit-Kiram-3.jpg', 'Wisata alam pegunungan dengan spot foto instagramable dan villa.', '[\"Parkir Motor\", \"Parkir Mobil\"]', 'Desa Kiram, Kec. Karang Intan', '-3.5283', '114.8964', '24 Jam', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:18:14'),
+(8, 3, 'Pasar Terapung Lok Baintan', '1784042200_pasarterapung.jpg', 'Pasar terapung alami dan legendaris yang beroperasi saat subuh hari.', '[]', 'Desa Lok Baintan, Kec. Sungai Tabuk', '-3.2981', '114.6642', '05:00 - 09:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 07:16:40'),
 (9, 4, 'Pantai Takisung', 'default.jpg', 'Pantai populer dengan pemandangan sunset yang indah dan wahana banana boat.', NULL, 'Desa Takisung, Kec. Takisung', '-3.8794', '114.6542', '24 Jam', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (10, 4, 'Pantai Batakan Baru', 'default.jpg', 'Pantai luas dengan fasilitas camping ground dan dermaga.', NULL, 'Desa Batakan, Kec. Panyipatan', '-4.0019', '114.6853', '24 Jam', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(11, 4, 'Air Terjun Bajuin', 'default.jpg', 'Air terjun alami di kaki pegunungan Meratus dengan suasana sejuk.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Warung Makan\", \"Spot Foto\"]', 'Desa Sungai Bakar, Kec. Bajuin', '-3.9011', '114.8524', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-30 21:11:26'),
+(11, 4, 'Air Terjun Bajuin', '1784027917_bajuin.png', 'Air terjun alami di kaki pegunungan Meratus dengan suasana sejuk.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Warung Makan\", \"Spot Foto\"]', 'Desa Sungai Bakar, Kec. Bajuin', '-3.9011', '114.8524', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:18:37'),
 (12, 5, 'Pulau Kembang', 'default.jpg', 'Habitat kera ekor panjang dan bekantan di tengah delta sungai Barito.', NULL, 'Kec. Alalak, Tengah Sungai Barito', '-3.3031', '114.5622', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(13, 6, 'Goa Batu Hapu', 'default.jpg', 'Wisata goa alam dengan ornamen stalaktit dan stalagmit yang memukau.', NULL, 'Desa Batu Hapu, Kec. Hatungun', '-3.1114', '115.1236', '08:00 - 16:30 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(14, 7, 'Air Panas Tanuhi', 'default.jpg', 'Pemandian air panas alami di kawasan pegunungan Meratus.', NULL, 'Desa Hulu Banyu, Kec. Loksado', '-2.7936', '115.4853', '07:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(15, 7, 'Bamboo Rafting Loksado', 'default.jpg', 'Arung jeram menggunakan rakit bambu tradisional menyusuri sungai Amandit.', NULL, 'Sungai Amandit, Kec. Loksado', '-2.7911', '115.5022', '08:00 - 16:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
+(13, 6, 'Goa Batu Hapu', '1784027928_44-Goa-Batu-Hapu-1-scaled-2.jpg', 'Wisata goa alam dengan ornamen stalaktit dan stalagmit yang memukau.', '[]', 'Desa Batu Hapu, Kec. Hatungun', '-3.1114', '115.1236', '08:00 - 16:30 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:18:48'),
+(14, 7, 'Air Panas Tanuhi', '1784027940_tanuhi.jpg', 'Pemandian air panas alami di kawasan pegunungan Meratus.', '[]', 'Desa Hulu Banyu, Kec. Loksado', '-2.7936', '115.4853', '07:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:19:00'),
+(15, 7, 'Bamboo Rafting Loksado', '1784027957_antarafoto-wisata-bamboo-rafting-di-kalimantan-selatan-231021-bay-3.jpg', 'Arung jeram menggunakan rakit bambu tradisional menyusuri sungai Amandit.', '[]', 'Sungai Amandit, Kec. Loksado', '-2.7911', '115.5022', '08:00 - 16:00 WITA', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:19:17'),
 (16, 8, 'Pagat Batu Benawa', 'default.jpg', 'Wisata alam sungai jernih dan gua di kaki bukit batu.', NULL, 'Desa Pagat, Kec. Batu Benawa', '-2.6531', '115.4214', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (17, 12, 'Pantai Pagatan', 'default.jpg', 'Pantai panjang yang menjadi pusat pesta adat laut Mappanretasi.', NULL, 'Kel. Kota Pagatan, Kec. Kusan Hilir', '-3.5936', '115.9872', '24 Jam', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(18, 12, 'Goa Liang Bangkai', 'default.jpg', 'Situs goa prasejarah dengan pemandangan eksotis dan jejak manusia purba.', NULL, 'Desa Dukuh Rejo, Kec. Mantewe', '-3.2842', '115.7124', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(19, 13, 'Pantai Gedambaan', 'default.jpg', 'Pantai pasir putih dengan fasilitas resort dan kolam renang.', NULL, 'Desa Gedambaan, Kec. Pulau Laut Utara', '-3.3214', '116.2942', '07:00 - 18:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(20, 13, 'Bukit Mamake', 'default.jpg', 'Bukit paralayang dengan pemandangan laut dan pulau-pulau kecil.', NULL, 'Desa Sarang Tiung, Kec. Pulau Laut Sigam', '-3.2872', '116.2711', '24 Jam', 'buka', 1, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(22, 4, 'Gunung Kayangan', '1781120025_aphrodite.jpg', 'Gn Jajahan Jepang', '[\"Parkir Motor\", \"Toilet\", \"Restoran\", \"Pusat Informasi\"]', 'Jl A Yani, Tanah Laut', '-3.717009', '-965.247907', '09:00 - 17:00 WITA', 'buka', 0, '2026-06-10 11:33:45', '2026-06-29 02:44:09');
+(18, 12, 'Goa Liang Bangkai', '1784027971_liangbangkai.jpg', 'Situs goa prasejarah dengan pemandangan eksotis dan jejak manusia purba.', '[]', 'Desa Dukuh Rejo, Kec. Mantewe', '-3.2842', '115.7124', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:19:31'),
+(20, 13, 'Bukit Mamake', '1784027987_mamake.jpg', 'Bukit paralayang dengan pemandangan laut dan pulau-pulau kecil.', '[]', 'Desa Sarang Tiung, Kec. Pulau Laut Sigam', '-3.2872', '116.2711', '24 Jam', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:19:47'),
+(22, 4, 'Gunung Kayangan', '1784027881_IMG-20240507-WA0053.jpg', 'Gn Jajahan Jepang', '[\"Parkir Motor\", \"Toilet\", \"Restoran\", \"Pusat Informasi\"]', 'Jl A Yani, Tanah Laut', '-3.717009', '-965.247907', '09:00 - 17:00 WITA', 'tutup', 0, '2026-06-10 11:33:45', '2026-07-19 14:53:32'),
+(23, 3, 'Bukit Batu', '1784041960_bukit-batu.jpg', 'Bukit Batu merupakan salah satu destinasi wisata alam yang berada di Desa Tiwingan Baru, Kecamatan Aranio, Kabupaten Banjar, Kalimantan Selatan. Destinasi ini terletak di kawasan Waduk Riam Kanan dan menjadi bagian dari kawasan wisata alam yang dikelilingi oleh Pegunungan Meratus. Dari puncak bukit, pengunjung dapat menikmati panorama hamparan waduk berwarna biru kehijauan, gugusan pulau-pulau kecil, serta perbukitan hijau yang menciptakan pemandangan yang indah dan menenangkan.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Mushola\", \"Gazebo\", \"Spot Foto\", \"Camping Ground\", \"Pos Keamanan\", \"Penyewaan Alat (Sewa Perahu/Sepeda)\"]', 'Tiwingan Lama, Kec. Aranio, Kabupaten Banjar, Kalimantan Selatan 70671', '-3.504760', '115.071297', '08:00 - 22:00', 'buka', 1, '2026-07-14 07:12:40', '2026-07-14 07:12:40');
 
 -- --------------------------------------------------------
 
@@ -512,7 +502,8 @@ CREATE TABLE `pengunjungs` (
 
 INSERT INTO `pengunjungs` (`id`, `nama`, `email`, `no_wa`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Muhammad Irwan Firmanto', 'irwan@mail.com', '085347619091', '$2y$12$br0IabE0UBBDYqTU9uQySeiYK5ovfFpkmhWDVyOnrPMANBplBpPl.', NULL, '2026-06-30 21:09:45', '2026-06-30 21:09:45'),
-(2, 'Ahmad Subarjo', 'ahmad.s@contoh.com', '087896552010', '$2y$12$uMpO3y0fdj4O.L7Jo2bPreQIbsML0yPJKIpeDWGtw2a5yWG/2rtFS', NULL, '2026-07-08 04:52:19', '2026-07-08 04:52:19');
+(2, 'Ahmad Subarjo', 'ahmad.s@contoh.com', '087896552010', '$2y$12$uMpO3y0fdj4O.L7Jo2bPreQIbsML0yPJKIpeDWGtw2a5yWG/2rtFS', NULL, '2026-07-08 04:52:19', '2026-07-08 04:52:19'),
+(3, 'Ahmad Shawity', 'shawity@mail.com', '089845601233', '$2y$12$YAEIYO3uXOgT370RMsULguGYUW7pDyuYuFZFzso6qRh12xn5mRS7W', NULL, '2026-07-14 06:56:07', '2026-07-14 06:56:07');
 
 -- --------------------------------------------------------
 
@@ -570,12 +561,22 @@ INSERT INTO `pesanans` (`id`, `id_pengunjung`, `kode_pesanan`, `nama_pengunjung`
 (20, 1, 'ORD-20260709-HZXDJ', 'Saputri', '08456311201', 'junady@mail.com', '2026-07-09', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, 'd28c7542-f48c-49c7-958e-18ab939effb6', '2026-07-08 23:09:53', '2026-07-08 23:09:55'),
 (21, 1, 'ORD-20260709-FEMZF', 'SDN Komet 1 Banjarbaru', '089845601233', 'raihan@mail.com', '2026-07-09', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'b5bc7cca-2dd8-4e45-9872-77f040a92931', '2026-07-08 23:11:31', '2026-07-08 23:12:01'),
 (22, 1, 'ORD-20260709-UMLFM', 'Nur Sabila', '08456311201', 'junady@mail.com', '2026-07-09', 15, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'a8da4cb5-b025-4a87-ab9a-6b3f11600282', '2026-07-08 23:12:18', '2026-07-08 23:12:46'),
-(23, 1, 'ORD-20260710-O9W5W', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 18, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, '294e5cfc-7ded-45ef-a6e4-e8d103b6eb6b', '2026-07-10 06:17:50', '2026-07-10 06:17:54'),
+(23, 1, 'ORD-20260710-O9W5W', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 18, 5000, '0.00', 0, NULL, NULL, 0, 'Cancelled', 'active', NULL, '294e5cfc-7ded-45ef-a6e4-e8d103b6eb6b', '2026-07-10 06:17:50', '2026-07-17 21:49:56'),
 (24, 1, 'ORD-20260710-VNUGJ', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 7, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '441deb50-8628-4218-9ef0-d1e82d0c6aa9', '2026-07-10 06:18:44', '2026-07-10 06:19:16'),
 (25, 1, 'ORD-20260710-QSMK8', 'Muhammad Irwan Firmanto', '08456311201', 'irwanfrozen@gmail.com', '2026-07-10', 4, 20000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '1596ea49-ba4d-465f-9a36-1c849161a3e3', '2026-07-10 06:37:10', '2026-07-10 06:37:40'),
 (26, 1, 'ORD-20260710-GNYV9', 'Saputri', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'e60cb99a-34c3-45bf-b2ff-636a3749da57', '2026-07-10 06:39:04', '2026-07-10 06:40:07'),
 (27, 1, 'ORD-20260710-MXHJN', 'Ahmad Saidun', '08456311201', 'irwanfrozen@gmail.com', '2026-07-10', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '37bbbb8a-c47c-4434-bbaf-bba7fbb97b78', '2026-07-10 06:46:35', '2026-07-10 06:47:15'),
-(28, 1, 'ORD-20260710-Y8XWF', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 14, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-07-10 14:56:56', 'bb7a5544-7404-4e1c-aa4a-9292e6e92fc2', '2026-07-10 06:54:14', '2026-07-10 06:56:56');
+(28, 1, 'ORD-20260710-Y8XWF', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 14, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-07-10 14:56:56', 'bb7a5544-7404-4e1c-aa4a-9292e6e92fc2', '2026-07-10 06:54:14', '2026-07-10 06:56:56'),
+(29, 1, 'ORD-20260714-7OJJX', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-14', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '05063f90-e49e-461a-b3fd-8f0a2b052eb3', '2026-07-14 03:23:37', '2026-07-14 03:25:11'),
+(30, 3, 'ORD-20260714-WBYJO', 'Ahmad Shawity', '089845601233', 'irwanfrozen@gmail.com', '2026-07-14', 15, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-07-18 06:05:16', '7abe29f0-7055-4bb2-86a3-42e3107e11f4', '2026-07-14 07:45:01', '2026-07-17 22:05:16'),
+(31, 3, 'ORD-20260714-2ON0J', 'Ahmad Shawity', '08456311201', 'irwanfrozen@gmail.com', '2026-07-14', 5, 20000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, '377a5fbb-db40-4aa2-a1a6-bc45fd9ec2c3', '2026-07-14 07:56:29', '2026-07-14 07:56:33'),
+(32, NULL, 'ORD-20260719-UVH2K', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-25', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, NULL, '2026-07-19 08:41:42', '2026-07-19 08:41:42'),
+(33, 1, 'ORD-20260719-AVH9P', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'a6a9abab-6f9e-4f0d-aa0b-042012b22d32', '2026-07-19 08:43:01', '2026-07-19 08:48:44'),
+(34, 1, 'ORD-20260719-YROQQ', 'Ahmad Saidun', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, 'd552aede-2561-4b36-904e-107f40f5c060', '2026-07-19 08:50:36', '2026-07-19 08:50:41'),
+(35, 1, 'ORD-20260719-AHDIA', 'Nur Sabila', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 5, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '8478182a-a391-4bc0-91d3-7ab4269d6cd1', '2026-07-19 09:01:24', '2026-07-19 09:01:51'),
+(36, NULL, 'ORD-20260719-ITNMD', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 13, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '8a55f8b2-a1f6-460e-afc9-e1f99fb600bf', '2026-07-19 14:21:21', '2026-07-19 14:21:44'),
+(38, NULL, 'ORD-20260719-ETLWD', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 1, 0, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-07-19 14:50:35', '2026-07-19 14:50:35'),
+(39, NULL, 'ORD-20260719-MLPSO', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 11, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '0d1a7a38-0ca1-4e8d-952e-1b4c84e5c1a6', '2026-07-19 14:51:53', '2026-07-19 14:52:11');
 
 -- --------------------------------------------------------
 
@@ -631,7 +632,17 @@ INSERT INTO `pesanan_details` (`id`, `id_pesanan`, `id_jenis_tiket`, `harga`, `j
 (30, 25, 1, 10000, 2, 20000, '2026-07-10 06:37:10', '2026-07-10 06:37:10'),
 (31, 26, 1, 5000, 1, 5000, '2026-07-10 06:39:04', '2026-07-10 06:39:04'),
 (32, 27, 1, 10000, 1, 10000, '2026-07-10 06:46:35', '2026-07-10 06:46:35'),
-(33, 28, 1, 5000, 1, 5000, '2026-07-10 06:54:14', '2026-07-10 06:54:14');
+(33, 28, 1, 5000, 1, 5000, '2026-07-10 06:54:14', '2026-07-10 06:54:14'),
+(34, 29, 1, 10000, 1, 10000, '2026-07-14 03:23:37', '2026-07-14 03:23:37'),
+(35, 30, 1, 5000, 1, 5000, '2026-07-14 07:45:01', '2026-07-14 07:45:01'),
+(36, 31, 1, 10000, 2, 20000, '2026-07-14 07:56:29', '2026-07-14 07:56:29'),
+(37, 32, 1, 5000, 1, 5000, '2026-07-19 08:41:43', '2026-07-19 08:41:43'),
+(38, 33, 1, 5000, 1, 5000, '2026-07-19 08:43:02', '2026-07-19 08:43:02'),
+(39, 34, 1, 10000, 1, 10000, '2026-07-19 08:50:36', '2026-07-19 08:50:36'),
+(40, 35, 1, 10000, 1, 10000, '2026-07-19 09:01:24', '2026-07-19 09:01:24'),
+(41, 36, 1, 5000, 1, 5000, '2026-07-19 14:21:21', '2026-07-19 14:21:21'),
+(43, 38, 1, 0, 1, 0, '2026-07-19 14:50:35', '2026-07-19 14:50:35'),
+(44, 39, 1, 5000, 1, 5000, '2026-07-19 14:51:54', '2026-07-19 14:51:54');
 
 -- --------------------------------------------------------
 
@@ -694,7 +705,11 @@ INSERT INTO `transaksis` (`id`, `no_transaksi`, `tgl_transaksi`, `total_bayar`, 
 (13, 'TRX-20260205170833-102', '2026-02-05', '20000.00', '0.00', 0, '20000.00', '0.00', 'sukses', '2026-02-05 17:09:22', 1, 17, 'active', '2026-02-05 09:08:33', '2026-02-05 09:09:22'),
 (14, 'TRX-20260205171038-393', '2026-02-05', '20000.00', '0.00', 0, '20000.00', '0.00', 'sukses', '2026-02-05 17:11:01', 1, 5, 'active', '2026-02-05 09:10:38', '2026-02-05 09:11:01'),
 (15, 'TRX-20260622081435-698', '2026-06-22', '10000.00', '0.00', 0, '10000.00', '0.00', 'used', '2026-06-23 06:01:32', 1, 1, 'used', '2026-06-22 00:14:35', '2026-06-22 22:01:32'),
-(16, 'TRX-20260702035200-965', '2026-07-02', '178500.00', '15.00', 31500, '200000.00', '21500.00', 'sukses', NULL, 1, 6, 'active', '2026-07-01 19:52:00', '2026-07-01 19:52:00');
+(16, 'TRX-20260702035200-965', '2026-07-02', '178500.00', '15.00', 31500, '200000.00', '21500.00', 'sukses', NULL, 1, 6, 'active', '2026-07-01 19:52:00', '2026-07-01 19:52:00'),
+(17, 'TRX-20260714114610-268', '2026-07-14', '18000.00', '0.00', 0, '20000.00', '2000.00', 'sukses', '2026-07-14 11:47:43', 1, 1, 'used', '2026-07-14 03:46:10', '2026-07-14 03:47:43'),
+(18, 'TRX-20260714155140-397', '2026-07-14', '90000.00', '10.00', 10000, '100000.00', '10000.00', 'sukses', '2026-07-14 15:53:36', 9, 10, 'used', '2026-07-14 07:51:40', '2026-07-14 07:53:36'),
+(19, 'TRX-20260718060412-854', '2026-07-18', '90000.00', '10.00', 10000, '100000.00', '10000.00', 'sukses', '2026-07-18 06:04:37', 1, 6, 'used', '2026-07-17 22:04:12', '2026-07-17 22:04:37'),
+(20, 'TRX-20260718062502-884', '2026-07-18', '90000.00', '10.00', 10000, '100000.00', '10000.00', 'sukses', '2026-07-18 06:25:13', 1, 6, 'used', '2026-07-17 22:25:02', '2026-07-17 22:25:13');
 
 -- --------------------------------------------------------
 
@@ -735,8 +750,8 @@ CREATE TABLE `ulasans` (
 --
 
 INSERT INTO `ulasans` (`id`, `id_pengunjung`, `id_objek`, `id_pesanan`, `rating`, `komentar`, `created_at`, `updated_at`) VALUES
-(1, 2, 15, 14, 4, 'Bagus Banget', '2026-07-08 04:54:58', '2026-07-08 04:54:58'),
-(2, 1, 10, 15, 5, 'Bersih, Bagus', '2026-07-08 22:18:31', '2026-07-08 22:18:31');
+(2, 1, 10, 15, 5, 'Bersih, Bagus', '2026-07-08 22:18:31', '2026-07-08 22:18:31'),
+(3, 3, 15, 30, 5, 'Bersih dan Bagus', '2026-07-14 07:58:51', '2026-07-14 07:58:51');
 
 -- --------------------------------------------------------
 
@@ -750,6 +765,7 @@ CREATE TABLE `users` (
   `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `role` enum('admin','kadis_provinsi','kadis_kabkota','kasir','petugas') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'kasir',
+  `nip` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id_kabupaten` bigint UNSIGNED DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -760,25 +776,25 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`, `id_kabupaten`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrator', 'admin', '$2y$12$8MPSBtgYpzhANJuiboOIOe6GqK/DVCVKssVn2g/IgjefJivtG8n02', 'admin', NULL, NULL, '2025-12-17 01:59:55', '2025-12-20 02:12:52'),
-(7, 'Muhammad Irwan Firmanto', 'irwan', '$2y$12$fHBqft6OS0nTOksVanNdzO2aP9GChbVTPv7tvLeC6QX10Fhst11hC', 'admin', NULL, NULL, '2025-12-20 02:13:56', '2025-12-20 02:13:56'),
-(8, 'Ahmad Said', 'said', '$2y$12$iLkELP0mK.cWlLhcNB0Hsu/UCrU6vOXN51JMlQQSk5ytU1QJ2Ikp.', 'petugas', NULL, NULL, '2026-02-05 08:36:54', '2026-02-05 08:36:54'),
-(9, 'Junady', 'junady', '$2y$12$yLWFIs14g7Atw9mO9R266eIqqir0CuI02lQmTEe8TzHbiSQApnSEC', 'kasir', NULL, NULL, '2026-02-05 08:37:13', '2026-02-05 08:37:13'),
-(10, 'Kepala Dinas Pariwisata Provinsi Kalsel', 'kadis.provinsi', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_provinsi', NULL, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(11, 'Kepala Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 1, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(12, 'Kepala Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 2, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(13, 'Kepala Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 3, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(14, 'Kepala Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 5, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(15, 'Kepala Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 6, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(16, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 7, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(17, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 8, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(18, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 9, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(19, 'Kepala Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 10, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(20, 'Kepala Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 11, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(21, 'Kepala Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 13, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(22, 'Kepala Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 4, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(23, 'Kepala Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', 12, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30');
+INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`, `nip`, `id_kabupaten`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Administrator', 'admin', '$2y$12$8MPSBtgYpzhANJuiboOIOe6GqK/DVCVKssVn2g/IgjefJivtG8n02', 'admin', NULL, NULL, NULL, '2025-12-17 01:59:55', '2025-12-20 02:12:52'),
+(7, 'Muhammad Irwan Firmanto', 'irwan', '$2y$12$fHBqft6OS0nTOksVanNdzO2aP9GChbVTPv7tvLeC6QX10Fhst11hC', 'admin', NULL, NULL, NULL, '2025-12-20 02:13:56', '2025-12-20 02:13:56'),
+(8, 'Ahmad Said', 'said', '$2y$12$iLkELP0mK.cWlLhcNB0Hsu/UCrU6vOXN51JMlQQSk5ytU1QJ2Ikp.', 'petugas', NULL, NULL, NULL, '2026-02-05 08:36:54', '2026-02-05 08:36:54'),
+(9, 'Junady', 'junady', '$2y$12$yLWFIs14g7Atw9mO9R266eIqqir0CuI02lQmTEe8TzHbiSQApnSEC', 'kasir', NULL, NULL, NULL, '2026-02-05 08:37:13', '2026-02-05 08:37:13'),
+(10, 'Iwan Fitriadi, SH., MH', 'kadis.provinsi', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_provinsi', '19612251998031004', NULL, NULL, '2026-07-01 05:24:30', '2026-07-17 21:31:44'),
+(11, 'Kepala Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 1, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(12, 'Kepala Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 2, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(13, 'Kepala Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 3, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(14, 'Kepala Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 5, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(15, 'Kepala Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 6, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(16, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 7, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(17, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 8, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(18, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 9, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(19, 'Kepala Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 10, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(20, 'Kepala Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 11, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(21, 'Kepala Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 13, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(22, 'Kepala Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 4, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(23, 'Kepala Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 12, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30');
 
 -- --------------------------------------------------------
 
@@ -799,7 +815,7 @@ CREATE TABLE `video_terbaru` (
 --
 
 INSERT INTO `video_terbaru` (`id`, `judul`, `youtube_url`, `created_at`, `updated_at`) VALUES
-(1, 'RAJA AMPAT di Kalsel?', 'https://youtu.be/1spIPIOFoR4?si=QkB3WEbC1vW16kEu', '2026-07-07 02:22:41', '2026-07-07 02:22:41');
+(1, '7 WISATA PALING MENARIK DI BANJARMASIN KALIMANTAN SELATAN', 'https://youtu.be/j7HP13iqwXE?si=kn-bpXcbgxa-29Uu', '2026-07-07 02:22:41', '2026-07-14 07:42:04');
 
 -- --------------------------------------------------------
 
@@ -829,7 +845,8 @@ CREATE TABLE `vouchers` (
 --
 
 INSERT INTO `vouchers` (`id`, `kode`, `tipe_diskon`, `nilai_diskon`, `minimal_pembelian`, `maks_diskon`, `tanggal_mulai`, `tanggal_selesai`, `limit_pemakaian`, `jumlah_terpakai`, `status`, `id_user`, `created_at`, `updated_at`) VALUES
-(1, 'TALA26', 'persen', '15.00', 75000, 50000, '2026-07-09', '2026-07-20', 100, 1, 'aktif', 1, '2026-07-08 22:15:16', '2026-07-08 22:17:48');
+(1, 'TALA26', 'persen', '15.00', 75000, 50000, '2026-07-09', '2026-07-20', 100, 1, 'aktif', 1, '2026-07-08 22:15:16', '2026-07-08 22:17:48'),
+(2, 'TAHUNBARUKALSEL', 'persen', '15.00', 250000, 150000, '2026-07-14', '2026-07-31', NULL, 0, 'aktif', 1, '2026-07-14 07:33:33', '2026-07-14 07:33:33');
 
 -- --------------------------------------------------------
 
@@ -850,7 +867,10 @@ CREATE TABLE `wishlists` (
 --
 
 INSERT INTO `wishlists` (`id`, `id_pengunjung`, `id_objek`, `created_at`, `updated_at`) VALUES
-(1, 2, 11, '2026-07-08 05:13:23', '2026-07-08 05:13:23');
+(1, 2, 11, '2026-07-08 05:13:23', '2026-07-08 05:13:23'),
+(2, 1, 14, '2026-07-14 03:29:27', '2026-07-14 03:29:27'),
+(3, 1, 11, '2026-07-14 03:29:30', '2026-07-14 03:29:30'),
+(4, 1, 15, '2026-07-14 03:29:34', '2026-07-14 03:29:34');
 
 --
 -- Indexes for dumped tables
@@ -1061,31 +1081,31 @@ ALTER TABLE `wishlists`
 -- AUTO_INCREMENT for table `banners`
 --
 ALTER TABLE `banners`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `beritas`
 --
 ALTER TABLE `beritas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `detail_transaksis`
 --
 ALTER TABLE `detail_transaksis`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `diskon_rombongans`
 --
 ALTER TABLE `diskon_rombongans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1097,19 +1117,19 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `galeri_wisatas`
 --
 ALTER TABLE `galeri_wisatas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `harga_tikets`
 --
 ALTER TABLE `harga_tikets`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `jenis_tikets`
 --
 ALTER TABLE `jenis_tikets`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1121,37 +1141,37 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `kabupatens`
 --
 ALTER TABLE `kabupatens`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `objek_wisatas`
 --
 ALTER TABLE `objek_wisatas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `pengunjungs`
 --
 ALTER TABLE `pengunjungs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `pesanans`
 --
 ALTER TABLE `pesanans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `pesanan_details`
 --
 ALTER TABLE `pesanan_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `tikets`
@@ -1163,7 +1183,7 @@ ALTER TABLE `tikets`
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
@@ -1175,7 +1195,7 @@ ALTER TABLE `transaksi_details`
 -- AUTO_INCREMENT for table `ulasans`
 --
 ALTER TABLE `ulasans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1193,13 +1213,13 @@ ALTER TABLE `video_terbaru`
 -- AUTO_INCREMENT for table `vouchers`
 --
 ALTER TABLE `vouchers`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `wishlists`
 --
 ALTER TABLE `wishlists`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
