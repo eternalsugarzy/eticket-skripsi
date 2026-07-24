@@ -8,6 +8,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-white fw-bold"><i class="ti ti-users me-2"></i>Data Pengunjung Masuk (Scan Tiket)</h5>
+                @can('akses-laporan')
                 <div class="dropdown">
                     <button class="btn btn-light btn-sm fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="ti ti-printer"></i> Cetak Laporan
@@ -27,6 +28,7 @@
                         </li>
                     </ul>
                 </div>
+                @endcan
             </div>
             <div class="card-body">
                 

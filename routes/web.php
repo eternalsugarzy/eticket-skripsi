@@ -162,7 +162,8 @@ Route::middleware('auth')->group(function () {
         return response()->file($path);
     })->name('foto.wisata');
 
-    // 9. Laporan
+    // 9. Laporan — HANYA admin & kadis provinsi (kadis kabkota, kasir, petugas TIDAK boleh)
+    Route::middleware('role:admin,kadis_provinsi')->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/cetak-pengunjung', [LaporanController::class, 'cetakPengunjung'])->name('laporan.cetak-pengunjung');
     Route::get('/laporan/cetak-offline', [LaporanController::class, 'cetakOffline'])->name('laporan.cetak-offline');
@@ -194,6 +195,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/export-tiket', [LaporanController::class, 'exportTiket'])->name('laporan.export-tiket');
     Route::get('/laporan/export-objek', [LaporanController::class, 'exportObjek'])->name('laporan.export-objek');
     Route::get('/laporan/export-master', [LaporanController::class, 'exportMaster'])->name('laporan.export-master');
+    }); // end grup Laporan — admin & kadis provinsi saja
 
     // 10. Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

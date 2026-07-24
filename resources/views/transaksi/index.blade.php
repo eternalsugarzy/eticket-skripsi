@@ -70,6 +70,7 @@
                     <i class="ti ti-history me-2"></i>Riwayat Penjualan Tiket Gabungan
                 </h5>
                 <div class="d-flex gap-2">
+                    @can('akses-laporan')
                     <div class="dropdown">
                         <button class="btn btn-light text-primary fw-bold btn-sm shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             <i class="ti ti-printer me-1"></i> Cetak Laporan
@@ -89,6 +90,7 @@
                             </li>
                         </ul>
                     </div>
+                    @endcan
                     <a href="{{ route('transaksi.create') }}" class="btn btn-light text-primary fw-bold btn-sm shadow-sm">
                         <i class="ti ti-plus me-1"></i> Transaksi Kasir Baru
                     </a>

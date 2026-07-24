@@ -13,6 +13,7 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
+                @can('akses-laporan')
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="ti ti-printer me-1"></i> Cetak Laporan
@@ -32,6 +33,7 @@
                         </li>
                     </ul>
                 </div>
+                @endcan
                 <a href="{{ route('kelola-berita.create') }}" class="btn btn-primary">
                     <i class="ti ti-plus me-1"></i> Tambah Berita
                 </a>

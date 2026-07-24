@@ -6,6 +6,7 @@
     <div class="card-header-modern">
         <h5 class="card-title-modern mb-0"><i class="ti ti-tag me-2"></i> Daftar Jenis Tiket</h5>
         <div class="d-flex gap-2">
+            @can('akses-laporan')
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="ti ti-printer"></i> Cetak Laporan
@@ -25,6 +26,7 @@
                     </li>
                 </ul>
             </div>
+            @endcan
             <a href="{{ route('jenis-tiket.create') }}" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i> Tambah</a>
         </div>
     </div>

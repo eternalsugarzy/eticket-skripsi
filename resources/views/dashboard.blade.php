@@ -52,6 +52,7 @@
                 <i class="ti ti-clock me-1"></i>
                 <span id="liveClock">--:--:--</span> <small class="text-muted">WITA (GMT+8)</small>
             </div>
+            @can('akses-laporan')
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="ti ti-printer"></i> Cetak Laporan
@@ -77,6 +78,7 @@
                     </li>
                 </ul>
             </div>
+            @endcan
         </div>
     </div>
 
@@ -162,7 +164,7 @@
                 <div class="card-header card-header-modern">
                     <div>
                         <h5 class="card-title-modern mb-0">Top 5 Objek Wisata</h5>
-                        <p class="text-muted mb-0 small">Berdasarkan tiket terjual</p>
+                        <p class="text-muted mb-0 small">Tiket terjual bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}</p>
                     </div>
                     <span class="badge badge-soft-warning"><i class="ti ti-trophy me-1"></i>Ranking</span>
                 </div>
@@ -178,6 +180,9 @@
                         </div>
                         <div class="top-wisata-info flex-grow-1">
                             <p class="top-wisata-name mb-0">{{ $wisata->nama_objek }}</p>
+                            <div style="font-size:11px; color:#9aa1b1; margin-bottom:6px;">
+                                <i class="ti ti-map-pin"></i> {{ $wisata->nama_kabupaten ?? '-' }}
+                            </div>
                             <div class="top-wisata-bar-wrap">
                                 <div class="top-wisata-bar" style="width: {{ $topWisata->max('total') > 0 ? ($wisata->total / $topWisata->max('total') * 100) : 0 }}%"></div>
                             </div>

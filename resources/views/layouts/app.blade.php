@@ -544,8 +544,8 @@
                         </a>
                     </li>
 
-                    {{-- ── LAPORAN — admin, kadis_provinsi, kadis_kabkota ── --}}
-                    @if($isDinas)
+                    {{-- ── LAPORAN — HANYA admin & kadis provinsi ── --}}
+                    @if($isSupervisor)
                     <li class="pc-item pc-caption">
                         <label>Laporan</label>
                     </li>

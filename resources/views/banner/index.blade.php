@@ -13,9 +13,11 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
+                @can('akses-laporan')
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'banners']) }}" target="_blank" class="btn btn-outline-secondary">
                     <i class="ti ti-printer me-1"></i> Cetak Laporan
                 </a>
+                @endcan
                 <a href="{{ route('kelola-banner.create') }}" class="btn btn-primary">
                     <i class="ti ti-plus me-1"></i> Tambah Banner
                 </a>

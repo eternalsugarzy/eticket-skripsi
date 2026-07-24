@@ -13,10 +13,12 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
+                @can('akses-laporan')
                 <a href="{{ route('laporan.cetak-voucher', ['tgl_awal' => date('Y-m-01'), 'tgl_akhir' => date('Y-m-d')]) }}"
                    target="_blank" class="btn btn-outline-secondary">
                     <i class="ti ti-printer me-1"></i> Cetak Laporan
                 </a>
+                @endcan
                 <a href="{{ route('kelola-voucher.create') }}" class="btn btn-primary">
                     <i class="ti ti-plus me-1"></i> Buat Voucher
                 </a>

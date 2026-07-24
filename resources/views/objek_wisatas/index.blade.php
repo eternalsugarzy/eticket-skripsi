@@ -7,6 +7,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="card-title-modern mb-0"><i class="ti ti-map me-2"></i> Daftar Objek Wisata</h5>
             <div class="d-flex gap-2">
+                @can('akses-laporan')
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="ti ti-printer"></i> Cetak Laporan
@@ -32,6 +33,7 @@
                         </li>
                     </ul>
                 </div>
+                @endcan
                 <a href="{{ route('objek-wisata.create') }}" class="btn btn-primary btn-sm">
                     <i class="ti ti-plus"></i> Tambah Wisata
                 </a>

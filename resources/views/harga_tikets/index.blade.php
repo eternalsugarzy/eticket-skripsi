@@ -7,9 +7,11 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="card-title-modern mb-0"><i class="ti ti-cash me-2"></i> Daftar Harga Tiket</h5>
             <div class="d-flex gap-2">
+                @can('akses-laporan')
                 <a href="{{ route('laporan.cetak-master', ['jenis' => 'harga_tikets']) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
                     <i class="ti ti-printer"></i> Cetak Laporan
                 </a>
+                @endcan
                 <a href="{{ route('harga-tiket.create') }}" class="btn btn-primary btn-sm">
                     <i class="ti ti-plus"></i> Tambah Harga
                 </a>

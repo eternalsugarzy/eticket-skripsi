@@ -14,6 +14,7 @@ class DashboardController extends Controller
     {
         $hariIni  = Carbon::today();
         $tahunIni = Carbon::now()->year;
+        $bulanIni = Carbon::now()->month;
 
         $user        = Auth::user();
         $idKabupaten = $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
@@ -64,22 +65,44 @@ class DashboardController extends Controller
 
 
         // =========================================================
-        // 2. TOP 5 OBJEK WISATA
+        // 2. TOP 5 OBJEK WISATA (tiket terjual = offline non-batal + online Paid)
+        //    Periode BULAN BERJALAN — disamakan dengan Perbandingan Kabupaten supaya
+        //    angkanya rekonsiliasi. Sertakan nama kabupaten tiap objek.
         // =========================================================
         try {
-            $topWisata = DB::table('detail_transaksis')
+            $topOffline = DB::table('detail_transaksis')
                 ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
                 ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+                ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                ->where('transaksis.status_tiket', '!=', 'batal')
+                ->whereMonth('transaksis.created_at', $bulanIni)
+                ->whereYear('transaksis.created_at', $tahunIni)
                 ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
-                ->select(
-                    'objek_wisatas.id',
-                    'objek_wisatas.nama_objek',
-                    DB::raw('SUM(detail_transaksis.jumlah) as total')
-                )
-                ->groupBy('objek_wisatas.id', 'objek_wisatas.nama_objek')
-                ->orderByDesc('total')
-                ->limit(5)
-                ->get();
+                ->select('objek_wisatas.id', 'objek_wisatas.nama_objek', 'kabupatens.nama_kabupaten', DB::raw('SUM(detail_transaksis.jumlah) as total'))
+                ->groupBy('objek_wisatas.id', 'objek_wisatas.nama_objek', 'kabupatens.nama_kabupaten');
+
+            $topOnline = DB::table('pesanan_details')
+                ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+                ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+                ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                ->where('pesanans.status_pembayaran', 'Paid')
+                ->whereMonth('pesanans.created_at', $bulanIni)
+                ->whereYear('pesanans.created_at', $tahunIni)
+                ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+                ->select('objek_wisatas.id', 'objek_wisatas.nama_objek', 'kabupatens.nama_kabupaten', DB::raw('SUM(pesanan_details.jumlah) as total'))
+                ->groupBy('objek_wisatas.id', 'objek_wisatas.nama_objek', 'kabupatens.nama_kabupaten');
+
+            $topWisata = $topOffline->unionAll($topOnline)->get()
+                ->groupBy('id')
+                ->map(fn($rows) => (object) [
+                    'id'             => $rows->first()->id,
+                    'nama_objek'     => $rows->first()->nama_objek,
+                    'nama_kabupaten' => $rows->first()->nama_kabupaten,
+                    'total'          => (int) $rows->sum('total'),
+                ])
+                ->sortByDesc('total')
+                ->take(5)
+                ->values();
         } catch (\Exception $e) {
             $topWisata = collect();
         }
@@ -132,59 +155,56 @@ class DashboardController extends Controller
         $perbandinganKabupaten = collect();
 
         if (!$idKabupaten) {
-            $bulanIni = Carbon::now()->month;
-
-            $offlineKab = DB::table('detail_transaksis')
+            // ── Pengunjung per kabupaten (level DETAIL tiket): offline non-batal + online Paid ──
+            $offVis = DB::table('detail_transaksis')
                 ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
                 ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
-                ->join('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
+                ->where('transaksis.status_tiket', '!=', 'batal')
                 ->whereMonth('transaksis.created_at', $bulanIni)
                 ->whereYear('transaksis.created_at', $tahunIni)
-                ->select(
-                    'kabupatens.nama_kabupaten',
-                    DB::raw('SUM(detail_transaksis.jumlah) as total_pengunjung'),
-                    DB::raw('SUM(detail_transaksis.subtotal) as total_pendapatan')
-                )
-                ->groupBy('kabupatens.nama_kabupaten');
+                ->select('objek_wisatas.id_kabupaten', DB::raw('SUM(detail_transaksis.jumlah) as v'))
+                ->groupBy('objek_wisatas.id_kabupaten')->pluck('v', 'id_kabupaten');
 
-            $onlineKab = DB::table('pesanan_details')
+            $onVis = DB::table('pesanan_details')
                 ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
                 ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
-                ->join('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
                 ->where('pesanans.status_pembayaran', 'Paid')
                 ->whereMonth('pesanans.created_at', $bulanIni)
                 ->whereYear('pesanans.created_at', $tahunIni)
-                ->select(
-                    'kabupatens.nama_kabupaten',
-                    DB::raw('SUM(pesanan_details.jumlah) as total_pengunjung'),
-                    DB::raw('SUM(pesanan_details.subtotal) as total_pendapatan')
-                )
-                ->groupBy('kabupatens.nama_kabupaten');
+                ->select('objek_wisatas.id_kabupaten', DB::raw('SUM(pesanan_details.jumlah) as v'))
+                ->groupBy('objek_wisatas.id_kabupaten')->pluck('v', 'id_kabupaten');
 
-            $gabunganKab = $offlineKab->unionAll($onlineKab)->get();
+            // ── Pendapatan per kabupaten (level TRANSAKSI, pakai total_bayar = sudah termasuk
+            //    diskon) supaya konsisten dengan kartu "Pendapatan" & Laporan Pendapatan ──
+            $offRev = DB::table('transaksis')
+                ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+                ->where('transaksis.status_tiket', '!=', 'batal')
+                ->whereMonth('transaksis.created_at', $bulanIni)
+                ->whereYear('transaksis.created_at', $tahunIni)
+                ->select('objek_wisatas.id_kabupaten', DB::raw('SUM(transaksis.total_bayar) as r'))
+                ->groupBy('objek_wisatas.id_kabupaten')->pluck('r', 'id_kabupaten');
 
-            $rekapKab = $gabunganKab->groupBy('nama_kabupaten')->map(function ($rows) {
-                return (object) [
-                    'total_pengunjung' => $rows->sum('total_pengunjung'),
-                    'total_pendapatan' => $rows->sum('total_pendapatan'),
-                ];
-            });
+            $onRev = DB::table('pesanans')
+                ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+                ->where('pesanans.status_pembayaran', 'Paid')
+                ->whereMonth('pesanans.created_at', $bulanIni)
+                ->whereYear('pesanans.created_at', $tahunIni)
+                ->select('objek_wisatas.id_kabupaten', DB::raw('SUM(pesanans.total_bayar) as r'))
+                ->groupBy('objek_wisatas.id_kabupaten')->pluck('r', 'id_kabupaten');
 
-            // Jumlah objek wisata per kabupaten — SATU query GROUP BY (bukan 1 COUNT per
-            // kabupaten seperti sebelumnya, yang menimbulkan N+1 = 13 query per load).
+            // Jumlah objek wisata per kabupaten — SATU query GROUP BY (hindari N+1).
             $wisataCounts = ObjekWisata::select('id_kabupaten', DB::raw('COUNT(*) as total'))
                 ->groupBy('id_kabupaten')
                 ->pluck('total', 'id_kabupaten');
 
-            // Pastikan SEMUA kabupaten muncul walau belum ada transaksi bulan ini (isi 0)
+            // Gabungkan per kabupaten (semua kabupaten tetap muncul walau 0)
             $perbandinganKabupaten = \App\Models\Kabupaten::orderBy('nama_kabupaten')->get()
-                ->map(function ($kab) use ($rekapKab, $wisataCounts) {
-                    $data = $rekapKab->get($kab->nama_kabupaten);
+                ->map(function ($kab) use ($offVis, $onVis, $offRev, $onRev, $wisataCounts) {
                     return (object) [
                         'nama_kabupaten'   => $kab->nama_kabupaten,
                         'jumlah_wisata'    => $wisataCounts[$kab->id] ?? 0,
-                        'total_pengunjung' => $data->total_pengunjung ?? 0,
-                        'total_pendapatan' => $data->total_pendapatan ?? 0,
+                        'total_pengunjung' => ($offVis[$kab->id] ?? 0) + ($onVis[$kab->id] ?? 0),
+                        'total_pendapatan' => ($offRev[$kab->id] ?? 0) + ($onRev[$kab->id] ?? 0),
                     ];
                 })
                 ->sortByDesc('total_pendapatan')
