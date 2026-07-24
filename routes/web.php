@@ -86,17 +86,22 @@ Route::middleware('auth')->group(function () {
     // 1. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Manajemen User, Wilayah, Diskon Rombongan & Voucher — hanya admin & kadis provinsi
+    // 2. Manajemen User — semua role dinas boleh akses, scoping wilayah dilakukan di controller
+    Route::resource('users', UserController::class);
+
+    // 2a. Wilayah & Diskon Rombongan — hanya admin & kadis provinsi
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
-        Route::resource('users', UserController::class);
         Route::resource('kabupatens', KabupatenController::class);
         Route::resource('diskon-rombongan', DiskonRombonganController::class)->parameters([
             'diskon-rombongan' => 'diskonRombongan'
         ]);
-        Route::resource('kelola-voucher', VoucherController::class)
-            ->except(['show'])
-            ->parameters(['kelola-voucher' => 'voucher']);
     });
+
+    // 2a-2. Kode Voucher — semua role dinas boleh lihat & tambah; edit/hapus
+    // discoping ke wilayah sendiri untuk kadis_kabkota (lihat VoucherController)
+    Route::resource('kelola-voucher', VoucherController::class)
+        ->except(['show'])
+        ->parameters(['kelola-voucher' => 'voucher']);
 
     // 2b. Manajemen Banner — semua role dinas (admin, kadis_provinsi, kadis_kabkota) boleh upload
     Route::resource('kelola-banner', BannerController::class)
@@ -108,9 +113,11 @@ Route::middleware('auth')->group(function () {
         ->except(['show'])
         ->parameters(['kelola-event' => 'event']);
 
-    // 2d. Manajemen Video Terbaru — singleton (cuma 1 data), semua role dinas boleh update
-    Route::get('/kelola-video', [VideoTerbaruController::class, 'edit'])->name('kelola-video.edit');
-    Route::put('/kelola-video', [VideoTerbaruController::class, 'update'])->name('kelola-video.update');
+    // 2d. Manajemen Video Terbaru — singleton (cuma 1 data), hanya admin & kadis_provinsi
+    Route::middleware('role:admin,kadis_provinsi')->group(function () {
+        Route::get('/kelola-video', [VideoTerbaruController::class, 'edit'])->name('kelola-video.edit');
+        Route::put('/kelola-video', [VideoTerbaruController::class, 'update'])->name('kelola-video.update');
+    });
 
     // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller)
     Route::resource('objek-wisata', ObjekWisataController::class)->parameters([
@@ -119,10 +126,12 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/galeri-wisata/{id}', [ObjekWisataController::class, 'hapusGaleri'])->name('galeri.destroy');
 
-    // 4. Manajemen Kategori & Harga Tiket
-    Route::resource('jenis-tiket', JenisTiketController::class)->parameters([
-        'jenis-tiket' => 'jenisTiket'
-    ]);
+    // 4. Manajemen Kategori (master, hanya admin & kadis_provinsi) & Harga Tiket
+    Route::middleware('role:admin,kadis_provinsi')->group(function () {
+        Route::resource('jenis-tiket', JenisTiketController::class)->parameters([
+            'jenis-tiket' => 'jenisTiket'
+        ]);
+    });
     Route::resource('harga-tiket', HargaTiketController::class)->parameters([
         'harga-tiket' => 'hargaTiket'
     ]);

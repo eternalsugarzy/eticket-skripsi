@@ -34,13 +34,26 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label class="form-label">Level Akses (Role)</label>
-                                <select name="role" id="role" class="form-select">
-                                    <option value="petugas" {{ $user->role == 'petugas' ? 'selected' : '' }}>Petugas</option>
-                                    <option value="kasir" {{ $user->role == 'kasir' ? 'selected' : '' }}>Kasir</option>
-                                    <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="kadis_provinsi" {{ $user->role == 'kadis_provinsi' ? 'selected' : '' }}>Kadis Provinsi</option>
-                                    <option value="kadis_kabkota" {{ $user->role == 'kadis_kabkota' ? 'selected' : '' }}>Kadis Kab/Kota</option>
-                                </select>
+                                @if(auth()->user()->role === 'kadis_kabkota' && $user->id === auth()->id())
+                                    <select class="form-select" disabled>
+                                        <option selected>Kadis Kab/Kota (akun Anda sendiri)</option>
+                                    </select>
+                                    <input type="hidden" name="role" value="{{ $user->role }}">
+                                    <small class="text-muted">Anda tidak bisa mengubah role akun Anda sendiri.</small>
+                                @elseif(auth()->user()->role === 'kadis_kabkota')
+                                    <select name="role" id="role" class="form-select">
+                                        <option value="petugas" {{ $user->role == 'petugas' ? 'selected' : '' }}>Petugas</option>
+                                        <option value="kasir" {{ $user->role == 'kasir' ? 'selected' : '' }}>Kasir</option>
+                                    </select>
+                                @else
+                                    <select name="role" id="role" class="form-select">
+                                        <option value="petugas" {{ $user->role == 'petugas' ? 'selected' : '' }}>Petugas</option>
+                                        <option value="kasir" {{ $user->role == 'kasir' ? 'selected' : '' }}>Kasir</option>
+                                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                        <option value="kadis_provinsi" {{ $user->role == 'kadis_provinsi' ? 'selected' : '' }}>Kadis Provinsi</option>
+                                        <option value="kadis_kabkota" {{ $user->role == 'kadis_kabkota' ? 'selected' : '' }}>Kadis Kab/Kota</option>
+                                    </select>
+                                @endif
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -50,6 +63,7 @@
                                 <small class="text-muted">Wajib untuk Kadis — dipakai untuk TTD di laporan cetak.</small>
                             </div>
                         </div>
+                        @if(auth()->user()->role !== 'kadis_kabkota')
                         <div class="col-md-6" id="wrapper-kabupaten" style="{{ $user->role == 'kadis_kabkota' ? '' : 'display:none;' }}">
                             <div class="form-group mb-3">
                                 <label class="form-label">Kabupaten/Kota (khusus Kadis Kab/Kota)</label>
@@ -61,6 +75,7 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
                     </div>
 
                     <div class="mt-3">
@@ -72,8 +87,13 @@
 </div>
 
 <script>
-    document.getElementById('role').addEventListener('change', function () {
-        document.getElementById('wrapper-kabupaten').style.display = this.value === 'kadis_kabkota' ? 'block' : 'none';
-    });
+    const roleSelect = document.getElementById('role');
+    if (roleSelect) {
+        roleSelect.addEventListener('change', function () {
+            const wrapper = document.getElementById('wrapper-kabupaten');
+            if (!wrapper) return;
+            wrapper.style.display = this.value === 'kadis_kabkota' ? 'block' : 'none';
+        });
+    }
 </script>
 @endsection

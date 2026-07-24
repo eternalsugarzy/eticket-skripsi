@@ -51,12 +51,16 @@ class BannerController extends Controller
     // 4. FORM EDIT
     public function edit(Banner $banner)
     {
+        $this->cekAksesEdit($banner);
+
         return view('banner.edit', compact('banner'));
     }
 
     // 5. UPDATE DATA
     public function update(Request $request, Banner $banner)
     {
+        $this->cekAksesEdit($banner);
+
         $request->validate([
             'judul'           => 'nullable|string|max:255',
             'gambar'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
@@ -90,6 +94,8 @@ class BannerController extends Controller
     // 6. HAPUS DATA
     public function destroy(Banner $banner)
     {
+        $this->cekAksesEdit($banner);
+
         if ($banner->gambar) {
             $foto = public_path('uploads/banner/' . $banner->gambar);
             if (file_exists($foto)) unlink($foto);
@@ -98,5 +104,15 @@ class BannerController extends Controller
         $banner->delete();
 
         return redirect()->route('kelola-banner.index')->with('success', 'Banner berhasil dihapus!');
+    }
+
+    // =========================================================
+    // PRIVATE HELPER — Cek akses edit/hapus (lihat Banner::bisaDieditOleh)
+    // =========================================================
+    private function cekAksesEdit(Banner $banner)
+    {
+        if (!$banner->bisaDieditOleh(Auth::user())) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit banner ini.');
+        }
     }
 }

@@ -67,6 +67,7 @@
                             </td>
                             <td class="py-3 pe-4">
                                 <div class="d-flex gap-2">
+                                    @if($ev->bisaDieditOleh(auth()->user()))
                                     <a href="{{ route('kelola-event.edit', $ev->id) }}" class="btn btn-sm btn-outline-primary">
                                         <i class="ti ti-edit"></i>
                                     </a>
@@ -76,6 +77,9 @@
                                             <i class="ti ti-trash"></i>
                                         </button>
                                     </form>
+                                    @else
+                                    <span class="text-muted small">Wilayah lain</span>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

@@ -14,6 +14,18 @@ class Voucher extends Model
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    // Semua role dinas boleh LIHAT semua voucher; admin/kadis_provinsi boleh edit semua;
+    // kadis_kabkota hanya boleh edit voucher wilayahnya sendiri (via kabupaten pengupload)
+    public function bisaDieditOleh(User $user): bool
+    {
+        if (in_array($user->role, ['admin', 'kadis_provinsi'])) {
+            return true;
+        }
+
+        return $user->role === 'kadis_kabkota'
+            && optional($this->uploader)->id_kabupaten == $user->id_kabupaten;
+    }
+
     /**
      * Validasi kode voucher terhadap subtotal tertentu.
      * Dipakai baik di endpoint AJAX (preview FE) maupun saat proses checkout (server-side, wajib).

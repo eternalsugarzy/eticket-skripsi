@@ -782,19 +782,19 @@ INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`, `nip`, `id_ka
 (8, 'Ahmad Said', 'said', '$2y$12$iLkELP0mK.cWlLhcNB0Hsu/UCrU6vOXN51JMlQQSk5ytU1QJ2Ikp.', 'petugas', NULL, NULL, NULL, '2026-02-05 08:36:54', '2026-02-05 08:36:54'),
 (9, 'Junady', 'junady', '$2y$12$yLWFIs14g7Atw9mO9R266eIqqir0CuI02lQmTEe8TzHbiSQApnSEC', 'kasir', NULL, NULL, NULL, '2026-02-05 08:37:13', '2026-02-05 08:37:13'),
 (10, 'Iwan Fitriadi, SH., MH', 'kadis.provinsi', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_provinsi', '19612251998031004', NULL, NULL, '2026-07-01 05:24:30', '2026-07-17 21:31:44'),
-(11, 'Kepala Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 1, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(12, 'Kepala Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 2, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(13, 'Kepala Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 3, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(14, 'Kepala Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 5, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(15, 'Kepala Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 6, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(16, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 7, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(17, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 8, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(18, 'Kepala Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 9, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(19, 'Kepala Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 10, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(20, 'Kepala Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 11, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(21, 'Kepala Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 13, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(22, 'Kepala Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 4, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(23, 'Kepala Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 12, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30');
+(11, 'Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 1, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(12, 'Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 2, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(13, 'Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 3, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(14, 'Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 5, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(15, 'Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 6, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(16, 'Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 7, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(17, 'Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 8, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(18, 'Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 9, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(19, 'Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 10, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(20, 'Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 11, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(21, 'Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 13, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(22, 'Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 4, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
+(23, 'Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 12, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30');
 
 -- --------------------------------------------------------
 

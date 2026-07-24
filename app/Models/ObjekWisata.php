@@ -8,6 +8,7 @@ use App\Models\GaleriWisata;
 use App\Models\Kabupaten;
 use App\Models\HargaTiket;
 use App\Models\Ulasan;
+use Illuminate\Support\Facades\Cache;
 
 class ObjekWisata extends Model
 {
@@ -17,6 +18,14 @@ class ObjekWisata extends Model
     protected $casts = [
         'fasilitas' => 'array',
     ];
+
+    // Objek wisata tampil di homepage yang di-cache — hapus cache begitu ada
+    // perubahan supaya objek baru langsung muncul, tanpa menunggu TTL.
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('landing_home_bundle'));
+        static::deleted(fn () => Cache::forget('landing_home_bundle'));
+    }
 
     // Relasi ke Kabupaten (BelongsTo)
     public function kabupaten()

@@ -49,6 +49,8 @@ class EventController extends Controller
     // 4. FORM EDIT
     public function edit(Event $event)
     {
+        $this->cekAksesEdit($event);
+
         $objekWisatas = ObjekWisata::orderBy('nama_objek')->get();
         return view('event.edit', compact('event', 'objekWisatas'));
     }
@@ -56,6 +58,8 @@ class EventController extends Controller
     // 5. UPDATE DATA
     public function update(Request $request, Event $event)
     {
+        $this->cekAksesEdit($event);
+
         $request->validate([
             'judul'         => 'required|string|max:255',
             'tanggal_event' => 'required|date',
@@ -78,7 +82,19 @@ class EventController extends Controller
     // 6. HAPUS DATA
     public function destroy(Event $event)
     {
+        $this->cekAksesEdit($event);
+
         $event->delete();
         return redirect()->route('kelola-event.index')->with('success', 'Event berhasil dihapus!');
+    }
+
+    // =========================================================
+    // PRIVATE HELPER — Cek akses edit/hapus (lihat Event::bisaDieditOleh)
+    // =========================================================
+    private function cekAksesEdit(Event $event)
+    {
+        if (!$event->bisaDieditOleh(Auth::user())) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit event ini.');
+        }
     }
 }

@@ -56,11 +56,15 @@ class VoucherController extends Controller
 
     public function edit(Voucher $voucher)
     {
+        $this->cekAksesEdit($voucher);
+
         return view('voucher.edit', compact('voucher'));
     }
 
     public function update(Request $request, Voucher $voucher)
     {
+        $this->cekAksesEdit($voucher);
+
         $request->validate([
             'kode'              => 'required|string|max:50|unique:vouchers,kode,' . $voucher->id,
             'tipe_diskon'       => 'required|in:persen,nominal',
@@ -94,7 +98,19 @@ class VoucherController extends Controller
 
     public function destroy(Voucher $voucher)
     {
+        $this->cekAksesEdit($voucher);
+
         $voucher->delete();
         return redirect()->route('kelola-voucher.index')->with('success', 'Voucher berhasil dihapus!');
+    }
+
+    // =========================================================
+    // PRIVATE HELPER — Cek akses edit/hapus (lihat Voucher::bisaDieditOleh)
+    // =========================================================
+    private function cekAksesEdit(Voucher $voucher)
+    {
+        if (!$voucher->bisaDieditOleh(Auth::user())) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit voucher ini.');
+        }
     }
 }

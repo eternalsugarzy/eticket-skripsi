@@ -32,6 +32,13 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label class="form-label">Level Akses (Role)</label>
+                                @if(auth()->user()->role === 'kadis_kabkota')
+                                <select name="role" id="role" class="form-select">
+                                    <option value="petugas">Petugas</option>
+                                    <option value="kasir">Kasir</option>
+                                </select>
+                                <small class="text-muted">Anda hanya bisa menambahkan akun Petugas/Kasir untuk wilayah Anda.</small>
+                                @else
                                 <select name="role" id="role" class="form-select">
                                     <option value="petugas">Petugas</option>
                                     <option value="kasir">Kasir</option>
@@ -39,6 +46,7 @@
                                     <option value="kadis_provinsi">Kadis Provinsi</option>
                                     <option value="kadis_kabkota">Kadis Kab/Kota</option>
                                 </select>
+                                @endif
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -48,6 +56,7 @@
                                 <small class="text-muted">Wajib untuk Kadis — dipakai untuk TTD di laporan cetak.</small>
                             </div>
                         </div>
+                        @if(auth()->user()->role !== 'kadis_kabkota')
                         <div class="col-md-6" id="wrapper-kabupaten" style="display:none;">
                             <div class="form-group mb-3">
                                 <label class="form-label">Kabupaten/Kota (khusus Kadis Kab/Kota)</label>
@@ -59,6 +68,7 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
                     </div>
 
                     <div class="mt-3">
@@ -71,7 +81,9 @@
 
 <script>
     document.getElementById('role').addEventListener('change', function () {
-        document.getElementById('wrapper-kabupaten').style.display = this.value === 'kadis_kabkota' ? 'block' : 'none';
+        const wrapper = document.getElementById('wrapper-kabupaten');
+        if (!wrapper) return;
+        wrapper.style.display = this.value === 'kadis_kabkota' ? 'block' : 'none';
     });
 </script>
 @endsection

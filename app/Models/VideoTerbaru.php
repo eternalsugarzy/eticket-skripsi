@@ -3,11 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class VideoTerbaru extends Model
 {
     protected $table = 'video_terbaru';
     protected $guarded = ['id'];
+
+    // Video tampil di homepage yang di-cache — hapus cache begitu ada perubahan
+    // supaya video baru langsung muncul, tanpa menunggu TTL.
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('landing_home_bundle'));
+        static::deleted(fn () => Cache::forget('landing_home_bundle'));
+    }
 
     /**
      * Ambil ID video YouTube dari berbagai format URL, lalu bentuk URL embed.

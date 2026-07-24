@@ -40,11 +40,16 @@
 
     {{-- Page Header --}}
     <div class="dash-header mb-4">
-        <div>
-            <p class="dash-greeting text-muted mb-1">Selamat datang kembali, <strong>{{ Auth::user()->nama ?? 'Admin' }}</strong> 👋</p>
-            <h4 class="dash-title mb-0">Dashboard Harian</h4>
+        <div class="dash-header__left">
+            <div class="dash-header__icon">
+                <i class="ti ti-dashboard"></i>
+            </div>
+            <div>
+                <p class="dash-greeting text-muted mb-1">Selamat datang kembali, <strong>{{ Auth::user()->nama ?? 'Admin' }}</strong> 👋</p>
+                <h4 class="dash-title mb-0">Dashboard Harian</h4>
+            </div>
         </div>
-        <div class="d-flex align-items-center gap-2">
+        <div class="dash-header__right">
             <div class="dash-date-badge">
                 <i class="ti ti-calendar-event me-2"></i>
                 {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}

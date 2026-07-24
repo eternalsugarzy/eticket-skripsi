@@ -156,33 +156,79 @@
             border-radius: 10px;
         }
         .pc-header .pc-head-link:hover { color: var(--brand-primary); background: var(--brand-primary-light); }
-        .pc-header .user-avtar {
-            width: 36px;
-            height: 36px;
+
+        /* Avatar berbasis inisial nama — konsisten & personal tanpa perlu upload foto */
+        .pc-avatar-initial {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            border: 2px solid var(--brand-primary-light);
-            object-fit: cover;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #3a0ca3 100%);
+            box-shadow: 0 2px 8px rgba(67,97,238,0.28);
         }
-        .pc-header .dropdown-toggle span { font-size: 14px; font-weight: 600; color: #1e2742; margin-left: 8px; }
+        .pc-avatar-initial.wid-42 { width: 42px; height: 42px; font-size: 15px; }
+
+        /* Trigger dropdown akun — override kotak ikon 34x34 overflow:hidden bawaan .pc-head-link
+           (rule itu didesain utk tombol ikon-saja; di sini isinya avatar+nama jadi harus lebar bebas) */
+        .header-user-profile .pc-head-link {
+            width: auto;
+            height: auto;
+            overflow: visible;
+            padding: 6px 12px 6px 6px;
+            border-radius: 12px;
+        }
+        .header-user-profile .pc-head-link:hover,
+        .header-user-profile.show .pc-head-link { background: var(--brand-primary-light); }
+        .header-user-profile .pc-user-name {
+            font-size: 14px; font-weight: 600; color: #1e2742; line-height: 1.3;
+            white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis;
+        }
+        .header-user-profile .pc-user-role { font-size: 11px; color: #9aa1b1; }
+        .header-user-profile .pc-head-link .ti-chevron-down {
+            font-size: 15px; color: #9aa1b1; margin-left: 4px; transition: transform 0.2s ease;
+        }
+        .header-user-profile.show .ti-chevron-down { transform: rotate(180deg); }
+
         .pc-header .dropdown-menu {
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            min-width: 220px;
-            padding: 8px;
+            border-radius: 14px;
+            box-shadow: 0 12px 36px rgba(16,24,40,0.14);
+            min-width: 250px;
+            padding: 10px;
+            margin-top: 10px !important;
+            animation: pcDropdownIn 0.15s ease both;
         }
-        .pc-header .dropdown-menu .dropdown-header { padding: 12px; }
+        @keyframes pcDropdownIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .pc-header .dropdown-menu .dropdown-header {
+            padding: 10px 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .pc-header .dropdown-divider { margin: 4px 6px 8px; border-color: #f0f2f8; }
         .pc-header .dropdown-item {
-            border-radius: 8px;
-            padding: 9px 14px;
+            border-radius: 9px;
+            padding: 10px 12px;
             font-size: 13.5px;
+            font-weight: 500;
             color: #374151;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: background 0.15s;
+            transition: background 0.15s, color 0.15s;
         }
+        .pc-header .dropdown-item i { font-size: 16px; width: 18px; text-align: center; }
         .pc-header .dropdown-item:hover { background: var(--brand-primary-light); color: var(--brand-primary); }
+        .pc-header .dropdown-item.text-danger:hover { background: var(--brand-danger-light); color: var(--brand-danger) !important; }
 
         .pc-container {
             background:
@@ -192,6 +238,61 @@
             min-height: 100vh;
         }
         .pc-content { padding: 28px 28px; }
+
+        .pc-footer {
+            /* Override .pc-footer bawaan template (style.css) yang pasang margin-left:260px
+               + margin-top:60px dengan asumsi footer ada DI LUAR .pc-container. Punya kita
+               ditaruh DI DALAM .pc-container (yang sudah punya margin-left:260px sendiri),
+               jadi tanpa override ini offset-nya dobel. */
+            margin: 32px 0 0;
+            position: relative;
+            padding: 22px 28px;
+            background: #fff;
+            border-top: 1px solid #eef0f6;
+            overflow: hidden;
+        }
+        .pc-footer::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-purple) 50%, var(--brand-primary) 100%);
+            opacity: 0.55;
+        }
+        .pc-footer-wrapper {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .pc-footer-brand { display: flex; align-items: center; gap: 12px; }
+        .pc-footer-brand img {
+            width: 34px; height: 34px; object-fit: contain; flex-shrink: 0;
+            border-radius: 8px;
+        }
+        .pc-footer-title { font-size: 13.5px; font-weight: 700; color: #1e2742; }
+        .pc-footer-sub { font-size: 12px; color: #9aa1b1; }
+        .pc-footer-meta { display: flex; align-items: flex-end; flex-direction: column; gap: 4px; }
+        .pc-footer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--brand-success-light);
+            color: #0a9396;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 50px;
+        }
+        .pc-footer-badge i { font-size: 12px; }
+        .pc-footer-copy { font-size: 11.5px; color: #b0b8cc; }
+        @media (max-width: 575.98px) {
+            .pc-footer-wrapper { flex-direction: column; align-items: flex-start; }
+            .pc-footer-meta { align-items: flex-start; }
+        }
 
         /* ── Elevate base Bootstrap components to the same modern language as
               .card-modern, so pages that haven't been individually restyled
@@ -286,7 +387,41 @@
             .pc-content .btn-primary:hover { transform: none; }
         }
 
-        .dash-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .dash-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: #fff;
+            border: 1px solid #eef0f6;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 22px 26px;
+            position: relative;
+            overflow: hidden;
+        }
+        .dash-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 100% 0%, rgba(67,97,238,0.07), transparent 45%);
+            pointer-events: none;
+        }
+        .dash-header__left { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
+        .dash-header__icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #3a0ca3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(67,97,238,0.3);
+        }
+        .dash-header__icon i { font-size: 24px; color: #fff; }
+        .dash-header__right { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .dash-greeting { font-size: 13.5px; }
         .dash-title { font-size: 22px; font-weight: 700; color: #1e2742; }
         .dash-date-badge {
@@ -395,7 +530,7 @@
                     </li>
                     <li class="pc-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <a href="{{ route('dashboard') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-layout-dashboard"></i></span>
+                            <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
                             <span class="pc-mtext">Dashboard</span>
                         </a>
                     </li>
@@ -403,21 +538,22 @@
                     {{-- ── DATA MASTER ──
                          Tampil untuk: admin, kadis_provinsi, kadis_kabkota
                          - admin & kadis_provinsi: semua sub-menu
-                         - kadis_kabkota: hanya objek wisata, jenis tiket, harga tiket
+                         - kadis_kabkota: hanya objek wisata, harga tiket
                     --}}
                     @if($isDinas)
                     <li class="pc-item pc-caption">
                         <label>Data Master</label>
                     </li>
 
-                    {{-- Manajemen User & Kabupaten — hanya admin & kadis provinsi --}}
-                    @if($isSupervisor)
+                    {{-- Manajemen User — semua role dinas (kadis_kabkota discoping ke wilayahnya di controller) --}}
                     <li class="pc-item {{ request()->is('users*') ? 'active' : '' }}">
                         <a href="{{ route('users.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-users"></i></span>
                             <span class="pc-mtext">Manajemen User</span>
                         </a>
                     </li>
+                    {{-- Data Kabupaten — hanya admin & kadis provinsi --}}
+                    @if($isSupervisor)
                     <li class="pc-item {{ request()->is('kabupatens*') ? 'active' : '' }}">
                         <a href="{{ route('kabupatens.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-map-pin"></i></span>
@@ -426,31 +562,38 @@
                     </li>
                     @endif
 
-                    {{-- Objek wisata, jenis tiket, harga — semua role dinas --}}
+                    {{-- Objek wisata, harga — semua role dinas --}}
                     <li class="pc-item {{ request()->is('objek-wisata*') ? 'active' : '' }}">
                         <a href="{{ route('objek-wisata.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-map"></i></span>
                             <span class="pc-mtext">Objek Wisata</span>
                         </a>
                     </li>
+                    {{-- Jenis Tiket — master data global (unique nama_jenis), hanya admin & kadis_provinsi --}}
+                    @if($isSupervisor)
                     <li class="pc-item {{ request()->is('jenis-tiket*') ? 'active' : '' }}">
                         <a href="{{ route('jenis-tiket.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-tag"></i></span>
                             <span class="pc-mtext">Jenis Tiket</span>
                         </a>
                     </li>
+                    @endif
                     <li class="pc-item {{ request()->is('harga-tiket*') ? 'active' : '' }}">
                         <a href="{{ route('harga-tiket.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-cash"></i></span>
                             <span class="pc-mtext">Manajemen Harga</span>
                         </a>
                     </li>
+                    {{-- Diskon Rombongan — hanya admin & kadis_provinsi (rute sudah dibatasi) --}}
+                    @if($isSupervisor)
                     <li class="pc-item {{ request()->is('diskon-rombongan*') ? 'active' : '' }}">
                         <a href="{{ route('diskon-rombongan.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-discount"></i></span>
                             <span class="pc-mtext">Diskon Rombongan</span>
                         </a>
                     </li>
+                    @endif
+                    {{-- Kode Voucher — semua role dinas boleh lihat & tambah; edit/hapus discoping wilayah --}}
                     <li class="pc-item {{ request()->is('kelola-voucher*') ? 'active' : '' }}">
                         <a href="{{ route('kelola-voucher.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-ticket"></i></span>
@@ -491,6 +634,8 @@
                             <span class="pc-mtext">Event</span>
                         </a>
                     </li>
+                    @endif
+                    @if($isSupervisor)
                     <li class="pc-item {{ request()->is('kelola-video*') ? 'active' : '' }}">
                         <a href="{{ route('kelola-video.edit') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-brand-youtube"></i></span>
@@ -589,51 +734,44 @@
             </div>
 
             {{-- Right: User Profile --}}
+            @php
+                $namaUser = Auth::user()->nama ?? 'User';
+                $inisial  = strtoupper(substr(trim($namaUser), 0, 1) ?: 'U');
+                $labelRole = match($role) {
+                    'admin'          => 'Admin Sistem',
+                    'kadis_provinsi' => 'Kadis Provinsi Kalsel',
+                    'kadis_kabkota'  => 'Kadis ' . (Auth::user()->kabupaten->nama_kabupaten ?? 'Kab/Kota'),
+                    'kasir'          => 'Kasir',
+                    'petugas'        => 'Petugas',
+                    default          => ucfirst($role),
+                };
+            @endphp
             <div class="ms-auto">
                 <ul class="list-unstyled mb-0">
                     <li class="dropdown pc-h-item header-user-profile">
                         <a class="pc-head-link dropdown-toggle arrow-none me-0 d-flex align-items-center"
                            data-bs-toggle="dropdown" href="#" role="button"
                            aria-haspopup="false" data-bs-auto-close="outside" aria-expanded="false">
-                            <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" alt="user-image" class="user-avtar">
+                            <span class="pc-avatar-initial">{{ $inisial }}</span>
                             <div class="d-none d-md-block ms-2">
-                                <span style="font-size:14px; font-weight:600; color:#1e2742;">{{ Auth::user()->nama ?? 'User' }}</span>
-                                <small class="d-block text-muted" style="font-size:11px; line-height:1.2;">
-                                    @switch($role)
-                                        @case('admin')          Admin Sistem @break
-                                        @case('kadis_provinsi') Kadis Provinsi @break
-                                        @case('kadis_kabkota')  Kadis Kab/Kota @break
-                                        @case('kasir')          Kasir @break
-                                        @case('petugas')        Petugas @break
-                                        @default                {{ ucfirst($role) }}
-                                    @endswitch
-                                </small>
+                                <span class="pc-user-name d-block">{{ $namaUser }}</span>
+                                <small class="pc-user-role d-block">{{ $labelRole }}</small>
                             </div>
+                            <i class="ti ti-chevron-down d-none d-md-inline-block"></i>
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" alt="user-image" class="user-avtar wid-35 me-2">
-                                    <div>
-                                        <h6 class="mb-0" style="font-size:13.5px;">{{ Auth::user()->nama ?? 'User' }}</h6>
-                                        <small class="text-muted">
-                                            @switch($role)
-                                                @case('admin')          Admin Sistem @break
-                                                @case('kadis_provinsi') Kadis Provinsi Kalsel @break
-                                                @case('kadis_kabkota')  Kadis {{ Auth::user()->kabupaten->nama_kabupaten ?? 'Kab/Kota' }} @break
-                                                @case('kasir')          Kasir @break
-                                                @case('petugas')        Petugas @break
-                                                @default                {{ ucfirst($role) }}
-                                            @endswitch
-                                        </small>
-                                    </div>
+                                <span class="pc-avatar-initial wid-42">{{ $inisial }}</span>
+                                <div>
+                                    <h6 class="mb-0" style="font-size:14px; font-weight:700; color:#1e2742;">{{ $namaUser }}</h6>
+                                    <small class="text-muted">{{ $labelRole }}</small>
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
                             <a href="#" class="dropdown-item text-danger"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="ti ti-power"></i> Logout
+                                <i class="ti ti-power"></i> Keluar / Logout
                             </a>
                         </div>
                     </li>
@@ -647,6 +785,22 @@
         <div class="pc-content">
             @yield('content')
         </div>
+
+        <footer class="pc-footer">
+            <div class="pc-footer-wrapper">
+                <div class="pc-footer-brand">
+                    <img src="{{ asset('assets/images/logo1.png') }}" alt="logo">
+                    <div>
+                        <div class="pc-footer-title">E-Ticketing Kalsel</div>
+                        <div class="pc-footer-sub">Dinas Pariwisata Provinsi Kalimantan Selatan</div>
+                    </div>
+                </div>
+                <div class="pc-footer-meta">
+                    <span class="pc-footer-badge"><i class="ti ti-shield-check"></i> Sistem Resmi Pemerintah Provinsi</span>
+                    <span class="pc-footer-copy">&copy; {{ date('Y') }} MUHAMMAD IRWAN FIRMANTO. All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
     </div>
 
     {{-- ==================== SCRIPTS ==================== --}}
@@ -686,6 +840,16 @@
                 cancelButtonText: 'Batal',
             }).then((result) => { if (result.isConfirmed) form.submit(); });
         }
+
+        // Sidebar adalah halaman penuh (bukan SPA) — tiap pindah halaman, scroll menu
+        // sidebar reset ke atas. Ini membuat menu yang sedang aktif otomatis terlihat
+        // lagi, tanpa harus scroll manual tiap kali pindah halaman.
+        window.addEventListener('load', function () {
+            const activeItem = document.querySelector('.pc-navbar .pc-item.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'center' });
+            }
+        });
     </script>
     @yield('scripts')
     @stack('scripts')
