@@ -5,7 +5,7 @@
 @section('content')
 <div class="card card-modern">
     <div class="card-header-modern">
-        <h5 class="card-title-modern mb-0"><i class="ti ti-user-edit me-2"></i> Form Edit User</h5>
+        <h5 class="card-title-modern mb-0"><i class="ti ti-edit me-2"></i> Form Edit User</h5>
     </div>
     <div class="card-body p-4">
                 <form action="{{ route('users.update', $user->id) }}" method="POST">

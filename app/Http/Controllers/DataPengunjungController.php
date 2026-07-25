@@ -18,6 +18,20 @@ class DataPengunjungController extends Controller
     {
         $idKabupaten = $this->scopeKabupaten();
 
+        // Filter tanggal diterapkan di MASING-MASING subquery (bukan di query gabungan
+        // setelah union) — kalau ditaruh setelah unionAll()+mergeBindings(), urutan
+        // parameter binding yang dikirim ke MySQL jadi tidak sesuai urutan placeholder
+        // '?' di SQL hasil gabungan, sehingga filter tanggal + status tiket online salah
+        // sasaran (hasil selalu kosong saat sumber tidak dipilih eksplisit).
+        $filterTanggal = function ($q) use ($request) {
+            if ($request->filled('tgl_awal') && $request->filled('tgl_akhir')) {
+                $q->whereBetween('waktu_validasi', [
+                    $request->tgl_awal . ' 00:00:00',
+                    $request->tgl_akhir . ' 23:59:59',
+                ]);
+            }
+        };
+
         // 1. Query Offline
         $queryOffline = DB::table('transaksis')
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
@@ -25,6 +39,7 @@ class DataPengunjungController extends Controller
             ->where('transaksis.status_tiket', 'used')
             ->whereNotNull('transaksis.waktu_validasi')
             ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->tap($filterTanggal)
             ->select(
                 'transaksis.id',
                 DB::raw("'Offline' as sumber"),
@@ -42,6 +57,7 @@ class DataPengunjungController extends Controller
             ->where('pesanans.status_tiket', 'used')
             ->whereNotNull('pesanans.waktu_validasi')
             ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->tap($filterTanggal)
             ->select(
                 'pesanans.id',
                 DB::raw("'Online' as sumber"),
@@ -61,17 +77,9 @@ class DataPengunjungController extends Controller
             $queryGabungan = $queryOffline->unionAll($queryOnline);
         }
 
-        // 4. Subquery final
+        // 4. Subquery final (tanpa filter tambahan di sini — sudah diterapkan di atas)
         $finalQuery = DB::table(DB::raw("({$queryGabungan->toSql()}) as combined_table"))
                         ->mergeBindings($queryGabungan);
-
-        // 5. Filter tanggal
-        if ($request->filled('tgl_awal') && $request->filled('tgl_akhir')) {
-            $finalQuery->whereBetween('waktu_validasi', [
-                $request->tgl_awal . ' 00:00:00',
-                $request->tgl_akhir . ' 23:59:59',
-            ]);
-        }
 
         $pengunungs = $finalQuery->orderBy('waktu_validasi', 'desc')->paginate(10);
 

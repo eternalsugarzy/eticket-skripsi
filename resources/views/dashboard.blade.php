@@ -199,7 +199,7 @@
                     </div>
                     @empty
                     <div class="empty-state py-5">
-                        <i class="ti ti-map-off"></i>
+                        <i class="ti ti-map-pin-off"></i>
                         <p>Data belum tersedia</p>
                     </div>
                     @endforelse

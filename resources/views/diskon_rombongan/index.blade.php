@@ -89,7 +89,7 @@
                         @empty
                         <tr>
                             <td colspan="5" class="text-center py-5">
-                                <i class="ti ti-discount-off" style="font-size:40px; color:#d1d5db;"></i>
+                                <i class="ti ti-discount" style="font-size:40px; color:#d1d5db;"></i>
                                 <p class="mt-2 text-muted">Belum ada setting diskon rombongan.</p>
                                 <a href="{{ route('diskon-rombongan.create') }}" class="btn btn-primary btn-sm">
                                     Tambah Sekarang

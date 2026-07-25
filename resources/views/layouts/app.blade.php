@@ -195,6 +195,15 @@
         }
         .header-user-profile.show .ti-chevron-down { transform: rotate(180deg); }
 
+        /* style.css base theme punya aturan mobile yang sembunyikan setiap <span> langsung
+           di dalam .pc-head-link (didesain utk teks nama, bukan avatar) — itu ikut menyembunyikan
+           avatar inisial kita juga sehingga tombol akun jadi kotak kosong di layar <576px. */
+        @media (max-width: 575.98px) {
+            .pc-header .header-user-profile .pc-head-link > .pc-avatar-initial {
+                display: inline-flex !important;
+            }
+        }
+
         .pc-header .dropdown-menu {
             border: none;
             border-radius: 14px;
@@ -238,61 +247,6 @@
             min-height: 100vh;
         }
         .pc-content { padding: 28px 28px; }
-
-        .pc-footer {
-            /* Override .pc-footer bawaan template (style.css) yang pasang margin-left:260px
-               + margin-top:60px dengan asumsi footer ada DI LUAR .pc-container. Punya kita
-               ditaruh DI DALAM .pc-container (yang sudah punya margin-left:260px sendiri),
-               jadi tanpa override ini offset-nya dobel. */
-            margin: 32px 0 0;
-            position: relative;
-            padding: 22px 28px;
-            background: #fff;
-            border-top: 1px solid #eef0f6;
-            overflow: hidden;
-        }
-        .pc-footer::before {
-            content: '';
-            position: absolute;
-            top: -1px; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-purple) 50%, var(--brand-primary) 100%);
-            opacity: 0.55;
-        }
-        .pc-footer-wrapper {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .pc-footer-brand { display: flex; align-items: center; gap: 12px; }
-        .pc-footer-brand img {
-            width: 34px; height: 34px; object-fit: contain; flex-shrink: 0;
-            border-radius: 8px;
-        }
-        .pc-footer-title { font-size: 13.5px; font-weight: 700; color: #1e2742; }
-        .pc-footer-sub { font-size: 12px; color: #9aa1b1; }
-        .pc-footer-meta { display: flex; align-items: flex-end; flex-direction: column; gap: 4px; }
-        .pc-footer-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--brand-success-light);
-            color: #0a9396;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 50px;
-        }
-        .pc-footer-badge i { font-size: 12px; }
-        .pc-footer-copy { font-size: 11.5px; color: #b0b8cc; }
-        @media (max-width: 575.98px) {
-            .pc-footer-wrapper { flex-direction: column; align-items: flex-start; }
-            .pc-footer-meta { align-items: flex-start; }
-        }
 
         /* ── Elevate base Bootstrap components to the same modern language as
               .card-modern, so pages that haven't been individually restyled
@@ -785,22 +739,6 @@
         <div class="pc-content">
             @yield('content')
         </div>
-
-        <footer class="pc-footer">
-            <div class="pc-footer-wrapper">
-                <div class="pc-footer-brand">
-                    <img src="{{ asset('assets/images/logo1.png') }}" alt="logo">
-                    <div>
-                        <div class="pc-footer-title">E-Ticketing Kalsel</div>
-                        <div class="pc-footer-sub">Dinas Pariwisata Provinsi Kalimantan Selatan</div>
-                    </div>
-                </div>
-                <div class="pc-footer-meta">
-                    <span class="pc-footer-badge"><i class="ti ti-shield-check"></i> Sistem Resmi Pemerintah Provinsi</span>
-                    <span class="pc-footer-copy">&copy; {{ date('Y') }} MUHAMMAD IRWAN FIRMANTO. All rights reserved.</span>
-                </div>
-            </div>
-        </footer>
     </div>
 
     {{-- ==================== SCRIPTS ==================== --}}

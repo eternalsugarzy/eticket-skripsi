@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    // Helper: kembalikan id_kabupaten kalau kadis_kabkota, null kalau role lain
+    private function scopeKabupaten()
+    {
+        $user = Auth::user();
+        return $user->role === 'kadis_kabkota' ? $user->id_kabupaten : null;
+    }
+
     // 1. TAMPILKAN DAFTAR EVENT
     public function index()
     {
@@ -19,7 +26,10 @@ class EventController extends Controller
     // 2. FORM TAMBAH
     public function create()
     {
-        $objekWisatas = ObjekWisata::orderBy('nama_objek')->get();
+        $idKabupaten = $this->scopeKabupaten();
+        $objekWisatas = $idKabupaten
+            ? ObjekWisata::where('id_kabupaten', $idKabupaten)->orderBy('nama_objek')->get()
+            : ObjekWisata::orderBy('nama_objek')->get();
         return view('event.create', compact('objekWisatas'));
     }
 
@@ -33,6 +43,15 @@ class EventController extends Controller
             'link_url'      => 'nullable|string|max:500',
             'status'        => 'required|in:aktif,nonaktif',
         ]);
+
+        // 🔒 SCOPING: kadis_kabkota hanya boleh tautkan event ke objek wisata wilayahnya sendiri
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten && $request->id_objek) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda hanya bisa menautkan event ke objek wisata di wilayah Anda sendiri.');
+            }
+        }
 
         Event::create([
             'judul'         => $request->judul,
@@ -51,7 +70,10 @@ class EventController extends Controller
     {
         $this->cekAksesEdit($event);
 
-        $objekWisatas = ObjekWisata::orderBy('nama_objek')->get();
+        $idKabupaten = $this->scopeKabupaten();
+        $objekWisatas = $idKabupaten
+            ? ObjekWisata::where('id_kabupaten', $idKabupaten)->orderBy('nama_objek')->get()
+            : ObjekWisata::orderBy('nama_objek')->get();
         return view('event.edit', compact('event', 'objekWisatas'));
     }
 
@@ -67,6 +89,15 @@ class EventController extends Controller
             'link_url'      => 'nullable|string|max:500',
             'status'        => 'required|in:aktif,nonaktif',
         ]);
+
+        // 🔒 SCOPING: kadis_kabkota hanya boleh tautkan event ke objek wisata wilayahnya sendiri
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten && $request->id_objek) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                abort(403, 'Anda hanya bisa menautkan event ke objek wisata di wilayah Anda sendiri.');
+            }
+        }
 
         $event->update([
             'judul'         => $request->judul,

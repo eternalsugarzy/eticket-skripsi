@@ -17,7 +17,7 @@
                         <li>
                             <a class="dropdown-item" target="_blank"
                                href="{{ route('laporan.cetak-pengunjung', ['tgl_awal' => request('tgl_awal', date('Y-m-01')), 'tgl_akhir' => request('tgl_akhir', date('Y-m-d'))]) }}">
-                                <i class="ti ti-list-details me-2"></i> Detail Transaksi (Filter Aktif)
+                                <i class="ti ti-list me-2"></i> Detail Transaksi (Filter Aktif)
                             </a>
                         </li>
                         <li>
@@ -105,7 +105,7 @@
                             @empty
                             <tr>
                                 <td colspan="7" class="text-center py-5 text-muted">
-                                    <i class="ti ti-calendar-x fs-1 mb-3 d-block text-secondary"></i>
+                                    <i class="ti ti-calendar-off fs-1 mb-3 d-block text-secondary"></i>
                                     Tidak ada data pengunjung yang cocok dengan filter pencarian.
                                 </td>
                             </tr>

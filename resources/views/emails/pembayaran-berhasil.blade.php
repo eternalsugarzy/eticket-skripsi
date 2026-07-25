@@ -57,11 +57,31 @@
                     </tr>
                 </table>
 
+                {{-- Info Pemesan --}}
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Nama Pemesan</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->nama_pengunjung }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Email</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->email }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">No. WhatsApp</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->no_wa }}</td>
+                    </tr>
+                </table>
+
                 {{-- Rincian --}}
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                     <tr>
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Destinasi Wisata</td>
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->objekWisata->nama_objek ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Alamat</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->objekWisata->alamat ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Tanggal Kunjungan</td>
@@ -73,6 +93,22 @@
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; text-align:right;">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
                     </tr>
                     @endforeach
+                    @if($pesanan->diskon_persen > 0)
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#059669; font-size:13px;">Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#059669; font-size:13px; text-align:right;">- Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}</td>
+                    </tr>
+                    @endif
+                    @if($pesanan->diskon_voucher_nominal > 0)
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#7c3aed; font-size:13px;">Voucher {{ $pesanan->kode_voucher }}</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#7c3aed; font-size:13px; text-align:right;">- Rp {{ number_format($pesanan->diskon_voucher_nominal, 0, ',', '.') }}</td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Metode Pembayaran</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->metode_pembayaran ?? '-' }}</td>
+                    </tr>
                     <tr>
                         <td style="padding:14px 0 0; color:#0F1C14; font-size:15px; font-weight:bold;">Total Dibayar</td>
                         <td style="padding:14px 0 0; color:#1A3D2B; font-size:18px; font-weight:bold; text-align:right;">Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}</td>

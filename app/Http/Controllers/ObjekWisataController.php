@@ -66,7 +66,7 @@ class ObjekWisataController extends Controller
             abort(403, 'Anda hanya bisa menambahkan objek wisata di wilayah Anda sendiri.');
         }
 
-        $data = $request->all();
+        $data = $request->except('galeri');
 
         // Foto utama
         if ($request->hasFile('foto')) {
@@ -123,7 +123,7 @@ class ObjekWisataController extends Controller
             abort(403, 'Anda hanya bisa memindahkan objek wisata di wilayah Anda sendiri.');
         }
 
-        $data = $request->all();
+        $data = $request->except('galeri');
 
         if ($request->hasFile('foto')) {
             if ($objekWisata->foto && $objekWisata->foto != 'default.jpg') {
@@ -219,7 +219,8 @@ class ObjekWisataController extends Controller
     // =========================================================
     public function hapusGaleri($id)
     {
-        $galeri = GaleriWisata::findOrFail($id);
+        $galeri = GaleriWisata::with('objekWisata')->findOrFail($id);
+        $this->cekAksesKabupaten($galeri->objekWisata);
 
         $idObjek = $galeri->id_objek;
 

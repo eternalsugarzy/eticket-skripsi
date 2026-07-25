@@ -49,7 +49,6 @@ Route::get('/cek-pesanan', [CheckoutController::class, 'cekPesanan'])->name('cek
 Route::get('/cek-status-pembayaran/{kode}', [CheckoutController::class, 'cekStatusAjax'])->name('checkout.cek-status-ajax');
 Route::get('/snap-token/{kode}', [CheckoutController::class, 'snapTokenAjax'])->name('checkout.snap-token');
 
-Route::post('/simulasi-bayar/{kode_pesanan}', [CheckoutController::class, 'simulasiBayar'])->name('simulasi.bayar');
 Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->name('cetak.eticket');
 
 // API tier diskon (dipanggil JS, tidak perlu login)
@@ -87,31 +86,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // 2. Manajemen User — semua role dinas boleh akses, scoping wilayah dilakukan di controller
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->except(['show']);
 
     // 2a. Wilayah & Diskon Rombongan — hanya admin & kadis provinsi
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
-        Route::resource('kabupatens', KabupatenController::class);
-        Route::resource('diskon-rombongan', DiskonRombonganController::class)->parameters([
+        Route::resource('kabupatens', KabupatenController::class)->except(['show']);
+        Route::resource('diskon-rombongan', DiskonRombonganController::class)->except(['show'])->parameters([
             'diskon-rombongan' => 'diskonRombongan'
         ]);
     });
 
-    // 2a-2. Kode Voucher — semua role dinas boleh lihat & tambah; edit/hapus
-    // discoping ke wilayah sendiri untuk kadis_kabkota (lihat VoucherController)
-    Route::resource('kelola-voucher', VoucherController::class)
-        ->except(['show'])
-        ->parameters(['kelola-voucher' => 'voucher']);
+    // 2a-2/2b/2c. Kode Voucher, Banner, Event — hanya role dinas (admin, kadis_provinsi,
+    // kadis_kabkota); kasir/petugas TIDAK boleh akses sama sekali (di luar cakupan mereka)
+    Route::middleware('role:admin,kadis_provinsi,kadis_kabkota')->group(function () {
+        // Kode Voucher — semua role dinas boleh lihat & tambah; edit/hapus
+        // discoping ke wilayah sendiri untuk kadis_kabkota (lihat VoucherController)
+        Route::resource('kelola-voucher', VoucherController::class)
+            ->except(['show'])
+            ->parameters(['kelola-voucher' => 'voucher']);
 
-    // 2b. Manajemen Banner — semua role dinas (admin, kadis_provinsi, kadis_kabkota) boleh upload
-    Route::resource('kelola-banner', BannerController::class)
-        ->except(['show'])
-        ->parameters(['kelola-banner' => 'banner']);
+        // Manajemen Banner — semua role dinas boleh upload
+        Route::resource('kelola-banner', BannerController::class)
+            ->except(['show'])
+            ->parameters(['kelola-banner' => 'banner']);
 
-    // 2c. Manajemen Event — semua role dinas boleh upload
-    Route::resource('kelola-event', EventController::class)
-        ->except(['show'])
-        ->parameters(['kelola-event' => 'event']);
+        // Manajemen Event — semua role dinas boleh upload
+        Route::resource('kelola-event', EventController::class)
+            ->except(['show'])
+            ->parameters(['kelola-event' => 'event']);
+    });
 
     // 2d. Manajemen Video Terbaru — singleton (cuma 1 data), hanya admin & kadis_provinsi
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
@@ -120,7 +123,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller)
-    Route::resource('objek-wisata', ObjekWisataController::class)->parameters([
+    Route::resource('objek-wisata', ObjekWisataController::class)->except(['show'])->parameters([
         'objek-wisata' => 'objekWisata'
     ]);
 
@@ -128,27 +131,30 @@ Route::middleware('auth')->group(function () {
 
     // 4. Manajemen Kategori (master, hanya admin & kadis_provinsi) & Harga Tiket
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
-        Route::resource('jenis-tiket', JenisTiketController::class)->parameters([
+        Route::resource('jenis-tiket', JenisTiketController::class)->except(['show'])->parameters([
             'jenis-tiket' => 'jenisTiket'
         ]);
     });
-    Route::resource('harga-tiket', HargaTiketController::class)->parameters([
+    Route::resource('harga-tiket', HargaTiketController::class)->except(['show'])->parameters([
         'harga-tiket' => 'hargaTiket'
     ]);
 
     // 4b. Manajemen Berita — URI 'kelola-berita' (berbeda dari publik '/berita')
     // supaya tidak bentrok URL/nama route dengan halaman publik di bawah.
     // ->parameters() menjaga agar controller tetap pakai $berita, bukan $kelolaBerita.
-    Route::resource('kelola-berita', BeritaController::class)
-        ->except(['show'])
-        ->parameters(['kelola-berita' => 'berita']);
+    // Hanya role dinas — kasir/petugas tidak boleh akses.
+    Route::middleware('role:admin,kadis_provinsi,kadis_kabkota')->group(function () {
+        Route::resource('kelola-berita', BeritaController::class)
+            ->except(['show'])
+            ->parameters(['kelola-berita' => 'berita']);
+    });
 
     // 4c. Moderasi Ulasan — hanya index & hapus (ulasan dibuat pengunjung, bukan admin)
     Route::get('/kelola-ulasan', [UlasanAdminController::class, 'index'])->name('kelola-ulasan.index');
     Route::delete('/kelola-ulasan/{ulasan}', [UlasanAdminController::class, 'destroy'])->name('kelola-ulasan.destroy');
 
     // 5. Operasional Loket & Transaksi
-    Route::resource('transaksi', TransaksiController::class);
+    Route::resource('transaksi', TransaksiController::class)->except(['edit', 'update', 'destroy']);
     Route::get('riwayat-transaksi', [TransaksiController::class, 'riwayat'])->name('transaksi.riwayat');
     Route::get('get-tiket/{id_objek}', [TransaksiController::class, 'getTiketByObjek'])->name('transaksi.getTiket');
     Route::put('/transaksi/{id}/void', [TransaksiController::class, 'void'])->name('transaksi.void');

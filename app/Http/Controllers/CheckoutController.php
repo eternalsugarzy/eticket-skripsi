@@ -115,6 +115,7 @@ class CheckoutController extends Controller
             'kode_voucher'           => $kodeVoucherDipakai,
             'diskon_voucher_nominal' => $diskonVoucherNominal,
             'status_pembayaran'      => $isGratis ? 'Paid' : 'Unpaid',
+            'metode_pembayaran'      => $isGratis ? 'Gratis' : null,
         ]);
 
         foreach ($detailTikets as $detail) {
@@ -141,6 +142,14 @@ class CheckoutController extends Controller
                 } catch (\Throwable $e) {
                     // Email gagal terkirim — pesanan gratis tetap sah
                 }
+                try {
+                    app(\App\Services\FonnteService::class)->kirim(
+                        $pesananEmail->no_wa,
+                        $this->buatPesanTiketWa($pesananEmail)
+                    );
+                } catch (\Throwable $e) {
+                    // WA gagal terkirim — pesanan gratis tetap sah
+                }
             });
 
             return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])
@@ -154,6 +163,15 @@ class CheckoutController extends Controller
                 Mail::to($pesanan->email)->send(new PesananDibuat($pesanan));
             } catch (\Throwable $e) {
                 // Email gagal terkirim (misal SMTP belum diatur) — checkout tetap lanjut normal
+            }
+            try {
+                $totalFormat = number_format($pesanan->total_bayar, 0, ',', '.');
+                app(\App\Services\FonnteService::class)->kirim(
+                    $pesanan->no_wa,
+                    "Halo {$pesanan->nama_pengunjung}, pesanan {$pesanan->kode_pesanan} untuk {$pesanan->objekWisata->nama_objek} telah diterima. Total Rp {$totalFormat}. Selesaikan pembayaran: " . route('cek-pesanan', ['kode' => $pesanan->kode_pesanan])
+                );
+            } catch (\Throwable $e) {
+                // WA gagal terkirim — checkout tetap lanjut normal
             }
         });
 
@@ -284,7 +302,10 @@ class CheckoutController extends Controller
             $fraudStatus       = $status->fraud_status ?? null;
 
             if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
-                $pesanan->update(['status_pembayaran' => 'Paid']);
+                $pesanan->update([
+                    'status_pembayaran' => 'Paid',
+                    'metode_pembayaran' => $this->labelMetodePembayaran($status->payment_type ?? null),
+                ]);
 
                 // Kirim email E-Ticket SETELAH response (defer) — hanya terpicu sekali karena baris
                 // di atas mengubah status dari Unpaid, jadi panggilan berikutnya berhenti di guard clause
@@ -294,6 +315,14 @@ class CheckoutController extends Controller
                         Mail::to($pesananEmail->email)->send(new PembayaranBerhasil($pesananEmail));
                     } catch (\Throwable $e) {
                         // Email gagal terkirim — tidak masalah, status pembayaran tetap ter-update
+                    }
+                    try {
+                        app(\App\Services\FonnteService::class)->kirim(
+                            $pesananEmail->no_wa,
+                            $this->buatPesanTiketWa($pesananEmail)
+                        );
+                    } catch (\Throwable $e) {
+                        // WA gagal terkirim — tidak masalah, status pembayaran tetap ter-update
                     }
                 });
             } elseif (in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure'])) {
@@ -307,30 +336,55 @@ class CheckoutController extends Controller
         return $pesanan->fresh();
     }
 
-    // 4. Simulasi Pembayaran
-    public function simulasiBayar($kode_pesanan)
+    // =========================================================
+    // PRIVATE HELPER — Susun isi pesan WhatsApp "E-Ticket siap" lengkap
+    // =========================================================
+    private function buatPesanTiketWa(Pesanan $pesanan): string
     {
-        $pesanan = Pesanan::where('kode_pesanan', $kode_pesanan)->first();
+        $rincianTiket = $pesanan->details
+            ->map(fn ($d) => "  • {$d->jenisTiket->nama_jenis} x{$d->jumlah} - Rp " . number_format($d->subtotal, 0, ',', '.'))
+            ->implode("\n");
+        $totalTiket = $pesanan->details->sum('jumlah');
+        $subtotalFormat = number_format($pesanan->details->sum('subtotal'), 0, ',', '.');
+        $totalBayarFormat = number_format($pesanan->total_bayar, 0, ',', '.');
 
-        if ($pesanan && $pesanan->status_pembayaran == 'Unpaid') {
-            $pesanan->update([
-                'status_pembayaran' => 'Paid',
-            ]);
-
-            $pesananEmail = $pesanan->fresh(['details.jenisTiket', 'objekWisata']);
-            defer(function () use ($pesananEmail) {
-                try {
-                    Mail::to($pesananEmail->email)->send(new PembayaranBerhasil($pesananEmail));
-                } catch (\Throwable $e) {
-                    // Email gagal terkirim — tidak masalah, status pembayaran tetap ter-update
-                }
-            });
-
-            return redirect()->route('cek-pesanan', ['kode' => $kode_pesanan])
-                             ->with('success_pembayaran', 'Pembayaran berhasil dikonfirmasi. E-Ticket Anda telah diterbitkan.');
+        $baris_diskon = '';
+        if ($pesanan->diskon_persen > 0) {
+            $baris_diskon .= "Diskon Rombongan ({$pesanan->diskon_persen}%): -Rp " . number_format($pesanan->diskon_nominal, 0, ',', '.') . "\n";
+        }
+        if ($pesanan->diskon_voucher_nominal > 0) {
+            $baris_diskon .= "Voucher {$pesanan->kode_voucher}: -Rp " . number_format($pesanan->diskon_voucher_nominal, 0, ',', '.') . "\n";
         }
 
-        return back()->with('error', 'Pesanan tidak ditemukan atau sudah dibayar.');
+        return "🎫 *E-Ticket Anda Sudah Siap!*\n\n"
+            . "Kode Pesanan: {$pesanan->kode_pesanan}\n"
+            . "Nama: {$pesanan->nama_pengunjung}\n"
+            . "Email: {$pesanan->email}\n"
+            . "No. WhatsApp: {$pesanan->no_wa}\n\n"
+            . "Objek Wisata: {$pesanan->objekWisata->nama_objek}\n"
+            . "Alamat: {$pesanan->objekWisata->alamat}\n\n"
+            . "Rincian Tiket ({$totalTiket} tiket):\n{$rincianTiket}\n\n"
+            . "Subtotal: Rp {$subtotalFormat}\n"
+            . $baris_diskon
+            . "Total Pembayaran: Rp {$totalBayarFormat}\n"
+            . "Metode Pembayaran: {$pesanan->metode_pembayaran}\n\n"
+            . "📧 QR Code E-Ticket Anda sudah dikirim ke email {$pesanan->email}.\n"
+            . "E-Ticket lengkap: " . route('cetak.eticket', $pesanan->kode_pesanan);
+    }
+
+    // PRIVATE HELPER — Terjemahkan kode payment_type Midtrans ke label ramah-baca
+    private function labelMetodePembayaran(?string $paymentType): string
+    {
+        return match ($paymentType) {
+            'bank_transfer', 'echannel' => 'Transfer Bank',
+            'gopay'                     => 'GoPay',
+            'qris'                      => 'QRIS',
+            'shopeepay'                 => 'ShopeePay',
+            'credit_card'               => 'Kartu Kredit',
+            'cstore'                    => 'Gerai Retail (Indomaret/Alfamart)',
+            'akulaku'                   => 'Akulaku PayLater',
+            default                     => $paymentType ? ucwords(str_replace('_', ' ', $paymentType)) : 'Midtrans',
+        };
     }
 
     // 5. Tampilkan E-Ticket

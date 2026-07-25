@@ -169,6 +169,12 @@ class TransaksiController extends Controller
             $diskonNominal = (int) round($subtotalSebelumDiskon * $diskonPersen / 100);
             $grandTotal    = $subtotalSebelumDiskon - $diskonNominal;
 
+            // Cegah kembalian negatif tercetak di struk — bayar tidak boleh kurang dari total
+            if ($request->bayar < $grandTotal) {
+                DB::rollback();
+                return back()->with('error', 'Jumlah bayar kurang dari total tagihan Rp ' . number_format($grandTotal, 0, ',', '.') . '.');
+            }
+
             $transaksi = Transaksi::create([
                 'no_transaksi'  => 'TRX-' . date('YmdHis') . '-' . rand(100, 999),
                 'tgl_transaksi' => now(),
@@ -208,20 +214,22 @@ class TransaksiController extends Controller
     public function show($id)
     {
         $transaksi = Transaksi::with(['kasir', 'objekWisata', 'details.jenisTiket'])->findOrFail($id);
+        $this->cekAksesWilayah($transaksi);
         return view('transaksi.show', compact('transaksi'));
     }
 
     // 6. Void / Batalkan Transaksi
     public function void($id)
     {
+        $transaksi = Transaksi::with('objekWisata')->findOrFail($id);
+        $this->cekAksesWilayah($transaksi);
+
+        if ($transaksi->status_tiket == 'batal') {
+            return back()->with('error', 'Transaksi ini sudah dibatalkan sebelumnya!');
+        }
+
         try {
             DB::beginTransaction();
-
-            $transaksi = Transaksi::findOrFail($id);
-
-            if ($transaksi->status_tiket == 'batal') {
-                return back()->with('error', 'Transaksi ini sudah dibatalkan sebelumnya!');
-            }
 
             $transaksi->update(['status_tiket' => 'batal']);
 
@@ -231,6 +239,17 @@ class TransaksiController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Gagal membatalkan transaksi: ' . $e->getMessage());
+        }
+    }
+
+    // =========================================================
+    // PRIVATE HELPER — kadis_kabkota hanya boleh akses transaksi wilayahnya sendiri
+    // =========================================================
+    private function cekAksesWilayah(Transaksi $transaksi)
+    {
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten && (int) $transaksi->objekWisata->id_kabupaten !== (int) $idKabupaten) {
+            abort(403, 'Anda tidak memiliki akses ke transaksi ini.');
         }
     }
 }

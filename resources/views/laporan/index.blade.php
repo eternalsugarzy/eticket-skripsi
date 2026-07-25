@@ -42,7 +42,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-pengunjung') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -78,7 +78,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-pendapatan') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -114,7 +114,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-tiket') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -150,7 +150,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-objek') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -194,7 +194,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-offline') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -230,7 +230,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-online') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -266,7 +266,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-ulasan') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -298,7 +298,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-rekap-tahunan') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -330,7 +330,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-tren') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -366,7 +366,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-validasi') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -402,7 +402,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-publikasi') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -438,7 +438,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-voucher') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -474,7 +474,7 @@
                         </button>
                         <button type="submit" formaction="{{ route('laporan.export-wishlist') }}" formtarget="_self"
                                 class="btn btn-outline-success btn-sm fw-bold flex-fill">
-                            <i class="ti ti-file-spreadsheet me-1"></i> Excel
+                            <i class="ti ti-file-export me-1"></i> Excel
                         </button>
                     </div>
                 </form>
@@ -507,7 +507,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'users']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -530,7 +530,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'kabupatens']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -553,7 +553,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'objek_wisatas']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -576,7 +576,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'jenis_tikets']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -599,7 +599,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'harga_tikets']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -622,7 +622,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'beritas']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>
@@ -645,7 +645,7 @@
                 </a>
                 <a href="{{ route('laporan.export-master', ['jenis' => 'banners']) }}"
                    class="btn btn-outline-success btn-sm fw-bold w-100">
-                    <i class="ti ti-file-spreadsheet me-1"></i> Export Excel
+                    <i class="ti ti-file-export me-1"></i> Export Excel
                 </a>
             </div>
         </div>

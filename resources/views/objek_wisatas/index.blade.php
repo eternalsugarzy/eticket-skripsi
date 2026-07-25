@@ -108,9 +108,9 @@
                             </span>
                             <br>
                             @if($ow->status == 'buka')
-                                <span class="badge bg-light-success text-success"><i class="ti ti-door-enter"></i> Buka</span>
+                                <span class="badge bg-light-success text-success"><i class="ti ti-circle-check"></i> Buka</span>
                             @else
-                                <span class="badge bg-light-danger text-danger"><i class="ti ti-door-exit"></i> Tutup</span>
+                                <span class="badge bg-light-danger text-danger"><i class="ti ti-circle-x"></i> Tutup</span>
                             @endif
                         </td>
 
@@ -123,7 +123,7 @@
 
                         <td>
                             @if($ow->is_populer)
-                                <span class="badge bg-light-warning text-warning"><i class="ti ti-star-filled"></i> Ya</span>
+                                <span class="badge bg-light-warning text-warning"><i class="ti ti-star"></i> Ya</span>
                             @else
                                 <span class="badge bg-light-secondary text-secondary">Tidak</span>
                             @endif
