@@ -85,8 +85,11 @@ Route::middleware('auth')->group(function () {
     // 1. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Manajemen User — semua role dinas boleh akses, scoping wilayah dilakukan di controller
-    Route::resource('users', UserController::class)->except(['show']);
+    // 2. Manajemen User — semua role dinas boleh akses, scoping wilayah dilakukan di controller.
+    // kasir/petugas TIDAK boleh akses sama sekali (di luar cakupan mereka).
+    Route::middleware('role:admin,kadis_provinsi,kadis_kabkota')->group(function () {
+        Route::resource('users', UserController::class)->except(['show']);
+    });
 
     // 2a. Wilayah & Diskon Rombongan — hanya admin & kadis provinsi
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
@@ -122,22 +125,26 @@ Route::middleware('auth')->group(function () {
         Route::put('/kelola-video', [VideoTerbaruController::class, 'update'])->name('kelola-video.update');
     });
 
-    // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller)
-    Route::resource('objek-wisata', ObjekWisataController::class)->except(['show'])->parameters([
-        'objek-wisata' => 'objekWisata'
-    ]);
+    // 3. Manajemen Destinasi (filter per-kabupaten dilakukan di controller) & Harga Tiket —
+    // hanya role dinas, kasir/petugas TIDAK boleh akses sama sekali.
+    Route::middleware('role:admin,kadis_provinsi,kadis_kabkota')->group(function () {
+        Route::resource('objek-wisata', ObjekWisataController::class)->except(['show'])->parameters([
+            'objek-wisata' => 'objekWisata'
+        ]);
 
-    Route::delete('/galeri-wisata/{id}', [ObjekWisataController::class, 'hapusGaleri'])->name('galeri.destroy');
+        Route::delete('/galeri-wisata/{id}', [ObjekWisataController::class, 'hapusGaleri'])->name('galeri.destroy');
 
-    // 4. Manajemen Kategori (master, hanya admin & kadis_provinsi) & Harga Tiket
+        Route::resource('harga-tiket', HargaTiketController::class)->except(['show'])->parameters([
+            'harga-tiket' => 'hargaTiket'
+        ]);
+    });
+
+    // 4. Manajemen Kategori (master, hanya admin & kadis_provinsi)
     Route::middleware('role:admin,kadis_provinsi')->group(function () {
         Route::resource('jenis-tiket', JenisTiketController::class)->except(['show'])->parameters([
             'jenis-tiket' => 'jenisTiket'
         ]);
     });
-    Route::resource('harga-tiket', HargaTiketController::class)->except(['show'])->parameters([
-        'harga-tiket' => 'hargaTiket'
-    ]);
 
     // 4b. Manajemen Berita — URI 'kelola-berita' (berbeda dari publik '/berita')
     // supaya tidak bentrok URL/nama route dengan halaman publik di bawah.
@@ -149,9 +156,12 @@ Route::middleware('auth')->group(function () {
             ->parameters(['kelola-berita' => 'berita']);
     });
 
-    // 4c. Moderasi Ulasan — hanya index & hapus (ulasan dibuat pengunjung, bukan admin)
-    Route::get('/kelola-ulasan', [UlasanAdminController::class, 'index'])->name('kelola-ulasan.index');
-    Route::delete('/kelola-ulasan/{ulasan}', [UlasanAdminController::class, 'destroy'])->name('kelola-ulasan.destroy');
+    // 4c. Moderasi Ulasan — hanya index & hapus (ulasan dibuat pengunjung, bukan admin).
+    // Hanya role dinas — kasir/petugas tidak boleh akses.
+    Route::middleware('role:admin,kadis_provinsi,kadis_kabkota')->group(function () {
+        Route::get('/kelola-ulasan', [UlasanAdminController::class, 'index'])->name('kelola-ulasan.index');
+        Route::delete('/kelola-ulasan/{ulasan}', [UlasanAdminController::class, 'destroy'])->name('kelola-ulasan.destroy');
+    });
 
     // 5. Operasional Loket & Transaksi
     Route::resource('transaksi', TransaksiController::class)->except(['edit', 'update', 'destroy']);
