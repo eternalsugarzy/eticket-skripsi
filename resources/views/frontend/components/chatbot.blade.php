@@ -455,13 +455,40 @@
             
             // 1. Check if asking about a specific wisata
             let targetWisata = null;
+            let highestWisataScore = 0;
+            
+            // Kata umum yang tidak unik untuk satu tempat wisata
+            const genericWords = ['pantai', 'bukit', 'gunung', 'danau', 'air', 'terjun', 'taman', 'pulau', 'goa', 'hutan', 'kampung', 'desa', 'wisata', 'monumen', 'museum', 'pasar'];
+            
             for (const w of knowledgeBase.wisata) {
-                const namaTokens = w.nama.toLowerCase().split(/\s+/);
-                // Check if any significant part of the name is in the query
-                const match = namaTokens.some(nt => nt.length > 3 && rawQuery.includes(nt));
-                if (match || rawQuery.includes(w.nama.toLowerCase())) {
+                const namaUtuh = w.nama.toLowerCase();
+                
+                // Jika user menyebut nama utuh persis (contoh: "bukit mamake")
+                if (rawQuery.includes(namaUtuh)) {
                     targetWisata = w;
+                    highestWisataScore = 999;
                     break;
+                }
+                
+                const namaTokens = namaUtuh.split(/\s+/);
+                let score = 0;
+                let hasUniqueMatch = false;
+                
+                for (const nt of namaTokens) {
+                    if (nt.length > 2 && rawQuery.includes(nt)) {
+                        score += 1;
+                        // Jika kata yang cocok BUKAN kata umum, berarti sangat spesifik
+                        if (!genericWords.includes(nt)) {
+                            hasUniqueMatch = true;
+                            score += 5; // Bobot tinggi untuk kata unik (misal: "sapu", "angin", "mamake")
+                        }
+                    }
+                }
+                
+                // Hanya set targetWisata jika ada kata unik yang cocok dan skornya paling tinggi
+                if (hasUniqueMatch && score > highestWisataScore) {
+                    highestWisataScore = score;
+                    targetWisata = w;
                 }
             }
             
