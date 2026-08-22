@@ -469,7 +469,7 @@
                 // Determine intent about this wisata
                 const isAskingJam = ['jam', 'buka', 'tutup', 'operasional', 'open', 'close', 'hours', 'waktu'].some(k => tokens.includes(k));
                 const isAskingHarga = ['harga', 'tiket', 'biaya', 'tarif', 'price', 'cost', 'ticket', 'fee'].some(k => tokens.includes(k));
-                const isAskingLokasi = ['lokasi', 'alamat', 'dimana', 'mana', 'address', 'location', 'where'].some(k => tokens.includes(k));
+                const isAskingLokasi = ['lokasi', 'alamat', 'dimana', 'mana', 'address', 'location', 'where', 'rute', 'jalan', 'arah', 'route', 'direction'].some(k => tokens.includes(k));
                 
                 if (isAskingJam) {
                     return addMessage(`Jam operasional <strong>${targetWisata.nama}</strong>: <br>${targetWisata.jam}`, 'bot');
@@ -491,7 +491,10 @@
                 }
                 
                 if (isAskingLokasi) {
-                    return addMessage(`Alamat <strong>${targetWisata.nama}</strong>:<br>${targetWisata.alamat}, ${targetWisata.kabupaten}`, 'bot');
+                    let mapQuery = encodeURIComponent(targetWisata.nama + ' ' + targetWisata.kabupaten);
+                    let routeHtml = `Alamat <strong>${targetWisata.nama}</strong>:<br>${targetWisata.alamat}, ${targetWisata.kabupaten}.<br><br>`;
+                    routeHtml += `<a href="https://www.google.com/maps/search/?api=1&query=${mapQuery}" target="_blank" style="display:inline-block; background:#1A3D2B; color:white; padding:4px 10px; border-radius:12px; text-decoration:none; font-size:12px;">📍 Buka Rute di Google Maps</a>`;
+                    return addMessage(routeHtml, 'bot');
                 }
                 
                 // General info about the wisata if no specific intent
