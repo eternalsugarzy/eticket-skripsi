@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Riwayat Pesanan Saya')
+@section('title', __('Riwayat Pesanan Saya'))
 
 @push('styles')
 <style>
@@ -338,9 +338,9 @@ body { background: var(--cream); }
         <div class="row align-items-center g-3">
             <div class="col-md-7">
                 <h1 class="page-title">
-                    <i class="bi bi-clock-history me-2"></i> Riwayat Pesanan Saya
+                    <i class="bi bi-clock-history me-2"></i> {{ __('Riwayat Pesanan Saya') }}
                 </h1>
-                <p class="page-subtitle">Kelola dan pantau semua pesanan tiket wisata Anda</p>
+                <p class="page-subtitle">{{ __('Kelola dan pantau semua pesanan tiket wisata Anda') }}</p>
             </div>
             <div class="col-md-5">
                 <div class="user-info-card">
@@ -355,7 +355,7 @@ body { background: var(--cream); }
                         <form action="{{ route('pengunjung.logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn-logout">
-                                <i class="bi bi-box-arrow-right"></i> Keluar
+                                <i class="bi bi-box-arrow-right"></i> {{ __('Keluar') }}
                             </button>
                         </form>
                     </div>
@@ -380,9 +380,9 @@ body { background: var(--cream); }
     <div class="content-card">
         <div class="card-head">
             <div class="card-head-icon"><i class="bi bi-receipt"></i></div>
-            <h4>Daftar Pesanan</h4>
+            <h4>{{ __('Daftar Pesanan') }}</h4>
             <span class="ms-auto badge bg-secondary rounded-pill">
-                {{ $pesanans->count() }} pesanan
+                {{ $pesanans->count() }} {{ __('pesanan') }}
             </span>
         </div>
 
@@ -395,21 +395,21 @@ body { background: var(--cream); }
                     <div class="pesanan-kode">{{ $pesanan->kode_pesanan }}</div>
                     <div class="pesanan-tanggal">
                         <i class="bi bi-calendar3 me-1"></i>
-                        Dipesan: {{ \Carbon\Carbon::parse($pesanan->created_at)->translatedFormat('d F Y, H:i') }}
+                        {{ __('Dipesan:') }} {{ \Carbon\Carbon::parse($pesanan->created_at)->translatedFormat('d F Y, H:i') }}
                     </div>
                 </div>
                 <div>
                     @if($pesanan->status_pembayaran === 'Paid')
                         <span class="badge-status badge-paid">
-                            <i class="bi bi-check-circle-fill"></i> Lunas
+                            <i class="bi bi-check-circle-fill"></i> {{ __('Lunas') }}
                         </span>
                     @elseif($pesanan->status_pembayaran === 'Cancelled')
                         <span class="badge-status badge-cancelled">
-                            <i class="bi bi-x-circle-fill"></i> Dibatalkan
+                            <i class="bi bi-x-circle-fill"></i> {{ __('Dibatalkan') }}
                         </span>
                     @else
                         <span class="badge-status badge-unpaid">
-                            <i class="bi bi-clock-fill"></i> Belum Bayar
+                            <i class="bi bi-clock-fill"></i> {{ __('Belum Bayar') }}
                         </span>
                     @endif
                 </div>
@@ -423,12 +423,12 @@ body { background: var(--cream); }
                 </div>
                 <div class="pesanan-detail-row">
                     <i class="bi bi-calendar-event"></i>
-                    Tanggal Kunjungan:
+                    {{ __('Tanggal Kunjungan:') }}
                     <strong>{{ \Carbon\Carbon::parse($pesanan->tanggal_kunjungan)->translatedFormat('d F Y') }}</strong>
                 </div>
                 <div class="pesanan-detail-row">
                     <i class="bi bi-ticket-perforated"></i>
-                    Tiket:
+                    {{ __('Tiket:') }}
                     @foreach($pesanan->details as $detail)
                         <span>{{ $detail->jenisTiket->nama_jenis ?? '-' }} ({{ $detail->jumlah }}x)</span>
                         @if(!$loop->last) · @endif
@@ -439,7 +439,7 @@ body { background: var(--cream); }
             {{-- Footer --}}
             <div class="pesanan-footer">
                 <div>
-                    <div class="pesanan-total-label">Total Pembayaran</div>
+                    <div class="pesanan-total-label">{{ __('Total Pembayaran') }}</div>
                     <div class="pesanan-total-value">
                         Rp {{ number_format($pesanan->total_bayar, 0, ',', '.') }}
                     </div>
@@ -449,7 +449,7 @@ body { background: var(--cream); }
                     @if($pesanan->status_pembayaran === 'Unpaid')
                         <a href="{{ route('cek-pesanan', ['kode' => $pesanan->kode_pesanan]) }}"
                            class="btn-bayar">
-                            <i class="bi bi-credit-card-fill"></i> Bayar Sekarang
+                            <i class="bi bi-credit-card-fill"></i> {{ __('Bayar Sekarang') }}
                         </a>
                     @endif
 
@@ -457,13 +457,13 @@ body { background: var(--cream); }
                     @if($pesanan->status_pembayaran === 'Paid')
                         <a href="{{ route('cetak.eticket', $pesanan->kode_pesanan) }}"
                            class="btn-bayar" target="_blank">
-                            <i class="bi bi-qr-code"></i> Lihat E-Ticket
+                            <i class="bi bi-qr-code"></i> {{ __('Lihat E-Ticket') }}
                         </a>
                     @endif
 
                     <a href="{{ route('cek-pesanan', ['kode' => $pesanan->kode_pesanan]) }}"
                        class="btn-lihat">
-                        <i class="bi bi-eye-fill"></i> Detail
+                        <i class="bi bi-eye-fill"></i> {{ __('Detail') }}
                     </a>
                 </div>
             </div>
@@ -474,13 +474,13 @@ body { background: var(--cream); }
             <div class="empty-icon">
                 <i class="bi bi-receipt-cutoff"></i>
             </div>
-            <div class="empty-title">Belum Ada Pesanan</div>
+            <div class="empty-title">{{ __('Belum Ada Pesanan') }}</div>
             <p class="empty-desc">
-                Anda belum pernah memesan tiket wisata.<br>
-                Mulai jelajahi destinasi wisata Kalimantan Selatan!
+                {{ __('Anda belum pernah memesan tiket wisata.') }}<br>
+                {{ __('Mulai jelajahi destinasi wisata Kalimantan Selatan!') }}
             </p>
             <a href="{{ route('wisata.katalog') }}" class="btn-cari-wisata">
-                <i class="bi bi-compass-fill"></i> Jelajahi Wisata
+                <i class="bi bi-compass-fill"></i> {{ __('Jelajahi Wisata') }}
             </a>
         </div>
         @endforelse

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -474,29 +474,52 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('wisata.katalog') ? 'active' : '' }}"
                            href="{{ route('wisata.katalog') }}">
-                            Katalog Wisata
+                            {{ __('Katalog Wisata') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('berita.*') ? 'active' : '' }}"
                            href="{{ route('berita.index') }}">
-                            Berita
+                            {{ __('Berita') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('landing') }}#sig">
-                            Peta SIG
+                            {{ __('Peta SIG') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('faq.index') ? 'active' : '' }}"
                            href="{{ route('faq.index') }}">
-                            FAQ
+                            {{ __('FAQ') }}
                         </a>
                     </li>
                     <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="nav-link dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:none; background:none; cursor:pointer;">
+                                @if(app()->getLocale() === 'id')
+                                    <span style="font-size:1.2rem;">🇮🇩</span> <span class="d-none d-lg-inline" style="font-size:.8rem; font-weight:600;">ID</span>
+                                @else
+                                    <span style="font-size:1.2rem;">🇬🇧</span> <span class="d-none d-lg-inline" style="font-size:.8rem; font-weight:600;">EN</span>
+                                @endif
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" style="min-width:140px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12);">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 {{ app()->getLocale() === 'id' ? 'active' : '' }}" href="{{ route('lang.switch', 'id') }}" style="border-radius:8px; font-size:.85rem; font-weight:600;">
+                                        <span style="font-size:1.2rem;">🇮🇩</span> Bahasa Indonesia
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', 'en') }}" style="border-radius:8px; font-size:.85rem; font-weight:600;">
+                                        <span style="font-size:1.2rem;">🇬🇧</span> English
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
                         <a class="btn-lacak ms-2" href="{{ route('cek-pesanan') }}">
-                            <i class="bi bi-search"></i> Lacak Pesanan
+                            <i class="bi bi-search"></i> {{ __('Lacak Pesanan') }}
                         </a>
                     </li>
 
@@ -523,16 +546,16 @@
                                     <div class="dd-email">{{ Auth::guard('pengunjung')->user()->email }}</div>
                                 </div>
                                 <a href="{{ route('pengunjung.riwayat') }}" class="nav-dropdown-item">
-                                    <i class="bi bi-clock-history"></i> Riwayat Pesanan
+                                    <i class="bi bi-clock-history"></i> {{ __('Riwayat Pesanan') }}
                                 </a>
                                 <a href="{{ route('wishlist.index') }}" class="nav-dropdown-item">
-                                    <i class="bi bi-heart-fill"></i> Wishlist Saya
+                                    <i class="bi bi-heart-fill"></i> {{ __('Wishlist Saya') }}
                                 </a>
                                 <hr class="nav-dropdown-divider">
                                 <form action="{{ route('pengunjung.logout') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="nav-dropdown-item danger">
-                                        <i class="bi bi-box-arrow-right"></i> Keluar
+                                        <i class="bi bi-box-arrow-right"></i> {{ __('Keluar') }}
                                     </button>
                                 </form>
                             </div>
@@ -544,7 +567,7 @@
                     <li class="nav-item ms-2">
                         <div class="btn-masuk-wrap" id="masukWrap">
                             <button class="btn-masuk" id="masukBtn" type="button">
-                                <i class="bi bi-person-fill"></i> Masuk
+                                <i class="bi bi-person-fill"></i> {{ __('Masuk') }}
                             </button>
 
                             <div class="masuk-dropdown" id="masukDropdown">
@@ -554,15 +577,15 @@
                                         <i class="bi bi-person-fill"></i>
                                     </div>
                                     <div>
-                                        <div class="masuk-option-label">Masuk sebagai Pengunjung</div>
-                                        <div class="masuk-option-sub">Akses riwayat & pesanan tiket Anda</div>
+                                        <div class="masuk-option-label">{{ __('Masuk sebagai Pengunjung') }}</div>
+                                        <div class="masuk-option-sub">{{ __('Akses riwayat & pesanan tiket Anda') }}</div>
                                     </div>
                                 </a>
 
                                 <hr class="masuk-divider">
 
                                 <a href="{{ route('pengunjung.register.form') }}" class="masuk-register-link">
-                                    Belum punya akun? <strong>Daftar di sini</strong>
+                                    {{ __('Belum punya akun?') }} <strong>{{ __('Daftar di sini') }}</strong>
                                 </a>
                             </div>
                         </div>
@@ -583,15 +606,18 @@
     {{-- ══════════ FOOTER ══════════ --}}
     <footer class="footer-custom">
         <div class="container">
-            <p>&copy; {{ date('Y') }} Dinas Pariwisata Provinsi Kalimantan Selatan. Hak Cipta Dilindungi.</p>
-            <small>Sistem Informasi E-Tourism Terintegrasi</small>
+            <p>&copy; {{ date('Y') }} Dinas Pariwisata Provinsi Kalimantan Selatan. {{ __('Hak Cipta Dilindungi.') }}</p>
+            <small>{{ __('Sistem Informasi E-Tourism Terintegrasi') }}</small>
             <div class="mt-2">
                 <a href="{{ route('login') }}" style="color: rgba(255,255,255,.5); font-size: .75rem; text-decoration: none;">
-                    <i class="bi bi-shield-fill-check"></i> Masuk sebagai Petugas Dinas
+                    <i class="bi bi-shield-fill-check"></i> {{ __('Masuk sebagai Petugas Dinas') }}
                 </a>
             </div>
         </div>
     </footer>
+
+    {{-- ══════════ CHATBOT WIDGET ══════════ --}}
+    @include('frontend.components.chatbot')
 
     {{-- ══════════ SCRIPTS ══════════ --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

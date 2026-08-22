@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Wishlist Saya - E-Tourism Kalsel')
+@section('title', __('Wishlist Saya - E-Tourism Kalsel'))
 
 @push('styles')
 <style>
@@ -84,10 +84,10 @@ body { background: var(--cream); }
 <div class="wishlist-header">
     <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
-            <h1><i class="bi bi-heart-fill me-2"></i>Wishlist Saya</h1>
-            <p class="mb-0">Destinasi wisata yang ingin Anda kunjungi</p>
+            <h1><i class="bi bi-heart-fill me-2"></i>{{ __('Wishlist Saya') }}</h1>
+            <p class="mb-0">{{ __('Destinasi wisata yang ingin Anda kunjungi') }}</p>
         </div>
-        <span class="badge bg-light text-dark rounded-pill px-3 py-2">{{ $wishlists->count() }} destinasi</span>
+        <span class="badge bg-light text-dark rounded-pill px-3 py-2">{{ $wishlists->count() }} {{ __('destinasi') }}</span>
     </div>
 </div>
 <div class="gold-strip"></div>
@@ -101,7 +101,7 @@ body { background: var(--cream); }
             <div class="wishlist-card">
                 <form action="{{ route('wishlist.toggle', $w->id) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn-hapus-wishlist" aria-label="Hapus dari Wishlist" title="Hapus dari wishlist">
+                    <button type="submit" class="btn-hapus-wishlist" aria-label="{{ __('Hapus dari Wishlist') }}" title="{{ __('Hapus dari wishlist') }}">
                         <i class="bi bi-heart-fill"></i>
                     </button>
                 </form>
@@ -111,7 +111,7 @@ body { background: var(--cream); }
                         <div class="wishlist-nama">{{ $w->nama_objek }}</div>
                         <div class="wishlist-kab"><i class="bi bi-geo-alt-fill me-1"></i>{{ $w->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}</div>
                         <span class="btn-jelajahi" style="padding:8px 18px; font-size:.82rem;">
-                            Lihat Detail <i class="bi bi-arrow-right"></i>
+                            {{ __('Lihat Detail') }} <i class="bi bi-arrow-right"></i>
                         </span>
                     </div>
                 </a>
@@ -122,10 +122,10 @@ body { background: var(--cream); }
         <div class="col-12">
             <div class="empty-state">
                 <i class="bi bi-heart"></i>
-                <h5>Wishlist Anda Masih Kosong</h5>
-                <p class="mb-4">Simpan destinasi favorit Anda dengan klik ikon hati saat menjelajahi katalog wisata.</p>
+                <h5>{{ __('Wishlist Anda Masih Kosong') }}</h5>
+                <p class="mb-4">{{ __('Simpan destinasi favorit Anda dengan klik ikon hati saat menjelajahi katalog wisata.') }}</p>
                 <a href="{{ route('wisata.katalog') }}" class="btn-jelajahi">
-                    <i class="bi bi-compass-fill"></i> Jelajahi Wisata
+                    <i class="bi bi-compass-fill"></i> {{ __('Jelajahi Wisata') }}
                 </a>
             </div>
         </div>

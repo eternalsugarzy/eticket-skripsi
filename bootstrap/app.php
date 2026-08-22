@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+    // Middleware global: set locale dari session di setiap request web
+    $middleware->web(append: [
+        \App\Http\Middleware\SetLocale::class,
+    ]);
+
     $middleware->alias([
         'role' => \App\Http\Middleware\CheckRole::class,
         'pengunjung' => \App\Http\Middleware\PengunjungAuth::class,

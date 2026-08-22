@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 20, 2026 at 10:29 AM
+-- Generation Time: Aug 06, 2026 at 04:56 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.31
 
@@ -46,9 +46,11 @@ CREATE TABLE `banners` (
 --
 
 INSERT INTO `banners` (`id`, `judul`, `gambar`, `link_url`, `urutan`, `status`, `tanggal_mulai`, `tanggal_selesai`, `id_user`, `created_at`, `updated_at`) VALUES
-(1, 'Suka Travel Mart', '1784027576_poster.jpeg', NULL, 1, 'aktif', NULL, NULL, 1, '2026-07-07 01:24:28', '2026-07-14 03:12:56'),
+(1, 'Suka Travel Mart', '1784027576_poster.jpeg', NULL, 1, 'aktif', NULL, NULL, 1, '2026-07-07 01:24:28', '2026-07-24 11:10:21'),
 (2, 'Desa Bunglai', '1784027592_poster2.jpg', NULL, 2, 'aktif', NULL, NULL, 1, '2026-07-07 01:41:36', '2026-07-14 03:13:12'),
-(3, 'Ramadhan EXPO Tanah Laut', '1784043564_tala-ramadhan1.jpg', NULL, 1, 'aktif', '2026-07-14', '2026-07-20', 22, '2026-07-14 07:39:24', '2026-07-17 09:53:45');
+(3, 'Ramadhan EXPO Tanah Laut', '1784043564_tala-ramadhan1.jpg', NULL, 1, 'aktif', '2026-07-14', '2026-07-20', 22, '2026-07-14 07:39:24', '2026-07-17 09:53:45'),
+(5, 'Festival Budaya Saijaan Kotabaru', '1784921095_Screenshot 2026-07-25 031648.png', 'https://www.instagram.com/p/DbDI7fEoHdS/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==', 1, 'aktif', NULL, NULL, 21, '2026-07-24 11:24:55', '2026-07-24 11:24:55'),
+(6, 'Festival Budaya Saijaan Kotabaru Gelar Seni Budaya', '1784921177_Screenshot 2026-07-25 032536.png', NULL, 2, 'aktif', NULL, NULL, 21, '2026-07-24 11:26:17', '2026-07-24 11:26:17');
 
 -- --------------------------------------------------------
 
@@ -176,7 +178,8 @@ CREATE TABLE `diskon_rombongans` (
 INSERT INTO `diskon_rombongans` (`id`, `min_orang`, `persen_diskon`, `keterangan`, `aktif`, `created_at`, `updated_at`) VALUES
 (1, 10, '10.00', 'Diskon Rombongan Pelajar SD', 1, '2026-07-01 19:50:04', '2026-07-01 19:50:04'),
 (2, 20, '15.00', 'Diskon Rombongan Pelajar SMP', 1, '2026-07-01 19:50:37', '2026-07-01 19:50:37'),
-(3, 50, '20.00', 'Diskon Study Tour', 1, '2026-07-14 07:28:33', '2026-07-14 07:28:33');
+(3, 50, '20.00', 'Diskon Study Tour', 1, '2026-07-14 07:28:33', '2026-07-14 07:28:33'),
+(4, 25, '20.00', 'Diskon Rombongan Pelajar SD', 1, '2026-07-22 19:04:32', '2026-07-22 19:04:32');
 
 -- --------------------------------------------------------
 
@@ -201,8 +204,11 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`id`, `judul`, `tanggal_event`, `id_objek`, `link_url`, `status`, `id_user`, `created_at`, `updated_at`) VALUES
-(1, 'Festival Kembang Api', '2026-07-11', 1, NULL, 'aktif', 1, '2026-07-07 02:21:53', '2026-07-07 02:37:15'),
-(2, 'Ramadhan EXPO Tanah Laut', '2026-07-14', NULL, NULL, 'aktif', 22, '2026-07-14 07:40:16', '2026-07-14 07:40:16');
+(1, 'Festival Kembang Api', '2026-07-11', 1, NULL, 'aktif', 1, '2026-07-07 02:21:53', '2026-07-24 11:10:21'),
+(2, 'Ramadhan EXPO Tanah Laut', '2026-07-14', NULL, NULL, 'aktif', 22, '2026-07-14 07:40:16', '2026-07-14 07:40:16'),
+(3, 'Festival Budaya Saijaan Kotabaru', '2026-07-22', NULL, NULL, 'aktif', 21, '2026-07-24 11:28:26', '2026-07-24 11:28:26'),
+(4, 'Gelar Seni Budaya se-Kab/Kota Kalimantan Selatan', '2026-07-22', NULL, NULL, 'aktif', 21, '2026-07-24 11:29:07', '2026-07-24 11:29:07'),
+(5, 'Pemilihan Putra Putri Pariwisata Provinsi Kalimantan Selatan', '2026-07-25', NULL, NULL, 'aktif', 1, '2026-07-24 11:35:52', '2026-07-24 11:35:52');
 
 -- --------------------------------------------------------
 
@@ -302,8 +308,7 @@ INSERT INTO `harga_tikets` (`id`, `id_objek`, `id_jenis_tiket`, `harga`, `create
 (43, 18, 1, '5000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (44, 18, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (47, 20, 1, '5000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(48, 20, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
-(50, 22, 1, '0.00', '2026-06-29 02:50:11', '2026-06-29 02:50:26');
+(48, 20, 2, '3000.00', '2026-06-10 10:34:22', '2026-06-10 10:34:22');
 
 -- --------------------------------------------------------
 
@@ -427,7 +432,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (15, '2026_06_10_183023_add_front_end_fields_to_objek_wisatas_table', 5),
 (16, '2026_06_11_104919_create_galeri_wisatas_table', 6),
 (17, '2026_06_21_131638_create_pesanans_table', 7),
-(19, '2026_07_18_132448_add_nip_to_users_table', 8);
+(19, '2026_07_18_132448_add_nip_to_users_table', 8),
+(20, '2026_07_25_150818_add_metode_pembayaran_to_pesanans_table', 9);
 
 -- --------------------------------------------------------
 
@@ -476,7 +482,6 @@ INSERT INTO `objek_wisatas` (`id`, `id_kabupaten`, `nama_objek`, `foto`, `deskri
 (17, 12, 'Pantai Pagatan', 'default.jpg', 'Pantai panjang yang menjadi pusat pesta adat laut Mappanretasi.', NULL, 'Kel. Kota Pagatan, Kec. Kusan Hilir', '-3.5936', '115.9872', '24 Jam', 'buka', 0, '2026-06-10 10:34:22', '2026-06-10 10:34:22'),
 (18, 12, 'Goa Liang Bangkai', '1784027971_liangbangkai.jpg', 'Situs goa prasejarah dengan pemandangan eksotis dan jejak manusia purba.', '[]', 'Desa Dukuh Rejo, Kec. Mantewe', '-3.2842', '115.7124', '08:00 - 17:00 WITA', 'buka', 0, '2026-06-10 10:34:22', '2026-07-14 03:19:31'),
 (20, 13, 'Bukit Mamake', '1784027987_mamake.jpg', 'Bukit paralayang dengan pemandangan laut dan pulau-pulau kecil.', '[]', 'Desa Sarang Tiung, Kec. Pulau Laut Sigam', '-3.2872', '116.2711', '24 Jam', 'buka', 1, '2026-06-10 10:34:22', '2026-07-14 03:19:47'),
-(22, 4, 'Gunung Kayangan', '1784027881_IMG-20240507-WA0053.jpg', 'Gn Jajahan Jepang', '[\"Parkir Motor\", \"Toilet\", \"Restoran\", \"Pusat Informasi\"]', 'Jl A Yani, Tanah Laut', '-3.717009', '-965.247907', '09:00 - 17:00 WITA', 'tutup', 0, '2026-06-10 11:33:45', '2026-07-19 14:53:32'),
 (23, 3, 'Bukit Batu', '1784041960_bukit-batu.jpg', 'Bukit Batu merupakan salah satu destinasi wisata alam yang berada di Desa Tiwingan Baru, Kecamatan Aranio, Kabupaten Banjar, Kalimantan Selatan. Destinasi ini terletak di kawasan Waduk Riam Kanan dan menjadi bagian dari kawasan wisata alam yang dikelilingi oleh Pegunungan Meratus. Dari puncak bukit, pengunjung dapat menikmati panorama hamparan waduk berwarna biru kehijauan, gugusan pulau-pulau kecil, serta perbukitan hijau yang menciptakan pemandangan yang indah dan menenangkan.', '[\"Parkir Motor\", \"Parkir Mobil\", \"Toilet\", \"Mushola\", \"Gazebo\", \"Spot Foto\", \"Camping Ground\", \"Pos Keamanan\", \"Penyewaan Alat (Sewa Perahu/Sepeda)\"]', 'Tiwingan Lama, Kec. Aranio, Kabupaten Banjar, Kalimantan Selatan 70671', '-3.504760', '115.071297', '08:00 - 22:00', 'buka', 1, '2026-07-14 07:12:40', '2026-07-14 07:12:40');
 
 -- --------------------------------------------------------
@@ -527,6 +532,7 @@ CREATE TABLE `pesanans` (
   `kode_voucher` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `diskon_voucher_nominal` bigint NOT NULL DEFAULT '0',
   `status_pembayaran` enum('Unpaid','Paid','Cancelled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Unpaid',
+  `metode_pembayaran` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status_tiket` enum('active','used') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   `waktu_validasi` datetime DEFAULT NULL,
   `snap_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -538,45 +544,54 @@ CREATE TABLE `pesanans` (
 -- Dumping data for table `pesanans`
 --
 
-INSERT INTO `pesanans` (`id`, `id_pengunjung`, `kode_pesanan`, `nama_pengunjung`, `no_wa`, `email`, `tanggal_kunjungan`, `id_objek`, `total_bayar`, `diskon_persen`, `diskon_nominal`, `id_voucher`, `kode_voucher`, `diskon_voucher_nominal`, `status_pembayaran`, `status_tiket`, `waktu_validasi`, `snap_token`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'ORD-20260621-VUM2C', 'Muhammad Irwan Firmanto', '089845601233', 'irwan@mail.com', '2026-06-22', 1, 28000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-06-21 05:58:27', '2026-06-21 06:07:43'),
-(2, NULL, 'ORD-20260621-9AQ74', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:17:04', '2026-06-21 06:17:04'),
-(3, NULL, 'ORD-20260621-NP15Z', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-06-21 06:22:11', '2026-06-21 06:22:23'),
-(4, NULL, 'ORD-20260621-KW99C', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:47:20', '2026-06-21 06:47:20'),
-(5, NULL, 'ORD-20260621-ZOJOU', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, NULL, '2026-06-21 06:53:16', '2026-06-21 06:53:16'),
-(6, NULL, 'ORD-20260621-5O70L', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-06-21 06:58:38', '2026-06-21 07:02:12'),
-(7, NULL, 'ORD-20260621-URGFZ', 'Ahmad Saidun', '087896552010', 'putra@mail.com', '2026-06-30', 3, 36000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-06-23 06:02:20', NULL, '2026-06-21 11:03:04', '2026-06-22 22:02:20'),
-(8, NULL, 'ORD-20260622-QDQQJ', 'Saputri', '08456311201', 'saputri@mail.com', '2026-06-29', 1, 20000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-06-23 06:01:16', NULL, '2026-06-22 09:42:35', '2026-06-22 22:01:16'),
-(9, NULL, 'ORD-20260623-PRWRB', 'Nur Sabila', '085412332005', 'putri@mail.com', '2026-06-23', 11, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-06-23 05:46:08', NULL, '2026-06-22 21:45:27', '2026-06-22 21:46:08'),
-(10, NULL, 'ORD-20260623-PM4EJ', 'Saputri', '089845601233', 'admin@mail.com', '2026-06-28', 20, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-06-23 05:47:31', NULL, '2026-06-22 21:46:45', '2026-06-22 21:47:31'),
-(11, NULL, 'ORD-20260624-CDO1Z', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-06-24', 1, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-06-24 03:14:30', NULL, '2026-06-23 19:13:01', '2026-06-23 19:14:30'),
-(12, 1, 'ORD-20260701-57MIZ', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-05', 11, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-06-30 21:11:49', '2026-06-30 21:11:53'),
-(13, NULL, 'ORD-20260702-UKLFK', 'SDN Komet 1 Banjarbaru', '087845654111', 'komet1@mail.com', '2026-07-12', 5, 144500, '15.00', 25500, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-07-01 19:54:43', '2026-07-01 19:54:46'),
-(14, 2, 'ORD-20260708-HXN08', 'Ahmad Subarjo', '087896552010', 'ahmad.s@contoh.com', '2026-07-08', 15, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-07-08 04:52:55', '2026-07-08 04:52:58'),
-(15, 1, 'ORD-20260709-AWUY4', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-09', 10, 130050, '15.00', 27000, 1, 'TALA26', 22950, 'Paid', 'active', NULL, NULL, '2026-07-08 22:17:47', '2026-07-08 22:17:52'),
-(16, 1, 'ORD-20260709-7IFXM', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-09', 10, 20000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, 'b1e8d8db-1238-4b16-a8ea-21ee62ad18df', '2026-07-08 22:35:00', '2026-07-08 23:08:15'),
-(17, 1, 'ORD-20260709-WDMT2', 'Muhammad Irwan Firmanto', '087896552010', 'junady@mail.com', '2026-07-09', 10, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-07-08 22:41:21', '2026-07-08 23:01:19'),
-(18, 1, 'ORD-20260709-I6ESJ', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-09', 14, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, NULL, '2026-07-08 22:46:28', '2026-07-08 22:46:28'),
-(19, 1, 'ORD-20260709-CLTCS', 'Ahmad Saidun', '089845601233', 'putra@mail.com', '2026-07-09', 3, 36000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-07-08 23:02:06', '2026-07-08 23:02:44'),
-(20, 1, 'ORD-20260709-HZXDJ', 'Saputri', '08456311201', 'junady@mail.com', '2026-07-09', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, 'd28c7542-f48c-49c7-958e-18ab939effb6', '2026-07-08 23:09:53', '2026-07-08 23:09:55'),
-(21, 1, 'ORD-20260709-FEMZF', 'SDN Komet 1 Banjarbaru', '089845601233', 'raihan@mail.com', '2026-07-09', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'b5bc7cca-2dd8-4e45-9872-77f040a92931', '2026-07-08 23:11:31', '2026-07-08 23:12:01'),
-(22, 1, 'ORD-20260709-UMLFM', 'Nur Sabila', '08456311201', 'junady@mail.com', '2026-07-09', 15, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'a8da4cb5-b025-4a87-ab9a-6b3f11600282', '2026-07-08 23:12:18', '2026-07-08 23:12:46'),
-(23, 1, 'ORD-20260710-O9W5W', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 18, 5000, '0.00', 0, NULL, NULL, 0, 'Cancelled', 'active', NULL, '294e5cfc-7ded-45ef-a6e4-e8d103b6eb6b', '2026-07-10 06:17:50', '2026-07-17 21:49:56'),
-(24, 1, 'ORD-20260710-VNUGJ', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 7, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '441deb50-8628-4218-9ef0-d1e82d0c6aa9', '2026-07-10 06:18:44', '2026-07-10 06:19:16'),
-(25, 1, 'ORD-20260710-QSMK8', 'Muhammad Irwan Firmanto', '08456311201', 'irwanfrozen@gmail.com', '2026-07-10', 4, 20000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '1596ea49-ba4d-465f-9a36-1c849161a3e3', '2026-07-10 06:37:10', '2026-07-10 06:37:40'),
-(26, 1, 'ORD-20260710-GNYV9', 'Saputri', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'e60cb99a-34c3-45bf-b2ff-636a3749da57', '2026-07-10 06:39:04', '2026-07-10 06:40:07'),
-(27, 1, 'ORD-20260710-MXHJN', 'Ahmad Saidun', '08456311201', 'irwanfrozen@gmail.com', '2026-07-10', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '37bbbb8a-c47c-4434-bbaf-bba7fbb97b78', '2026-07-10 06:46:35', '2026-07-10 06:47:15'),
-(28, 1, 'ORD-20260710-Y8XWF', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 14, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-07-10 14:56:56', 'bb7a5544-7404-4e1c-aa4a-9292e6e92fc2', '2026-07-10 06:54:14', '2026-07-10 06:56:56'),
-(29, 1, 'ORD-20260714-7OJJX', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-14', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '05063f90-e49e-461a-b3fd-8f0a2b052eb3', '2026-07-14 03:23:37', '2026-07-14 03:25:11'),
-(30, 3, 'ORD-20260714-WBYJO', 'Ahmad Shawity', '089845601233', 'irwanfrozen@gmail.com', '2026-07-14', 15, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'used', '2026-07-18 06:05:16', '7abe29f0-7055-4bb2-86a3-42e3107e11f4', '2026-07-14 07:45:01', '2026-07-17 22:05:16'),
-(31, 3, 'ORD-20260714-2ON0J', 'Ahmad Shawity', '08456311201', 'irwanfrozen@gmail.com', '2026-07-14', 5, 20000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, '377a5fbb-db40-4aa2-a1a6-bc45fd9ec2c3', '2026-07-14 07:56:29', '2026-07-14 07:56:33'),
-(32, NULL, 'ORD-20260719-UVH2K', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-25', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, NULL, '2026-07-19 08:41:42', '2026-07-19 08:41:42'),
-(33, 1, 'ORD-20260719-AVH9P', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, 'a6a9abab-6f9e-4f0d-aa0b-042012b22d32', '2026-07-19 08:43:01', '2026-07-19 08:48:44'),
-(34, 1, 'ORD-20260719-YROQQ', 'Ahmad Saidun', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', 'active', NULL, 'd552aede-2561-4b36-904e-107f40f5c060', '2026-07-19 08:50:36', '2026-07-19 08:50:41'),
-(35, 1, 'ORD-20260719-AHDIA', 'Nur Sabila', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 5, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '8478182a-a391-4bc0-91d3-7ab4269d6cd1', '2026-07-19 09:01:24', '2026-07-19 09:01:51'),
-(36, NULL, 'ORD-20260719-ITNMD', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 13, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '8a55f8b2-a1f6-460e-afc9-e1f99fb600bf', '2026-07-19 14:21:21', '2026-07-19 14:21:44'),
-(38, NULL, 'ORD-20260719-ETLWD', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 1, 0, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, NULL, '2026-07-19 14:50:35', '2026-07-19 14:50:35'),
-(39, NULL, 'ORD-20260719-MLPSO', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 11, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'active', NULL, '0d1a7a38-0ca1-4e8d-952e-1b4c84e5c1a6', '2026-07-19 14:51:53', '2026-07-19 14:52:11');
+INSERT INTO `pesanans` (`id`, `id_pengunjung`, `kode_pesanan`, `nama_pengunjung`, `no_wa`, `email`, `tanggal_kunjungan`, `id_objek`, `total_bayar`, `diskon_persen`, `diskon_nominal`, `id_voucher`, `kode_voucher`, `diskon_voucher_nominal`, `status_pembayaran`, `metode_pembayaran`, `status_tiket`, `waktu_validasi`, `snap_token`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'ORD-20260621-VUM2C', 'Muhammad Irwan Firmanto', '089845601233', 'irwan@mail.com', '2026-06-22', 1, 28000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-06-21 05:58:27', '2026-06-21 06:07:43'),
+(2, NULL, 'ORD-20260621-9AQ74', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, NULL, '2026-06-21 06:17:04', '2026-06-21 06:17:04'),
+(3, NULL, 'ORD-20260621-NP15Z', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-06-21 06:22:11', '2026-06-21 06:22:23'),
+(4, NULL, 'ORD-20260621-KW99C', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, NULL, '2026-06-21 06:47:20', '2026-06-21 06:47:20'),
+(5, NULL, 'ORD-20260621-ZOJOU', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, NULL, '2026-06-21 06:53:16', '2026-06-21 06:53:16'),
+(6, NULL, 'ORD-20260621-5O70L', 'Ahmad Saidun', '087896552010', 'said@mail.com', '2026-06-23', 2, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-06-21 06:58:38', '2026-06-21 07:02:12'),
+(7, NULL, 'ORD-20260621-URGFZ', 'Ahmad Saidun', '087896552010', 'putra@mail.com', '2026-06-30', 3, 36000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-06-23 06:02:20', NULL, '2026-06-21 11:03:04', '2026-06-22 22:02:20'),
+(8, NULL, 'ORD-20260622-QDQQJ', 'Saputri', '08456311201', 'saputri@mail.com', '2026-06-29', 1, 20000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-06-23 06:01:16', NULL, '2026-06-22 09:42:35', '2026-06-22 22:01:16'),
+(9, NULL, 'ORD-20260623-PRWRB', 'Nur Sabila', '085412332005', 'putri@mail.com', '2026-06-23', 11, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-06-23 05:46:08', NULL, '2026-06-22 21:45:27', '2026-06-22 21:46:08'),
+(10, NULL, 'ORD-20260623-PM4EJ', 'Saputri', '089845601233', 'admin@mail.com', '2026-06-28', 20, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-06-23 05:47:31', NULL, '2026-06-22 21:46:45', '2026-06-22 21:47:31'),
+(11, NULL, 'ORD-20260624-CDO1Z', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-06-24', 1, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-06-24 03:14:30', NULL, '2026-06-23 19:13:01', '2026-06-23 19:14:30'),
+(12, 1, 'ORD-20260701-57MIZ', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-05', 11, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-06-30 21:11:49', '2026-06-30 21:11:53'),
+(13, NULL, 'ORD-20260702-UKLFK', 'SDN Komet 1 Banjarbaru', '087845654111', 'komet1@mail.com', '2026-07-12', 5, 144500, '15.00', 25500, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-07-01 19:54:43', '2026-07-01 19:54:46'),
+(14, 2, 'ORD-20260708-HXN08', 'Ahmad Subarjo', '087896552010', 'ahmad.s@contoh.com', '2026-07-08', 15, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-07-08 04:52:55', '2026-07-08 04:52:58'),
+(15, 1, 'ORD-20260709-AWUY4', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-09', 10, 130050, '15.00', 27000, 1, 'TALA26', 22950, 'Paid', NULL, 'active', NULL, NULL, '2026-07-08 22:17:47', '2026-07-08 22:17:52'),
+(16, 1, 'ORD-20260709-7IFXM', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-09', 10, 20000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, 'b1e8d8db-1238-4b16-a8ea-21ee62ad18df', '2026-07-08 22:35:00', '2026-07-08 23:08:15'),
+(17, 1, 'ORD-20260709-WDMT2', 'Muhammad Irwan Firmanto', '087896552010', 'junady@mail.com', '2026-07-09', 10, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-07-08 22:41:21', '2026-07-08 23:01:19'),
+(18, 1, 'ORD-20260709-I6ESJ', 'Muhammad Irwan Firmanto', '087896552010', 'irwan@mail.com', '2026-07-09', 14, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, NULL, '2026-07-08 22:46:28', '2026-07-08 22:46:28'),
+(19, 1, 'ORD-20260709-CLTCS', 'Ahmad Saidun', '089845601233', 'putra@mail.com', '2026-07-09', 3, 36000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-07-08 23:02:06', '2026-07-08 23:02:44'),
+(20, 1, 'ORD-20260709-HZXDJ', 'Saputri', '08456311201', 'junady@mail.com', '2026-07-09', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, 'd28c7542-f48c-49c7-958e-18ab939effb6', '2026-07-08 23:09:53', '2026-07-08 23:09:55'),
+(21, 1, 'ORD-20260709-FEMZF', 'SDN Komet 1 Banjarbaru', '089845601233', 'raihan@mail.com', '2026-07-09', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, 'b5bc7cca-2dd8-4e45-9872-77f040a92931', '2026-07-08 23:11:31', '2026-07-08 23:12:01'),
+(22, 1, 'ORD-20260709-UMLFM', 'Nur Sabila', '08456311201', 'junady@mail.com', '2026-07-09', 15, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, 'a8da4cb5-b025-4a87-ab9a-6b3f11600282', '2026-07-08 23:12:18', '2026-07-08 23:12:46'),
+(23, 1, 'ORD-20260710-O9W5W', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 18, 5000, '0.00', 0, NULL, NULL, 0, 'Cancelled', NULL, 'active', NULL, '294e5cfc-7ded-45ef-a6e4-e8d103b6eb6b', '2026-07-10 06:17:50', '2026-07-17 21:49:56'),
+(24, 1, 'ORD-20260710-VNUGJ', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-11', 7, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '441deb50-8628-4218-9ef0-d1e82d0c6aa9', '2026-07-10 06:18:44', '2026-07-10 06:19:16'),
+(25, 1, 'ORD-20260710-QSMK8', 'Muhammad Irwan Firmanto', '08456311201', 'irwanfrozen@gmail.com', '2026-07-10', 4, 20000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '1596ea49-ba4d-465f-9a36-1c849161a3e3', '2026-07-10 06:37:10', '2026-07-10 06:37:40'),
+(26, 1, 'ORD-20260710-GNYV9', 'Saputri', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, 'e60cb99a-34c3-45bf-b2ff-636a3749da57', '2026-07-10 06:39:04', '2026-07-10 06:40:07'),
+(27, 1, 'ORD-20260710-MXHJN', 'Ahmad Saidun', '08456311201', 'irwanfrozen@gmail.com', '2026-07-10', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '37bbbb8a-c47c-4434-bbaf-bba7fbb97b78', '2026-07-10 06:46:35', '2026-07-10 06:47:15'),
+(28, 1, 'ORD-20260710-Y8XWF', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-10', 14, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-07-10 14:56:56', 'bb7a5544-7404-4e1c-aa4a-9292e6e92fc2', '2026-07-10 06:54:14', '2026-07-10 06:56:56'),
+(29, 1, 'ORD-20260714-7OJJX', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-14', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '05063f90-e49e-461a-b3fd-8f0a2b052eb3', '2026-07-14 03:23:37', '2026-07-14 03:25:11'),
+(30, 3, 'ORD-20260714-WBYJO', 'Ahmad Shawity', '089845601233', 'irwanfrozen@gmail.com', '2026-07-14', 15, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-07-18 06:05:16', '7abe29f0-7055-4bb2-86a3-42e3107e11f4', '2026-07-14 07:45:01', '2026-07-17 22:05:16'),
+(31, 3, 'ORD-20260714-2ON0J', 'Ahmad Shawity', '08456311201', 'irwanfrozen@gmail.com', '2026-07-14', 5, 20000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, '377a5fbb-db40-4aa2-a1a6-bc45fd9ec2c3', '2026-07-14 07:56:29', '2026-07-14 07:56:33'),
+(32, NULL, 'ORD-20260719-UVH2K', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-25', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, NULL, '2026-07-19 08:41:42', '2026-07-19 08:41:42'),
+(33, 1, 'ORD-20260719-AVH9P', 'Muhammad Irwan Firmanto', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 20, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, 'a6a9abab-6f9e-4f0d-aa0b-042012b22d32', '2026-07-19 08:43:01', '2026-07-19 08:48:44'),
+(34, 1, 'ORD-20260719-YROQQ', 'Ahmad Saidun', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 3, 10000, '0.00', 0, NULL, NULL, 0, 'Unpaid', NULL, 'active', NULL, 'd552aede-2561-4b36-904e-107f40f5c060', '2026-07-19 08:50:36', '2026-07-19 08:50:41'),
+(35, 1, 'ORD-20260719-AHDIA', 'Nur Sabila', '089845601233', 'irwanfrozen@gmail.com', '2026-07-20', 5, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '8478182a-a391-4bc0-91d3-7ab4269d6cd1', '2026-07-19 09:01:24', '2026-07-19 09:01:51'),
+(36, NULL, 'ORD-20260719-ITNMD', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 13, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '8a55f8b2-a1f6-460e-afc9-e1f99fb600bf', '2026-07-19 14:21:21', '2026-07-19 14:21:44'),
+(38, NULL, 'ORD-20260719-ETLWD', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 1, 0, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, NULL, '2026-07-19 14:50:35', '2026-07-19 14:50:35'),
+(39, NULL, 'ORD-20260719-MLPSO', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-20', 11, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '0d1a7a38-0ca1-4e8d-952e-1b4c84e5c1a6', '2026-07-19 14:51:53', '2026-07-19 14:52:11'),
+(40, NULL, 'ORD-20260723-TEECN', 'Muhammad Irwan Firmanto', '087896552010', 'irwanfrozen@gmail.com', '2026-07-23', 11, 100000, '20.00', 25000, NULL, NULL, 0, 'Paid', NULL, 'active', NULL, '310d4f4a-1a5d-4ed4-af97-de71551c1387', '2026-07-22 19:08:06', '2026-07-22 19:08:36'),
+(44, NULL, 'ORD-20260725-L8CZE', 'Saputri', '087896552010', 'irwanfrozen@gmail.com', '2026-07-25', 13, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', NULL, 'used', '2026-07-25 14:41:55', '15277e01-92cb-4865-b7c0-2f725827d008', '2026-07-25 06:40:38', '2026-07-25 06:41:55'),
+(51, NULL, 'ORD-20260725-F59WJ', 'Muhammad Irwan Firmanto', '083878962214', 'irwanfrozen@gmail.com', '2026-07-25', 18, 5000, '0.00', 0, NULL, NULL, 0, 'Paid', 'Transfer Bank', 'active', NULL, 'd2317ba9-051a-4c79-8dc8-1d572c49a479', '2026-07-25 07:48:27', '2026-07-25 07:48:58'),
+(52, 1, 'ORD-20260725-LNMSQ', 'Muhammad Irwan Firmanto', '083878962214', 'irwanfrozen@gmail.com', '2026-07-25', 7, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'Transfer Bank', 'active', NULL, '24ba3f30-9978-48f3-a985-8e50bf10bd29', '2026-07-25 07:52:41', '2026-07-25 07:53:03'),
+(54, 1, 'ORD-20260725-S7XIR', 'Muhammad Irwan Firmanto', '083878962214', 'irwanfrozen@gmail.com', '2026-07-25', 3, 8500, '0.00', 0, 1, 'TALA26', 1500, 'Paid', 'Transfer Bank', 'active', NULL, '0e72052a-cfd5-40c4-8873-315f483b019f', '2026-07-25 07:57:08', '2026-07-25 07:57:22'),
+(55, 1, 'ORD-20260725-3T4RW', 'Muhammad Irwan Firmanto', '083878962214', 'irwanfrozen@gmail.com', '2026-07-25', 18, 45000, '10.00', 5000, NULL, NULL, 0, 'Paid', 'Transfer Bank', 'active', NULL, '21277ea0-bb6d-4891-ada5-9b02ec51e543', '2026-07-25 07:58:26', '2026-07-25 07:58:44'),
+(56, 1, 'ORD-20260725-8FRKI', 'Muhammad Irwan Firmanto', '083878962214', 'irwanfrozen@gmail.com', '2026-07-25', 11, 38250, '10.00', 5000, 1, 'TALA26', 6750, 'Paid', 'Transfer Bank', 'active', NULL, '24014e61-6f47-4107-9ed1-f10ebf1843e8', '2026-07-25 07:59:38', '2026-07-25 08:00:20'),
+(60, NULL, 'ORD-20260726-VSYJJ', 'Muhammad Irwan Firmanto', '085347619092', 'irwanfrozen@gmail.com', '2026-07-26', 14, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'Transfer Bank', 'active', NULL, 'b629532b-cbe0-4a79-98db-682cbf1503a1', '2026-07-25 21:21:34', '2026-07-25 21:21:59'),
+(61, NULL, 'ORD-20260729-E8WBL', 'Muhammad Irwan Firmanto', '085347619092', 'irwanfrozen@gmail.com', '2026-07-29', 4, 10000, '0.00', 0, NULL, NULL, 0, 'Paid', 'Transfer Bank', 'active', NULL, 'b8510966-0ee0-4ae1-a263-47b5cc26ab0a', '2026-07-29 03:06:04', '2026-07-29 03:06:32');
 
 -- --------------------------------------------------------
 
@@ -642,7 +657,16 @@ INSERT INTO `pesanan_details` (`id`, `id_pesanan`, `id_jenis_tiket`, `harga`, `j
 (40, 35, 1, 10000, 1, 10000, '2026-07-19 09:01:24', '2026-07-19 09:01:24'),
 (41, 36, 1, 5000, 1, 5000, '2026-07-19 14:21:21', '2026-07-19 14:21:21'),
 (43, 38, 1, 0, 1, 0, '2026-07-19 14:50:35', '2026-07-19 14:50:35'),
-(44, 39, 1, 5000, 1, 5000, '2026-07-19 14:51:54', '2026-07-19 14:51:54');
+(44, 39, 1, 5000, 1, 5000, '2026-07-19 14:51:54', '2026-07-19 14:51:54'),
+(45, 40, 1, 5000, 25, 125000, '2026-07-22 19:08:06', '2026-07-22 19:08:06'),
+(48, 44, 1, 5000, 1, 5000, '2026-07-25 06:40:38', '2026-07-25 06:40:38'),
+(55, 51, 1, 5000, 1, 5000, '2026-07-25 07:48:27', '2026-07-25 07:48:27'),
+(56, 52, 1, 10000, 1, 10000, '2026-07-25 07:52:41', '2026-07-25 07:52:41'),
+(58, 54, 1, 10000, 1, 10000, '2026-07-25 07:57:08', '2026-07-25 07:57:08'),
+(59, 55, 1, 5000, 10, 50000, '2026-07-25 07:58:26', '2026-07-25 07:58:26'),
+(60, 56, 1, 5000, 10, 50000, '2026-07-25 07:59:39', '2026-07-25 07:59:39'),
+(64, 60, 1, 5000, 2, 10000, '2026-07-25 21:21:34', '2026-07-25 21:21:34'),
+(65, 61, 1, 10000, 1, 10000, '2026-07-29 03:06:04', '2026-07-29 03:06:04');
 
 -- --------------------------------------------------------
 
@@ -782,19 +806,19 @@ INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`, `nip`, `id_ka
 (8, 'Ahmad Said', 'said', '$2y$12$iLkELP0mK.cWlLhcNB0Hsu/UCrU6vOXN51JMlQQSk5ytU1QJ2Ikp.', 'petugas', NULL, NULL, NULL, '2026-02-05 08:36:54', '2026-02-05 08:36:54'),
 (9, 'Junady', 'junady', '$2y$12$yLWFIs14g7Atw9mO9R266eIqqir0CuI02lQmTEe8TzHbiSQApnSEC', 'kasir', NULL, NULL, NULL, '2026-02-05 08:37:13', '2026-02-05 08:37:13'),
 (10, 'Iwan Fitriadi, SH., MH', 'kadis.provinsi', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_provinsi', '19612251998031004', NULL, NULL, '2026-07-01 05:24:30', '2026-07-17 21:31:44'),
-(11, 'Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 1, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(12, 'Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 2, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(13, 'Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 3, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(14, 'Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 5, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(15, 'Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 6, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(16, 'Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 7, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(17, 'Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 8, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(18, 'Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 9, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(19, 'Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 10, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(20, 'Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 11, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(21, 'Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 13, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(22, 'Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 4, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30'),
-(23, 'Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 12, NULL, '2026-07-01 05:24:30', '2026-07-01 05:24:30');
+(11, 'Dinas Pariwisata Kota Banjarmasin', 'kadis.banjarmasin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 1, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:41'),
+(12, 'Dinas Pariwisata Kota Banjarbaru', 'kadis.banjarbaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 2, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:41'),
+(13, 'Dinas Pariwisata Kabupaten Banjar', 'kadis.banjar', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 3, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(14, 'Dinas Pariwisata Kabupaten Barito Kuala', 'kadis.batola', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 5, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(15, 'Dinas Pariwisata Kabupaten Tapin', 'kadis.tapin', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 6, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(16, 'Dinas Pariwisata Kabupaten Hulu Sungai Selatan', 'kadis.hss', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 7, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(17, 'Dinas Pariwisata Kabupaten Hulu Sungai Tengah', 'kadis.hst', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 8, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(18, 'Dinas Pariwisata Kabupaten Hulu Sungai Utara', 'kadis.hsu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 9, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(19, 'Dinas Pariwisata Kabupaten Balangan', 'kadis.balangan', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 10, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(20, 'Dinas Pariwisata Kabupaten Tabalong', 'kadis.tabalong', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 11, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(21, 'Dinas Pariwisata Kabupaten Kotabaru', 'kadis.kotabaru', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 13, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(22, 'Dinas Pariwisata Kabupaten Tanah Laut', 'kadis.tala', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 4, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42'),
+(23, 'Dinas Pariwisata Kabupaten Tanah Bumbu', 'kadis.tanbu', '$2y$12$nDNyuVGr07Aa5uP3/x9.tuu/les5iegPoT4T8vlRAsdUho3HTj7de', 'kadis_kabkota', NULL, 12, NULL, '2026-07-01 05:24:30', '2026-07-24 11:06:42');
 
 -- --------------------------------------------------------
 
@@ -845,7 +869,7 @@ CREATE TABLE `vouchers` (
 --
 
 INSERT INTO `vouchers` (`id`, `kode`, `tipe_diskon`, `nilai_diskon`, `minimal_pembelian`, `maks_diskon`, `tanggal_mulai`, `tanggal_selesai`, `limit_pemakaian`, `jumlah_terpakai`, `status`, `id_user`, `created_at`, `updated_at`) VALUES
-(1, 'TALA26', 'persen', '15.00', 75000, 50000, '2026-07-09', '2026-07-20', 100, 1, 'aktif', 1, '2026-07-08 22:15:16', '2026-07-08 22:17:48'),
+(1, 'TALA26', 'persen', '15.00', NULL, 50000, '2026-07-09', '2026-07-31', 100, 3, 'aktif', 1, '2026-07-08 22:15:16', '2026-07-25 07:59:39'),
 (2, 'TAHUNBARUKALSEL', 'persen', '15.00', 250000, 150000, '2026-07-14', '2026-07-31', NULL, 0, 'aktif', 1, '2026-07-14 07:33:33', '2026-07-14 07:33:33');
 
 -- --------------------------------------------------------
@@ -1081,31 +1105,31 @@ ALTER TABLE `wishlists`
 -- AUTO_INCREMENT for table `banners`
 --
 ALTER TABLE `banners`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `beritas`
 --
 ALTER TABLE `beritas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `detail_transaksis`
 --
 ALTER TABLE `detail_transaksis`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `diskon_rombongans`
 --
 ALTER TABLE `diskon_rombongans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1117,19 +1141,19 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `galeri_wisatas`
 --
 ALTER TABLE `galeri_wisatas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `harga_tikets`
 --
 ALTER TABLE `harga_tikets`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `jenis_tikets`
 --
 ALTER TABLE `jenis_tikets`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1141,37 +1165,37 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `kabupatens`
 --
 ALTER TABLE `kabupatens`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `objek_wisatas`
 --
 ALTER TABLE `objek_wisatas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `pengunjungs`
 --
 ALTER TABLE `pengunjungs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pesanans`
 --
 ALTER TABLE `pesanans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `pesanan_details`
 --
 ALTER TABLE `pesanan_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `tikets`
@@ -1183,7 +1207,7 @@ ALTER TABLE `tikets`
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
@@ -1195,13 +1219,13 @@ ALTER TABLE `transaksi_details`
 -- AUTO_INCREMENT for table `ulasans`
 --
 ALTER TABLE `ulasans`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `video_terbaru`
@@ -1219,7 +1243,7 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT for table `wishlists`
 --
 ALTER TABLE `wishlists`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

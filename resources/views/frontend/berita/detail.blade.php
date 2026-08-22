@@ -87,7 +87,7 @@ body { background: var(--cream); }
             <div class="hero-meta">
                 <span><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($berita->tanggal_publish)->translatedFormat('d F Y') }}</span>
                 <span><i class="bi bi-geo-alt-fill me-1"></i>{{ $berita->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}</span>
-                <span><i class="bi bi-eye-fill me-1"></i>{{ $berita->dilihat }} dilihat</span>
+                <span><i class="bi bi-eye-fill me-1"></i>{{ $berita->dilihat }} {{ __('dilihat') }}</span>
             </div>
         </div>
     </div>
@@ -98,7 +98,7 @@ body { background: var(--cream); }
     <div class="row g-4">
         <div class="col-lg-8">
             <a href="{{ route('berita.index') }}" class="btn-back">
-                <i class="bi bi-arrow-left"></i> Kembali ke Daftar Berita
+                <i class="bi bi-arrow-left"></i> {{ __('Kembali ke Daftar Berita') }}
             </a>
 
             <div class="content-card reveal">
@@ -111,7 +111,7 @@ body { background: var(--cream); }
         <div class="col-lg-4">
             <div class="content-card reveal" style="transition-delay:.1s;">
                 <h6 class="fw-bold mb-3" style="color:var(--text-dark);">
-                    <i class="bi bi-newspaper me-1" style="color:var(--gold);"></i> Berita Terkait
+                    <i class="bi bi-newspaper me-1" style="color:var(--gold);"></i> {{ __('Berita Terkait') }}
                 </h6>
                 @forelse($beritaTerkait as $bt)
                     <a href="{{ route('berita.detail', $bt->slug) }}" class="terkait-card">
@@ -122,7 +122,7 @@ body { background: var(--cream); }
                         </div>
                     </a>
                 @empty
-                    <p class="text-muted small mb-0">Belum ada berita terkait lainnya.</p>
+                    <p class="text-muted small mb-0">{{ __('Belum ada berita terkait lainnya.') }}</p>
                 @endforelse
             </div>
         </div>

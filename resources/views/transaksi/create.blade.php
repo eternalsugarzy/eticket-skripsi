@@ -115,15 +115,51 @@
                 <input type="hidden" name="diskon_persen" id="input-diskon-persen" value="0">
                 <input type="hidden" name="diskon_nominal" id="input-diskon-nominal" value="0">
 
+                {{-- Pilihan Metode Pembayaran --}}
                 <div class="mb-3">
-                    <label class="form-label">Uang Bayar (Rp)</label>
-                    <input type="number" name="bayar" id="bayar"
-                           class="form-control form-control-lg" placeholder="0" required>
+                    <label class="form-label fw-bold">Metode Pembayaran</label>
+                    <div class="d-flex gap-2">
+                        <div class="form-check form-check-inline flex-fill">
+                            <input class="form-check-input" type="radio" name="metode_pembayaran" 
+                                   id="metode-tunai" value="tunai" checked onchange="toggleMetode()">
+                            <label class="form-check-label fw-bold" for="metode-tunai">
+                                <i class="ti ti-cash"></i> Tunai
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline flex-fill">
+                            <input class="form-check-input" type="radio" name="metode_pembayaran" 
+                                   id="metode-qris" value="qris" onchange="toggleMetode()">
+                            <label class="form-check-label fw-bold" for="metode-qris">
+                                <i class="ti ti-qrcode"></i> QRIS
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label">Kembali</label>
-                    <input type="text" id="kembali" class="form-control bg-light" readonly value="Rp 0">
+                <div id="section-tunai">
+                    <div class="mb-3">
+                        <label class="form-label">Uang Bayar (Rp)</label>
+                        <input type="number" name="bayar" id="bayar"
+                               class="form-control form-control-lg" placeholder="0" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Kembali</label>
+                        <input type="text" id="kembali" class="form-control bg-light" readonly value="Rp 0">
+                    </div>
+                </div>
+
+                <div id="section-qris" style="display:none;">
+                    <div class="text-center p-3 border rounded mb-3" style="background:#f0fdf4;">
+                        <p class="fw-bold mb-2" style="color:#15803d;"><i class="ti ti-qrcode"></i> Pembayaran QRIS</p>
+                        <div class="mb-2">
+                            <img src="{{ asset('assets/images/qris-loket.png') }}" 
+                                 alt="QRIS" class="img-fluid rounded" 
+                                 style="max-height:280px; border:2px dashed #bbf7d0;"
+                                 onerror="this.onerror=null; this.src='{{ asset('assets/images/qris-placeholder.svg') }}'">
+                        </div>
+                        <small class="text-muted">Minta pengunjung scan QRIS di atas untuk melakukan pembayaran</small>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold"
@@ -274,6 +310,31 @@ function hitungGrandTotal() {
 
     displayTotal.innerText = formatRp(totalAkhir);
     hitungKembalian();
+
+    // Jika mode QRIS, update button state tanpa perlu cek bayar
+    const isTunai = document.getElementById('metode-tunai').checked;
+    if (!isTunai) {
+        btnSubmit.disabled = !(grandTotal > 0);
+    }
+}
+
+// Toggle antara Tunai dan QRIS
+function toggleMetode() {
+    const isTunai = document.getElementById('metode-tunai').checked;
+    document.getElementById('section-tunai').style.display = isTunai ? 'block' : 'none';
+    document.getElementById('section-qris').style.display = isTunai ? 'none' : 'block';
+    
+    if (isTunai) {
+        // Mode tunai: validasi bayar >= total
+        inputBayar.required = true;
+        hitungKembalian();
+    } else {
+        // Mode QRIS: tidak perlu input bayar, langsung enable button jika total > 0
+        inputBayar.required = false;
+        inputBayar.value = '';
+        inputKembali.value = 'Rp 0';
+        btnSubmit.disabled = !(grandTotal > 0);
+    }
 }
 
 inputBayar.addEventListener('keyup', hitungKembalian);
@@ -306,7 +367,12 @@ function updateSummary() {
 }
 
 function updateButtonState(bayar) {
-    btnSubmit.disabled = !(grandTotal > 0 && bayar >= grandTotal);
+    const isTunai = document.getElementById('metode-tunai').checked;
+    if (isTunai) {
+        btnSubmit.disabled = !(grandTotal > 0 && bayar >= grandTotal);
+    } else {
+        btnSubmit.disabled = !(grandTotal > 0);
+    }
 }
 </script>
 @endsection

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Event & Acara - E-Tourism Kalsel')
+@section('title', __('Event & Acara - E-Tourism Kalsel'))
 
 @push('styles')
 <style>
@@ -55,8 +55,8 @@ body { background: var(--cream); }
 
 <div class="event-header">
     <div class="container">
-        <h1>Event & Acara</h1>
-        <p>Jadwal acara dan kegiatan pariwisata Kalimantan Selatan</p>
+        <h1>{{ __('Event & Acara') }}</h1>
+        <p>{{ __('Jadwal acara dan kegiatan pariwisata Kalimantan Selatan') }}</p>
     </div>
 </div>
 <div class="gold-strip"></div>
@@ -81,8 +81,8 @@ body { background: var(--cream); }
                 @empty
                 <div class="empty-state">
                     <i class="bi bi-calendar-x"></i>
-                    <h5>Belum Ada Event</h5>
-                    <p class="mb-0">Silakan kembali lagi nanti untuk melihat jadwal acara terbaru.</p>
+                    <h5>{{ __('Belum Ada Event') }}</h5>
+                    <p class="mb-0">{{ __('Silakan kembali lagi nanti untuk melihat jadwal acara terbaru.') }}</p>
                 </div>
                 @endforelse
             </div>

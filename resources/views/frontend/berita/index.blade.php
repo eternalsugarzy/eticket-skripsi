@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Berita & Informasi - E-Tourism Kalsel')
+@section('title', __('Berita & Informasi - E-Tourism Kalsel'))
 
 @push('styles')
 <style>
@@ -146,8 +146,8 @@ body { background: var(--cream); }
 
 <div class="berita-header">
     <div class="container">
-        <h1>Berita & Informasi</h1>
-        <p class="lead">Update terbaru seputar pariwisata Kalimantan Selatan</p>
+        <h1>{{ __('Berita & Informasi') }}</h1>
+        <p class="lead">{{ __('Update terbaru seputar pariwisata Kalimantan Selatan') }}</p>
     </div>
 </div>
 <div class="gold-strip"></div>
@@ -156,18 +156,18 @@ body { background: var(--cream); }
     <div class="filter-card">
         <form action="{{ route('berita.index') }}" method="GET" class="row g-2 align-items-center">
             <div class="col-md-7">
-                <input type="text" name="q" class="form-control" placeholder="Cari judul berita..." value="{{ request('q') }}">
+                <input type="text" name="q" class="form-control" placeholder="{{ __('Cari judul berita...') }}" value="{{ request('q') }}">
             </div>
             <div class="col-md-3">
                 <select name="kategori" class="form-select">
-                    <option value="">Semua Kategori</option>
+                    <option value="">{{ __('Semua Kategori') }}</option>
                     @foreach($kategoris as $kat)
                         <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>{{ $kat }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn-filter w-100"><i class="bi bi-search me-1"></i> Cari</button>
+                <button type="submit" class="btn-filter w-100"><i class="bi bi-search me-1"></i> {{ __('Cari') }}</button>
             </div>
         </form>
     </div>
@@ -194,8 +194,8 @@ body { background: var(--cream); }
         <div class="col-12">
             <div class="empty-state">
                 <i class="bi bi-newspaper"></i>
-                <h5>Belum Ada Berita</h5>
-                <p class="mb-0">Silakan kembali lagi nanti untuk melihat update terbaru.</p>
+                <h5>{{ __('Belum Ada Berita') }}</h5>
+                <p class="mb-0">{{ __('Silakan kembali lagi nanti untuk melihat update terbaru.') }}</p>
             </div>
         </div>
         @endforelse

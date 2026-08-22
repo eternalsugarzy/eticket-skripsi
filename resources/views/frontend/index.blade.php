@@ -145,9 +145,9 @@
 @section('content')
     <section class="hero-section">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.5);">Jelajahi Pesona Kalimantan Selatan</h1>
-            <p class="lead mb-4" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.5);">Temukan destinasi wisata terbaik, pesan tiket dengan mudah tanpa antre, dan nikmati perjalanan Anda.</p>
-            <a href="{{ route('wisata.katalog') }}" class="btn btn-jelajah btn-lg px-5 rounded-pill shadow">Lihat Katalog</a>
+            <h1 class="display-4 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.5);">{{ __('Jelajahi Pesona Kalimantan Selatan') }}</h1>
+            <p class="lead mb-4" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.5);">{{ __('Temukan destinasi wisata terbaik, pesan tiket dengan mudah tanpa antre, dan nikmati perjalanan Anda.') }}</p>
+            <a href="{{ route('wisata.katalog') }}" class="btn btn-jelajah btn-lg px-5 rounded-pill shadow">{{ __('Lihat Katalog') }}</a>
         </div>
     </section>
 
@@ -185,18 +185,18 @@
                             @if($banners->count() > 1)
                             <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Sebelumnya</span>
+                                <span class="visually-hidden">{{ __('Sebelumnya') }}</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Berikutnya</span>
+                                <span class="visually-hidden">{{ __('Berikutnya') }}</span>
                             </button>
                             @endif
                         </div>
                         @else
                         <div class="info-col-empty">
                             <i class="bi bi-image"></i>
-                            <p class="mb-0">Belum ada banner</p>
+                            <p class="mb-0">{{ __('Belum ada banner') }}</p>
                         </div>
                         @endif
                     </div>
@@ -206,7 +206,7 @@
                 <div class="col-lg-4 reveal" style="transition-delay:.08s;">
                     <div class="info-col-inner event-panel d-flex flex-column">
                         <div class="event-panel-header">
-                            <h6 class="mb-0">Event Terbaru</h6>
+                            <h6 class="mb-0">{{ __('Event Terbaru') }}</h6>
                         </div>
                         <div class="flex-grow-1">
                             @forelse($eventTerbaru as $ev)
@@ -228,13 +228,13 @@
                             @empty
                             <div class="info-col-empty">
                                 <i class="bi bi-calendar-x"></i>
-                                <p class="mb-0">Belum ada event</p>
+                                <p class="mb-0">{{ __('Belum ada event') }}</p>
                             </div>
                             @endforelse
                         </div>
                         @if($eventTerbaru->count() > 0)
                         <a href="{{ route('event.index') }}" class="event-panel-footer">
-                            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                            {{ __('Lihat Semua') }} <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                         @endif
                     </div>
@@ -243,7 +243,7 @@
                 {{-- ══════ KOLOM 3: VIDEO TERBARU ══════ --}}
                 <div class="col-lg-4 reveal" style="transition-delay:.16s;">
                     <div class="info-col-inner d-flex flex-column">
-                        <h6 class="fw-bold mb-3" style="color:#0f172a;">Video Terbaru</h6>
+                        <h6 class="fw-bold mb-3" style="color:#0f172a;">{{ __('Video Terbaru') }}</h6>
                         @if($videoTerbaru && $videoTerbaru->embed_url)
                         <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm mb-3">
                             <iframe src="{{ $videoTerbaru->embed_url }}" title="{{ $videoTerbaru->judul ?? 'Video Terbaru' }}" allowfullscreen></iframe>
@@ -254,11 +254,11 @@
                         @else
                         <div class="ratio ratio-16x9 rounded-4 mb-3 info-col-empty" style="align-items:center; justify-content:center;">
                             <i class="bi bi-youtube"></i>
-                            <p class="mb-0">Belum ada video</p>
+                            <p class="mb-0">{{ __('Belum ada video') }}</p>
                         </div>
                         @endif
                         <a href="{{ route('wisata.katalog') }}" class="btn btn-jelajah rounded-pill fw-bold align-self-start px-4 mt-auto">
-                            Jelajahi Wisata <i class="bi bi-arrow-right ms-1"></i>
+                            {{ __('Jelajahi Wisata') }} <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
@@ -271,8 +271,8 @@
     <section id="sig" class="py-5 bg-index-gray">
         <div class="container">
             <div class="text-center mb-4 reveal">
-                <h2 class="fw-bold section-title">Peta Persebaran Objek Wisata</h2>
-                <p class="text-muted">Peta interaktif destinasi wisata di seluruh wilayah provinsi.</p>
+                <h2 class="fw-bold section-title">{{ __('Peta Persebaran Objek Wisata') }}</h2>
+                <p class="text-muted">{{ __('Peta interaktif destinasi wisata di seluruh wilayah provinsi.') }}</p>
             </div>
             <div id="map-sig" class="reveal"></div>
         </div>
@@ -281,8 +281,8 @@
     <section id="katalog-singkat" class="py-5 bg-index-gray pb-5">
         <div class="container">
             <div class="text-center mb-5 reveal">
-                <h2 class="fw-bold section-title">Destinasi Pilihan</h2>
-                <p class="text-muted">Rekomendasi destinasi wisata terbaik untuk Anda kunjungi.</p>
+                <h2 class="fw-bold section-title">{{ __('Destinasi Pilihan') }}</h2>
+                <p class="text-muted">{{ __('Rekomendasi destinasi wisata terbaik untuk Anda kunjungi.') }}</p>
             </div>
 
             <div class="row g-4 mb-5">
@@ -301,21 +301,21 @@
                                 {{ $w->deskripsi ?? 'Informasi destinasi belum tersedia.' }}
                             </p>
                             <div class="mt-auto pt-3">
-                                <a href="{{ route('wisata.detail', $w->id) }}" class="btn btn-outline-primary w-100 fw-bold rounded-pill">Lihat Detail & Tiket</a>
+                                <a href="{{ route('wisata.detail', $w->id) }}" class="btn btn-outline-primary w-100 fw-bold rounded-pill">{{ __('Lihat Detail & Tiket') }}</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 @empty
                 <div class="col-12 text-center py-5">
-                    <h5 class="text-muted">Belum ada data objek wisata yang ditambahkan.</h5>
+                    <h5 class="text-muted">{{ __('Belum ada data objek wisata yang ditambahkan.') }}</h5>
                 </div>
                 @endforelse
             </div>
 
             <div class="text-center mt-4 reveal">
                 <a href="{{ route('wisata.katalog') }}" class="btn btn-outline-primary btn-lg px-5 rounded-pill fw-bold shadow-sm" style="border-width: 2px;">
-                    Lihat Semua Destinasi <i class="bi bi-arrow-right ms-2"></i>
+                    {{ __('Lihat Semua Destinasi') }} <i class="bi bi-arrow-right ms-2"></i>
                 </a>
             </div>
 
@@ -327,11 +327,11 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2 reveal">
                 <div>
-                    <h2 class="fw-bold mb-1 section-title">Berita & Informasi Terbaru</h2>
-                    <p class="text-muted mb-0">Update terkini seputar pariwisata Kalimantan Selatan.</p>
+                    <h2 class="fw-bold mb-1 section-title">{{ __('Berita & Informasi Terbaru') }}</h2>
+                    <p class="text-muted mb-0">{{ __('Update terkini seputar pariwisata Kalimantan Selatan.') }}</p>
                 </div>
                 <a href="{{ route('berita.index') }}" class="btn btn-outline-primary rounded-pill fw-bold px-4">
-                    Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                    {{ __('Lihat Semua') }} <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
 

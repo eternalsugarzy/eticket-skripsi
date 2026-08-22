@@ -41,8 +41,9 @@ class DashboardController extends Controller
             ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->sum('pesanan_details.jumlah');
 
-        // Total pendapatan kasir hari ini
+        // Total pendapatan hari ini (offline kasir + online web, non-batal / sudah bayar)
         $totalPendapatan = Transaksi::whereDate('created_at', $hariIni)
+            ->where('status_tiket', '!=', 'batal')
             ->when($idKabupaten, function ($q) use ($idKabupaten) {
                 $q->whereHas('objekWisata', function ($q2) use ($idKabupaten) {
                     $q2->where('id_kabupaten', $idKabupaten);
@@ -50,13 +51,29 @@ class DashboardController extends Controller
             })
             ->sum('total_bayar');
 
-        // Total tiket terjual hari ini (sum jumlah dari detail_transaksis)
+        $totalPendapatan += DB::table('pesanans')
+            ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', $hariIni)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->sum('pesanans.total_bayar');
+
+        // Total tiket terjual hari ini (offline non-batal + online Paid)
         $tiketTerjual = DB::table('detail_transaksis')
             ->join('transaksis', 'detail_transaksis.id_transaksi', '=', 'transaksis.id')
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
+            ->where('transaksis.status_tiket', '!=', 'batal')
             ->whereDate('transaksis.created_at', $hariIni)
             ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->sum('detail_transaksis.jumlah');
+
+        $tiketTerjual += DB::table('pesanan_details')
+            ->join('pesanans', 'pesanan_details.id_pesanan', '=', 'pesanans.id')
+            ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
+            ->where('pesanans.status_pembayaran', 'Paid')
+            ->whereDate('pesanans.created_at', $hariIni)
+            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->sum('pesanan_details.jumlah');
 
         // Total objek wisata
         $totalObjekWisata = $idKabupaten

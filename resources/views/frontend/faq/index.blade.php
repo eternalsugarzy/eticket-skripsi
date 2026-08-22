@@ -101,8 +101,8 @@ body { background: var(--cream); }
 
 <div class="faq-header">
     <div class="container">
-        <h1>Pertanyaan yang Sering Diajukan</h1>
-        <p>Temukan jawaban seputar pemesanan tiket wisata Kalimantan Selatan</p>
+        <h1>{{ __('Pertanyaan yang Sering Diajukan') }}</h1>
+        <p>{{ __('Temukan jawaban seputar pemesanan tiket wisata Kalimantan Selatan') }}</p>
     </div>
 </div>
 <div class="gold-strip"></div>
@@ -114,21 +114,19 @@ body { background: var(--cream); }
             {{-- ═══════ KATEGORI: PEMESANAN TIKET ═══════ --}}
             <div class="faq-card reveal">
                 <div class="faq-card-header">
-                    <h5><i class="bi bi-ticket-perforated-fill"></i> Pemesanan Tiket</h5>
+                    <h5><i class="bi bi-ticket-perforated-fill"></i> {{ __('Pemesanan Tiket') }}</h5>
                 </div>
                 <div class="accordion accordion-flush" id="accordionPesan">
 
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#p1">
-                                Bagaimana cara memesan tiket wisata secara online?
+                                {{ __('Bagaimana cara memesan tiket wisata secara online?') }}
                             </button>
                         </h2>
                         <div id="p1" class="accordion-collapse collapse show" data-bs-parent="#accordionPesan">
                             <div class="accordion-body">
-                                Pilih destinasi wisata yang Anda inginkan di halaman <strong>Katalog Wisata</strong>, klik "Lihat Detail & Tiket",
-                                lalu klik tombol "Pesan Tiket Sekarang". Isi data diri, pilih jumlah dan jenis tiket, lalu klik "Lanjutkan Pembayaran".
-                                Anda akan mendapatkan kode pesanan untuk melacak status tiket Anda.
+                                {!! __('faq_answer_1') !!}
                             </div>
                         </div>
                     </div>
@@ -136,14 +134,12 @@ body { background: var(--cream); }
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p2">
-                                Apakah saya wajib membuat akun untuk memesan tiket?
+                                {{ __('Apakah saya wajib membuat akun untuk memesan tiket?') }}
                             </button>
                         </h2>
                         <div id="p2" class="accordion-collapse collapse" data-bs-parent="#accordionPesan">
                             <div class="accordion-body">
-                                Tidak wajib. Anda tetap bisa memesan tiket tanpa akun (cukup isi nama, WhatsApp, dan email saat checkout).
-                                Namun jika Anda mendaftar akun, semua riwayat pesanan Anda akan tersimpan otomatis dan bisa dilihat kapan saja
-                                di menu "Riwayat Pesanan".
+                                {!! __('faq_answer_2') !!}
                             </div>
                         </div>
                     </div>
@@ -151,14 +147,12 @@ body { background: var(--cream); }
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p3">
-                                Apakah ada diskon untuk rombongan/kelompok besar?
+                                {{ __('Apakah ada diskon untuk rombongan/kelompok besar?') }}
                             </button>
                         </h2>
                         <div id="p3" class="accordion-collapse collapse" data-bs-parent="#accordionPesan">
                             <div class="accordion-body">
-                                Ya. Sistem kami otomatis memberikan diskon rombongan jika jumlah tiket dalam satu transaksi mencapai
-                                jumlah minimal tertentu. Diskon akan langsung terlihat di ringkasan pembayaran saat checkout — tidak perlu
-                                kode khusus.
+                                {!! __('faq_answer_3') !!}
                             </div>
                         </div>
                     </div>
@@ -169,20 +163,19 @@ body { background: var(--cream); }
             {{-- ═══════ KATEGORI: PEMBAYARAN ═══════ --}}
             <div class="faq-card reveal" style="transition-delay:.08s;">
                 <div class="faq-card-header">
-                    <h5><i class="bi bi-credit-card-fill"></i> Pembayaran</h5>
+                    <h5><i class="bi bi-credit-card-fill"></i> {{ __('Pembayaran') }}</h5>
                 </div>
                 <div class="accordion accordion-flush" id="accordionBayar">
 
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b1">
-                                Metode pembayaran apa saja yang tersedia?
+                                {{ __('Metode pembayaran apa saja yang tersedia?') }}
                             </button>
                         </h2>
                         <div id="b1" class="accordion-collapse collapse" data-bs-parent="#accordionBayar">
                             <div class="accordion-body">
-                                Pembayaran dapat dilakukan melalui QRIS dan berbagai e-wallet (GoPay, OVO, DANA, ShopeePay, LinkAja)
-                                maupun m-banking, langsung melalui halaman "Cek Pesanan" setelah Anda melakukan pemesanan.
+                                {!! __('faq_answer_4') !!}
                             </div>
                         </div>
                     </div>
@@ -190,14 +183,12 @@ body { background: var(--cream); }
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b2">
-                                Berapa lama batas waktu pembayaran sebelum pesanan dibatalkan?
+                                {{ __('Berapa lama batas waktu pembayaran sebelum pesanan dibatalkan?') }}
                             </button>
                         </h2>
                         <div id="b2" class="accordion-collapse collapse" data-bs-parent="#accordionBayar">
                             <div class="accordion-body">
-                                Pesanan yang belum dibayar akan tetap berstatus "Belum Bayar" dan bisa diselesaikan kapan saja melalui
-                                halaman Cek Pesanan menggunakan kode pesanan Anda. Kami sarankan menyelesaikan pembayaran secepatnya
-                                agar kunjungan Anda dapat direncanakan dengan baik.
+                                {!! __('faq_answer_5') !!}
                             </div>
                         </div>
                     </div>
@@ -205,12 +196,12 @@ body { background: var(--cream); }
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b3">
-                                Apakah pembayaran saya aman?
+                                {{ __('Apakah pembayaran saya aman?') }}
                             </button>
                         </h2>
                         <div id="b3" class="accordion-collapse collapse" data-bs-parent="#accordionBayar">
                             <div class="accordion-body">
-                                Ya, seluruh transaksi diproses melalui sistem pembayaran yang terenkripsi dan aman.
+                                {!! __('faq_answer_6') !!}
                             </div>
                         </div>
                     </div>
@@ -221,20 +212,19 @@ body { background: var(--cream); }
             {{-- ═══════ KATEGORI: E-TICKET & KUNJUNGAN ═══════ --}}
             <div class="faq-card reveal" style="transition-delay:.16s;">
                 <div class="faq-card-header">
-                    <h5><i class="bi bi-qr-code"></i> E-Ticket & Kunjungan</h5>
+                    <h5><i class="bi bi-qr-code"></i> {{ __('E-Ticket & Kunjungan') }}</h5>
                 </div>
                 <div class="accordion accordion-flush" id="accordionTiket">
 
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#e1">
-                                Bagaimana cara mendapatkan E-Ticket saya?
+                                {{ __('Bagaimana cara mendapatkan E-Ticket saya?') }}
                             </button>
                         </h2>
                         <div id="e1" class="accordion-collapse collapse" data-bs-parent="#accordionTiket">
                             <div class="accordion-body">
-                                Setelah pembayaran berhasil dikonfirmasi, E-Ticket lengkap dengan QR Code akan otomatis tersedia.
-                                Cukup buka halaman "Cek Pesanan", masukkan kode pesanan Anda, lalu klik "Tampilkan E-Ticket".
+                                {!! __('faq_answer_7') !!}
                             </div>
                         </div>
                     </div>
@@ -242,14 +232,12 @@ body { background: var(--cream); }
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#e2">
-                                Saya lupa/kehilangan kode pesanan saya, bagaimana solusinya?
+                                {{ __('Saya lupa/kehilangan kode pesanan saya, bagaimana solusinya?') }}
                             </button>
                         </h2>
                         <div id="e2" class="accordion-collapse collapse" data-bs-parent="#accordionTiket">
                             <div class="accordion-body">
-                                Kode pesanan biasanya juga dikirimkan ke email yang Anda daftarkan saat checkout. Jika Anda memiliki
-                                akun pengunjung, Anda juga bisa melihat semua riwayat pesanan (termasuk kode pesanan) melalui menu
-                                "Riwayat Pesanan" setelah login.
+                                {!! __('faq_answer_8') !!}
                             </div>
                         </div>
                     </div>
@@ -257,13 +245,12 @@ body { background: var(--cream); }
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#e3">
-                                Apakah E-Ticket bisa dipakai berkali-kali?
+                                {{ __('Apakah E-Ticket bisa dipakai berkali-kali?') }}
                             </button>
                         </h2>
                         <div id="e3" class="accordion-collapse collapse" data-bs-parent="#accordionTiket">
                             <div class="accordion-body">
-                                Tidak. QR Code pada E-Ticket hanya berlaku satu kali validasi masuk (sekali scan oleh petugas di lokasi wisata).
-                                Pastikan Anda menyiapkan E-Ticket (bisa berupa screenshot atau tampilan di HP) saat tiba di lokasi.
+                                {!! __('faq_answer_9') !!}
                             </div>
                         </div>
                     </div>
@@ -273,10 +260,10 @@ body { background: var(--cream); }
 
             {{-- CTA lacak pesanan --}}
             <div class="cta-box reveal">
-                <h5>Masih Ada Pertanyaan Lain?</h5>
-                <p>Cek status pesanan Anda kapan saja, atau hubungi kami langsung.</p>
+                <h5>{{ __('Masih Ada Pertanyaan Lain?') }}</h5>
+                <p>{{ __('Cek status pesanan Anda kapan saja, atau hubungi kami langsung.') }}</p>
                 <a href="{{ route('cek-pesanan') }}" class="btn-cta">
-                    <i class="bi bi-search"></i> Lacak Pesanan Saya
+                    <i class="bi bi-search"></i> {{ __('Lacak Pesanan Saya') }}
                 </a>
             </div>
 

@@ -36,7 +36,8 @@
                 <div class="row mb-3 small">
                     <div class="col-6">
                         No Nota : <strong>{{ $transaksi->no_transaksi }}</strong><br>
-                        Tanggal : {{ date('d/m/Y H:i', strtotime($transaksi->tgl_transaksi)) }}
+                        Tanggal : {{ date('d/m/Y H:i', strtotime($transaksi->tgl_transaksi)) }}<br>
+                        Metode  : <strong><span class="badge {{ $transaksi->metode_pembayaran === 'qris' ? 'bg-success' : 'bg-primary' }}">{{ strtoupper($transaksi->metode_pembayaran ?? 'TUNAI') }}</span></strong>
                     </div>
                     <div class="col-6 text-end">
                         Kasir : {{ $transaksi->kasir->nama ?? 'Admin' }}<br>
@@ -92,13 +93,15 @@
                                 <td class="text-end fw-bold">Rp {{ number_format($transaksi->total_bayar, 0, ',', '.') }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2">Tunai / Bayar</td>
+                                <td colspan="2">{{ $transaksi->metode_pembayaran === 'qris' ? 'QRIS' : 'Tunai / Bayar' }}</td>
                                 <td class="text-end">Rp {{ number_format($transaksi->bayar, 0, ',', '.') }}</td>
                             </tr>
+                            @if($transaksi->metode_pembayaran !== 'qris')
                             <tr>
                                 <td colspan="2">Kembali</td>
                                 <td class="text-end">Rp {{ number_format($transaksi->kembali, 0, ',', '.') }}</td>
                             </tr>
+                            @endif
                         </tfoot>
                     </table>
                 </div>

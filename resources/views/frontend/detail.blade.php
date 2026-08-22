@@ -371,7 +371,7 @@ body {
         <div class="container">
             <div class="hero-badge">
                 <i class="bi bi-geo-alt-fill"></i>
-                {{ $wisata->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
+                {{ $wisata->kabupaten->nama_kabupaten ?? __('Kalimantan Selatan') }}
             </div>
             <h1 class="hero-title">{{ $wisata->nama_objek }}</h1>
             <div class="mt-2 d-flex align-items-center flex-wrap gap-2" style="position:relative; z-index:1;">
@@ -379,7 +379,7 @@ body {
                 <span style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); border-radius:50px; padding:6px 16px; color:#fff; font-size:.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
                     <i class="bi bi-star-fill" style="color:#F5D99A;"></i>
                     {{ $wisata->rating_rata_rata }}
-                    <span style="color:rgba(255,255,255,.6); font-weight:500;">({{ $wisata->jumlah_ulasan }} ulasan)</span>
+                    <span style="color:rgba(255,255,255,.6); font-weight:500;">({{ $wisata->jumlah_ulasan }} {{ __('ulasan') }})</span>
                 </span>
                 @endif
 
@@ -388,7 +388,7 @@ body {
                     @csrf
                     <button type="submit" style="background:{{ $sudahWishlist ? '#dc2626' : 'rgba(255,255,255,.15)' }}; border:1px solid {{ $sudahWishlist ? '#dc2626' : 'rgba(255,255,255,.3)' }}; border-radius:50px; padding:6px 16px; color:#fff; font-size:.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer; transition:background .2s;">
                         <i class="bi bi-heart{{ $sudahWishlist ? '-fill' : '' }}"></i>
-                        {{ $sudahWishlist ? 'Tersimpan' : 'Simpan ke Wishlist' }}
+                        {{ $sudahWishlist ? __('Tersimpan') : __('Simpan ke Wishlist') }}
                     </button>
                 </form>
                 @endauth
@@ -409,10 +409,10 @@ body {
             <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-file-text-fill"></i></div>
-                    <h4>Tentang Destinasi</h4>
+                    <h4>{{ __('Tentang Destinasi') }}</h4>
                 </div>
                 <p style="line-height:1.85; color:var(--text-muted); font-size:.95rem; text-align:justify; margin:0;">
-                    {{ $wisata->deskripsi ?? 'Informasi deskripsi belum tersedia.' }}
+                    {{ $wisata->deskripsi ?? __('Informasi deskripsi belum tersedia.') }}
                 </p>
             </div>
 
@@ -420,18 +420,18 @@ body {
             <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-geo-fill"></i></div>
-                    <h4>Detail Lokasi</h4>
+                    <h4>{{ __('Detail Lokasi') }}</h4>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="info-box">
-                            <div class="info-label">Kabupaten / Kota</div>
+                            <div class="info-label">{{ __('Kabupaten / Kota') }}</div>
                             <div class="info-value">{{ $wisata->kabupaten->nama_kabupaten ?? '-' }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="info-box">
-                            <div class="info-label">Alamat Fisik</div>
+                            <div class="info-label">{{ __('Alamat Fisik') }}</div>
                             <div class="info-value">{{ $wisata->alamat ?? '-' }}</div>
                         </div>
                     </div>
@@ -443,7 +443,7 @@ body {
             <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-stars"></i></div>
-                    <h4>Fasilitas Tersedia</h4>
+                    <h4>{{ __('Fasilitas Tersedia') }}</h4>
                 </div>
                 <div class="fasilitas-grid">
                     @php
@@ -487,14 +487,14 @@ body {
             <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-ticket-perforated-fill"></i></div>
-                    <h4>Retribusi Masuk</h4>
+                    <h4>{{ __('Retribusi Masuk') }}</h4>
                 </div>
                 <div class="table-responsive">
                     <table class="table tiket-table mb-0">
                         <thead>
                             <tr>
-                                <th>Jenis Tiket</th>
-                                <th class="text-end">Harga</th>
+                                <th>{{ __('Jenis Tiket') }}</th>
+                                <th class="text-end">{{ __('Harga') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -506,7 +506,7 @@ body {
                             @empty
                             <tr>
                                 <td colspan="2" class="text-center py-4" style="color:var(--text-muted);">
-                                    <i class="bi bi-info-circle me-1"></i> Data harga tiket belum tersedia.
+                                    <i class="bi bi-info-circle me-1"></i> {{ __('Data harga tiket belum tersedia.') }}
                                 </td>
                             </tr>
                             @endforelse
@@ -519,7 +519,7 @@ body {
             <div class="content-card reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-images"></i></div>
-                    <h4>Galeri Foto</h4>
+                    <h4>{{ __('Galeri Foto') }}</h4>
                 </div>
 
                 @if($wisata->galeri->count() > 0)
@@ -527,7 +527,7 @@ body {
                     <div class="carousel-inner" style="border-radius:10px; background:#0F1C14;">
                         @foreach($wisata->galeri as $key => $g)
                         <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                            <img src="{{ asset('uploads/wisata/galeri/' . $g->foto) }}" class="galeri-img" alt="Galeri foto {{ $loop->iteration }}" loading="lazy">
+                            <img src="{{ asset('uploads/wisata/galeri/' . $g->foto) }}" class="galeri-img" alt="{{ __('Galeri foto') }} {{ $loop->iteration }}" loading="lazy">
                         </div>
                         @endforeach
                     </div>
@@ -545,11 +545,10 @@ body {
                     <span class="slide-counter" id="slideCounter">1 / {{ $wisata->galeri->count() }}</span>
                 </div>
                 @endif
-
                 @else
                 <img src="{{ $wisata->foto ? asset('uploads/wisata/' . $wisata->foto) : '' }}" class="galeri-img" alt="{{ $wisata->nama_objek }}">
                 <p class="text-center mt-2 mb-0" style="font-size:.78rem; color:var(--text-muted);">
-                    <i class="bi bi-info-circle me-1"></i> Belum ada foto galeri.
+                    <i class="bi bi-info-circle me-1"></i> {{ __('Belum ada foto galeri.') }}
                 </p>
                 @endif
             </div>
@@ -559,7 +558,7 @@ body {
                 <div class="card-head d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div class="d-flex align-items-center gap-3">
                         <div class="card-head-icon"><i class="bi bi-star-fill"></i></div>
-                        <h4 class="mb-0">Ulasan Pengunjung</h4>
+                        <h4 class="mb-0">{{ __('Ulasan Pengunjung') }}</h4>
                     </div>
                     @if($wisata->jumlah_ulasan > 0)
                     <div class="d-flex align-items-center gap-2">
@@ -570,7 +569,7 @@ body {
                                     <i class="bi bi-star{{ $i <= round($wisata->rating_rata_rata) ? '-fill' : '' }}"></i>
                                 @endfor
                             </div>
-                            <div style="font-size:.72rem; color:var(--text-muted);">{{ $wisata->jumlah_ulasan }} ulasan</div>
+                            <div style="font-size:.72rem; color:var(--text-muted);">{{ $wisata->jumlah_ulasan }} {{ __('ulasan') }}</div>
                         </div>
                     </div>
                     @endif
@@ -588,7 +587,7 @@ body {
                 @auth('pengunjung')
                     @if($bisaUlasan)
                     <div class="mb-4 p-3" style="background:var(--cream); border-radius:12px;">
-                        <p class="fw-bold mb-2" style="font-size:.9rem; color:var(--text-dark);">Bagikan pengalaman Anda</p>
+                        <p class="fw-bold mb-2" style="font-size:.9rem; color:var(--text-dark);">{{ __('Bagikan pengalaman Anda') }}</p>
                         <form action="{{ route('ulasan.store', $wisata->id) }}" method="POST">
                             @csrf
                             <div class="mb-3">
@@ -603,19 +602,19 @@ body {
                             </div>
                             <div class="mb-3">
                                 <textarea name="komentar" class="form-control @error('komentar') is-invalid @enderror"
-                                          rows="3" placeholder="Ceritakan pengalaman kunjungan Anda (minimal 10 karakter)..." required>{{ old('komentar') }}</textarea>
+                                          rows="3" placeholder="{{ __('Ceritakan pengalaman kunjungan Anda (minimal 10 karakter)...') }}" required>{{ old('komentar') }}</textarea>
                                 @error('komentar')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <button type="submit" class="btn btn-sm" style="background:var(--forest); color:#fff; font-weight:700; padding:8px 20px; border-radius:8px;">
-                                <i class="bi bi-send-fill me-1"></i> Kirim Ulasan
+                                <i class="bi bi-send-fill me-1"></i> {{ __('Kirim Ulasan') }}
                             </button>
                         </form>
                     </div>
                     @endif
                 @else
                 <div class="mb-4 p-3 text-center" style="background:var(--cream); border-radius:12px; font-size:.85rem; color:var(--text-muted);">
-                    <a href="{{ route('pengunjung.login') }}" style="color:var(--forest); font-weight:700;">Masuk sebagai pengunjung</a>
-                    yang pernah membeli tiket ke sini untuk memberi ulasan.
+                    <a href="{{ route('pengunjung.login') }}" style="color:var(--forest); font-weight:700;">{{ __('Masuk sebagai pengunjung') }}</a>
+                    {{ __('yang pernah membeli tiket ke sini untuk memberi ulasan.') }}
                 </div>
                 @endauth
 
@@ -644,7 +643,7 @@ body {
                         <form action="{{ route('ulasan.destroy', $u->id) }}" method="POST" class="mt-2" onsubmit="return confirm('Hapus ulasan Anda?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-link text-danger p-0" style="font-size:.75rem;">
-                                <i class="bi bi-trash me-1"></i>Hapus ulasan saya
+                                <i class="bi bi-trash me-1"></i>{{ __('Hapus ulasan saya') }}
                             </button>
                         </form>
                         @endif
@@ -653,7 +652,7 @@ body {
                 </div>
                 @empty
                 <p class="text-center text-muted py-4 mb-0" style="font-size:.86rem;">
-                    Belum ada ulasan untuk destinasi ini. Jadilah yang pertama!
+                    {{ __('Belum ada ulasan untuk destinasi ini. Jadilah yang pertama!') }}
                 </p>
                 @endforelse
 
@@ -679,21 +678,21 @@ body {
                 </div>
                 <hr class="divider">
                 @php $hargaMin = $hargaTiket->min('harga') ?? 0; @endphp
-                <p class="price-from mb-1">Mulai dari</p>
+                <p class="price-from mb-1">{{ __('Mulai dari') }}</p>
                 <div class="price-main">@rupiah($hargaMin)</div>
-                <p class="price-sub mb-0">{{ $hargaMin > 0 ? 'per orang' : 'tidak dipungut biaya' }}</p>
+                <p class="price-sub mb-0">{{ $hargaMin > 0 ? __('per orang') : __('tidak dipungut biaya') }}</p>
                 <hr class="divider">
                 <ul class="feature-list">
-                    <li><i class="bi bi-check-circle-fill"></i> Tiket langsung via QR Code</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Tanpa registrasi akun</li>
-                    <li><i class="bi bi-check-circle-fill"></i> E-Ticket dikirim ke WhatsApp</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Pembayaran aman QRIS / E-Wallet</li>
+                    <li><i class="bi bi-check-circle-fill"></i> {{ __('Tiket langsung via QR Code') }}</li>
+                    <li><i class="bi bi-check-circle-fill"></i> {{ __('Tanpa registrasi akun') }}</li>
+                    <li><i class="bi bi-check-circle-fill"></i> {{ __('E-Ticket dikirim ke WhatsApp') }}</li>
+                    <li><i class="bi bi-check-circle-fill"></i> {{ __('Pembayaran aman QRIS / E-Wallet') }}</li>
                 </ul>
                 <a href="{{ route('checkout.index', $wisata->id) }}" class="btn-booking">
-                    <i class="bi bi-cart-plus-fill"></i> Pesan Tiket Sekarang
+                    <i class="bi bi-cart-plus-fill"></i> {{ __('Pesan Tiket Sekarang') }}
                 </a>
                 <p style="color:rgba(255,255,255,.35); font-size:.72rem; text-align:center; margin-top:10px; margin-bottom:0;">
-                    Dikelola oleh Dinas Pariwisata Kalimantan Selatan
+                    {{ __('Dikelola oleh Dinas Pariwisata Kalimantan Selatan') }}
                 </p>
             </div>
 
@@ -702,7 +701,7 @@ body {
             <div class="content-card mb-4 reveal">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-cloud-sun-fill"></i></div>
-                    <h5>Cuaca Hari Ini</h5>
+                    <h5>{{ __('Cuaca Hari Ini') }}</h5>
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <img src="https://openweathermap.org/img/wn/{{ $cuaca['weather'][0]['icon'] }}@2x.png"
@@ -719,19 +718,19 @@ body {
                 <div class="row g-2 mt-3">
                     <div class="col-6">
                         <div class="info-box">
-                            <div class="info-label">Kelembapan</div>
+                            <div class="info-label">{{ __('Kelembapan') }}</div>
                             <div class="info-value">{{ $cuaca['main']['humidity'] }}%</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="info-box">
-                            <div class="info-label">Angin</div>
+                            <div class="info-label">{{ __('Angin') }}</div>
                             <div class="info-value">{{ round($cuaca['wind']['speed'] * 3.6) }} km/j</div>
                         </div>
                     </div>
                 </div>
                 <p class="text-muted mt-2 mb-0" style="font-size:.72rem;">
-                    <i class="bi bi-info-circle me-1"></i>Data cuaca oleh OpenWeatherMap, diperbarui tiap 30 menit
+                    <i class="bi bi-info-circle me-1"></i>{{ __('Data cuaca oleh OpenWeatherMap, diperbarui tiap 30 menit') }}
                 </p>
             </div>
             @endif
@@ -740,14 +739,14 @@ body {
             <div class="content-card sticky-top" style="top: 100px;">
                 <div class="card-head">
                     <div class="card-head-icon"><i class="bi bi-map-fill"></i></div>
-                    <h5>Titik Navigasi</h5>
+                    <h5>{{ __('Titik Navigasi') }}</h5>
                 </div>
                 <div id="map" class="mb-3"></div>
                 <div class="coord-badge mb-2">
                     {{ $wisata->latitude }}, {{ $wisata->longitude }}
                 </div>
                 <a href="https://www.google.com/maps/dir/?api=1&destination={{ $wisata->latitude }},{{ $wisata->longitude }}" target="_blank" rel="noopener" class="btn-gmaps">
-                    <i class="bi bi-google"></i> Buka Rute di Google Maps
+                    <i class="bi bi-google"></i> {{ __('Buka Rute di Google Maps') }}
                 </a>
             </div>
 

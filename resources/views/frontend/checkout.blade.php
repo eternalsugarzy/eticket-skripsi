@@ -20,10 +20,10 @@
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
                         <h4 class="fw-bold">
                             <i class="bi bi-person-lines-fill text-primary me-2"></i>
-                            Form Pemesanan Tiket
+                            {{ __('Form Pemesanan Tiket') }}
                         </h4>
                         <p class="text-muted mb-0">
-                            Silakan isi data diri Anda. E-Ticket akan dikirimkan ke WhatsApp dan Email Anda.
+                            {{ __('Silakan isi data diri Anda. E-Ticket akan dikirimkan ke WhatsApp dan Email Anda.') }}
                         </p>
                     </div>
 
@@ -33,7 +33,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">
-                                    Nama Lengkap <span class="text-danger">*</span>
+                                    {{ __('Nama Lengkap') }} <span class="text-danger">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -41,7 +41,7 @@
                                     name="nama_pengunjung"
                                     value="{{ old('nama_pengunjung') }}"
                                     required
-                                    placeholder="Sesuai KTP/Identitas"
+                                    placeholder="{{ __('Sesuai KTP/Identitas') }}"
                                 >
                                 @error('nama_pengunjung')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -50,7 +50,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">
-                                    Nomor WhatsApp <span class="text-danger">*</span>
+                                    {{ __('Nomor WhatsApp') }} <span class="text-danger">*</span>
                                 </label>
                                 <input
                                     type="tel"
@@ -68,7 +68,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">
-                                    Email Aktif <span class="text-danger">*</span>
+                                    {{ __('Email Aktif') }} <span class="text-danger">*</span>
                                 </label>
                                 <input
                                     type="email"
@@ -76,7 +76,7 @@
                                     name="email"
                                     value="{{ old('email') }}"
                                     required
-                                    placeholder="contoh@email.com"
+                                    placeholder="{{ __('contoh@email.com') }}"
                                 >
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -85,7 +85,7 @@
 
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">
-                                    Tanggal Kunjungan <span class="text-danger">*</span>
+                                    {{ __('Tanggal Kunjungan') }} <span class="text-danger">*</span>
                                 </label>
                                 <input
                                     type="date"
@@ -106,13 +106,13 @@
                         {{-- Pilih Tiket --}}
                         <h5 class="fw-bold mt-4 mb-3">
                             <i class="bi bi-ticket-perforated-fill text-primary me-2"></i>
-                            Pilih Jenis Tiket
+                            {{ __('Pilih Jenis Tiket') }}
                         </h5>
 
                         @forelse($hargaTikets as $ht)
                         <div class="tiket-row d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
                             <div>
-                                <h6 class="mb-0 fw-bold tiket-nama">{{ $ht->jenisTiket->nama_jenis ?? 'Tiket Reguler' }}</h6>
+                                <h6 class="mb-0 fw-bold tiket-nama">{{ $ht->jenisTiket->nama_jenis ?? __('Tiket Reguler') }}</h6>
                                 <span class="text-muted" style="font-size: 14px;">
                                     @rupiah($ht->harga){{ $ht->harga > 0 ? ' / orang' : '' }}
                                 </span>
@@ -147,7 +147,7 @@
                         @empty
                         <div class="alert alert-warning">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            Harga tiket belum diatur oleh Admin.
+                            {{ __('Harga tiket belum diatur oleh Admin.') }}
                         </div>
                         @endforelse
 
@@ -156,13 +156,13 @@
                         {{-- Kode Voucher --}}
                         <h5 class="fw-bold mt-4 mb-3">
                             <i class="bi bi-tag-fill text-primary me-2"></i>
-                            Punya Kode Voucher?
+                            {{ __('Punya Kode Voucher?') }}
                         </h5>
                         <div class="input-group mb-2">
                             <input type="text" id="input-kode-voucher-ketik" class="form-control text-uppercase"
-                                   placeholder="Masukkan kode voucher" style="font-family:monospace; letter-spacing:.05em;">
+                                   placeholder="{{ __('Masukkan kode voucher') }}" style="font-family:monospace; letter-spacing:.05em;">
                             <button type="button" id="btn-cek-voucher" class="btn btn-outline-primary fw-bold">
-                                Terapkan
+                                {{ __('Terapkan') }}
                             </button>
                         </div>
                         <div id="voucher-feedback"></div>
@@ -175,7 +175,7 @@
             <div class="col-lg-4">
                 <div class="card shadow-sm border-0 sticky-top" style="top: 100px; border-radius: 12px;">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-4">Ringkasan Pesanan</h5>
+                        <h5 class="fw-bold mb-4">{{ __('Ringkasan Pesanan') }}</h5>
 
                         <div class="d-flex align-items-center mb-4">
                             @if($wisata->foto && $wisata->foto != 'default.jpg')
@@ -201,7 +201,7 @@
                         <div id="rincian-tiket" class="mb-3" style="font-size: 14px; min-height: 10px;"></div>
 
                         <div class="border-top pt-3 mb-3 d-flex justify-content-between align-items-center">
-                            <span class="text-muted fw-semibold">Total Pembayaran</span>
+                            <span class="text-muted fw-semibold">{{ __('Total Pembayaran') }}</span>
                             <h4 class="fw-bold text-primary mb-0" id="display-total">Rp 0</h4>
                         </div>
 
@@ -211,11 +211,11 @@
                             id="btn-submit"
                             disabled
                         >
-                            <span id="btn-submit-label">Lanjutkan Pembayaran</span> <i class="bi bi-shield-lock-fill ms-1"></i>
+                            <span id="btn-submit-label">{{ __('Lanjutkan Pembayaran') }}</span> <i class="bi bi-shield-lock-fill ms-1"></i>
                         </button>
 
                         <p class="text-center text-muted mt-3 mb-0" id="submit-note" style="font-size: 12px;">
-                            Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).
+                            {{ __('Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).') }}
                         </p>
                     </div>
                 </div>
@@ -359,10 +359,10 @@
             var gratis = (totalQty > 0 && totalAkhir <= 0);
             var lblEl  = document.getElementById('btn-submit-label');
             var noteEl = document.getElementById('submit-note');
-            if (lblEl)  lblEl.textContent  = gratis ? 'Dapatkan E-Ticket (Gratis)' : 'Lanjutkan Pembayaran';
+            if (lblEl)  lblEl.textContent  = gratis ? "{{ __('Dapatkan E-Ticket (Gratis)') }}" : "{{ __('Lanjutkan Pembayaran') }}";
             if (noteEl) noteEl.textContent = gratis
-                ? 'Objek wisata ini gratis — E-Ticket langsung terbit tanpa pembayaran.'
-                : 'Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).';
+                ? "{{ __('Objek wisata ini gratis — E-Ticket langsung terbit tanpa pembayaran.') }}"
+                : "{{ __('Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).') }}";
 
             return subtotalSetelahRombongan;
         }
@@ -396,7 +396,7 @@
                 var subtotalSetelahRombongan = calculateTotal(); // hitung ulang tanpa voucher dulu untuk dapat subtotal terkini
 
                 btnCekVoucher.disabled = true;
-                btnCekVoucher.innerText = 'Mengecek...';
+                btnCekVoucher.innerText = "{{ __('Mengecek...') }}";
 
                 fetch(URL_CEK_VOUCHER, {
                     method: 'POST',
@@ -410,7 +410,7 @@
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     btnCekVoucher.disabled = false;
-                    btnCekVoucher.innerText = 'Terapkan';
+                    btnCekVoucher.innerText = "{{ __('Terapkan') }}";
 
                     if (data.valid) {
                         voucherAktif = {
@@ -424,7 +424,7 @@
                         voucherFeedbackBox.innerHTML =
                             '<div class="alert alert-success py-2 px-3 mb-0 mt-2 d-flex justify-content-between align-items-center" style="font-size:13px;">' +
                                 '<span><i class="bi bi-check-circle-fill me-1"></i>' + data.pesan + '</span>' +
-                                '<button type="button" id="btn-hapus-voucher" class="btn btn-sm btn-link text-danger p-0" style="font-size:12px;">Hapus</button>' +
+                                '<button type="button" id="btn-hapus-voucher" class="btn btn-sm btn-link text-danger p-0" style="font-size:12px;">{{ __("Hapus") }}</button>' +
                             '</div>';
 
                         document.getElementById('btn-hapus-voucher').addEventListener('click', function () {
@@ -447,9 +447,9 @@
                 })
                 .catch(function () {
                     btnCekVoucher.disabled = false;
-                    btnCekVoucher.innerText = 'Terapkan';
+                    btnCekVoucher.innerText = "{{ __('Terapkan') }}";
                     voucherFeedbackBox.innerHTML =
-                        '<div class="alert alert-danger py-2 px-3 mb-0 mt-2" style="font-size:13px;">Gagal memeriksa voucher, coba lagi.</div>';
+                        '<div class="alert alert-danger py-2 px-3 mb-0 mt-2" style="font-size:13px;">{{ __("Gagal memeriksa voucher, coba lagi.") }}</div>';
                 });
             });
         }

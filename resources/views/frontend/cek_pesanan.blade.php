@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Lacak Pesanan Tiket')
+@section('title', __('Lacak Pesanan Tiket'))
 
 @section('content')
 
@@ -226,9 +226,9 @@
     <div class="alert-order success">
         <div class="d-flex align-items-center gap-2 mb-1">
             <i class="bi bi-check-circle-fill fs-5"></i>
-            <strong>Pesanan Berhasil Dibuat!</strong>
+            <strong>{{ __('Pesanan Berhasil Dibuat!') }}</strong>
         </div>
-        <p class="mb-2" style="font-size:.9rem;">Simpan kode pesanan ini untuk melacak status tiket Anda:</p>
+        <p class="mb-2" style="font-size:.9rem;">{{ __('Simpan kode pesanan ini untuk melacak status tiket Anda:') }}</p>
         <div class="alert-kode">{{ session('success_kode') }}</div>
     </div>
     @endif
@@ -239,7 +239,7 @@
         <div class="d-flex align-items-center gap-2">
             <i class="bi bi-wallet2 fs-5"></i>
             <div>
-                <strong>Pembayaran Berhasil!</strong>
+                <strong>{{ __('Pembayaran Berhasil!') }}</strong>
                 <p class="mb-0" style="font-size:.9rem;">{{ session('success_pembayaran') }}</p>
             </div>
         </div>
@@ -249,15 +249,15 @@
     {{-- ── Search hero ── --}}
     <div class="search-hero text-center">
         <div class="hero-icon"><i class="bi bi-search"></i></div>
-        <h3>Cek Status Pesanan</h3>
-        <p>Masukkan Kode Pesanan Anda (contoh: ORD-2026…) untuk melihat detail e-ticket dan status pembayaran.</p>
+        <h3>{{ __('Cek Status Pesanan') }}</h3>
+        <p>{{ __('Masukkan Kode Pesanan Anda (contoh: ORD-2026…) untuk melihat detail e-ticket dan status pembayaran.') }}</p>
 
         <form action="{{ route('cek-pesanan') }}" method="GET">
             <div class="input-group search-input-wrap mx-auto" style="max-width:520px;">
                 <input
                     type="text"
                     class="form-control"
-                    placeholder="Masukkan Kode Pesanan"
+                    placeholder="{{ __('Masukkan Kode Pesanan') }}"
                     name="kode"
                     value="{{ request('kode') }}"
                     required
@@ -265,7 +265,7 @@
                     style="text-transform:uppercase;"
                 >
                 <button class="btn-search" type="submit">
-                    <i class="bi bi-search me-1"></i> Lacak
+                    <i class="bi bi-search me-1"></i> {{ __('Lacak') }}
                 </button>
             </div>
         </form>
@@ -273,7 +273,7 @@
         @if(request()->has('kode') && !$pesanan)
         <div class="alert alert-danger mt-4 mb-0 text-start" style="border-radius:10px;">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            Pesanan dengan kode <strong>{{ request('kode') }}</strong> tidak ditemukan.
+            {{ __('Pesanan dengan kode') }} <strong>{{ request('kode') }}</strong> {{ __('tidak ditemukan.') }}
         </div>
         @endif
     </div>
@@ -290,44 +290,44 @@
 
             {{-- Header --}}
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold mb-0">Detail Pesanan</h5>
+                <h5 class="fw-bold mb-0">{{ __('Detail Pesanan') }}</h5>
                 @if($pesanan->status_pembayaran == 'Paid')
-                    <span id="status-badge" class="status-badge paid"><i class="bi bi-patch-check-fill"></i> LUNAS</span>
+                    <span id="status-badge" class="status-badge paid"><i class="bi bi-patch-check-fill"></i> {{ __('LUNAS') }}</span>
                 @elseif($pesanan->status_pembayaran == 'Cancelled')
-                    <span id="status-badge" class="status-badge cancelled"><i class="bi bi-x-circle-fill"></i> DIBATALKAN</span>
+                    <span id="status-badge" class="status-badge cancelled"><i class="bi bi-x-circle-fill"></i> {{ __('DIBATALKAN') }}</span>
                 @else
-                    <span id="status-badge" class="status-badge unpaid"><i class="bi bi-clock-fill"></i> BELUM BAYAR</span>
+                    <span id="status-badge" class="status-badge unpaid"><i class="bi bi-clock-fill"></i> {{ __('BELUM BAYAR') }}</span>
                 @endif
             </div>
 
             {{-- Info grid --}}
             <div class="info-grid mb-4">
                 <div class="info-item">
-                    <label>Kode Pesanan</label>
+                    <label>{{ __('Kode Pesanan') }}</label>
                     <span>{{ $pesanan->kode_pesanan }}</span>
                 </div>
                 <div class="info-item">
-                    <label>Nama Pengunjung</label>
+                    <label>{{ __('Nama Pengunjung') }}</label>
                     <span>{{ $pesanan->nama_pengunjung }}</span>
                 </div>
                 <div class="info-item">
-                    <label>Objek Wisata</label>
+                    <label>{{ __('Objek Wisata') }}</label>
                     <span>{{ $pesanan->objekWisata->nama_objek ?? '-' }}</span>
                 </div>
                 <div class="info-item">
-                    <label>Tanggal Kunjungan</label>
+                    <label>{{ __('Tanggal Kunjungan') }}</label>
                     <span>{{ date('d M Y', strtotime($pesanan->tanggal_kunjungan)) }}</span>
                 </div>
             </div>
 
             {{-- Rincian Tiket --}}
-            <p class="fw-bold text-uppercase" style="font-size:.78rem; letter-spacing:.08em; color:#6B7280; margin-bottom:10px;">Rincian Tiket</p>
+            <p class="fw-bold text-uppercase" style="font-size:.78rem; letter-spacing:.08em; color:#6B7280; margin-bottom:10px;">{{ __('Rincian Tiket') }}</p>
             @php $subtotalMentah = $pesanan->details->sum('subtotal'); @endphp
             <ul class="tiket-list">
                 @foreach($pesanan->details as $detail)
                 <li>
                     <div>
-                        <div class="tiket-nama">{{ $detail->jenisTiket->nama_jenis ?? 'Tiket' }}</div>
+                        <div class="tiket-nama">{{ $detail->jenisTiket->nama_jenis ?? __('Tiket') }}</div>
                         <div class="tiket-qty">{{ $detail->jumlah }} × @rupiah($detail->harga)</div>
                     </div>
                     <div class="tiket-sub">@rupiah($detail->subtotal)</div>
@@ -340,10 +340,10 @@
                     <div>
                         <div class="tiket-nama" style="color:#059669;">
                             <i class="bi bi-tag-fill me-1"></i>
-                            Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)
+                            {{ __('Diskon Rombongan') }} ({{ number_format($pesanan->diskon_persen, 0) }}%)
                         </div>
                         <div class="tiket-qty" style="color:#6B7280;">
-                            Hemat Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
+                            {{ __('Hemat') }} Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
                         </div>
                     </div>
                     <div class="tiket-sub" style="color:#059669;">
@@ -358,7 +358,7 @@
                     <div>
                         <div class="tiket-nama" style="color:#7c3aed;">
                             <i class="bi bi-ticket-perforated-fill me-1"></i>
-                            Voucher {{ $pesanan->kode_voucher }}
+                            {{ __('Voucher') }} {{ $pesanan->kode_voucher }}
                         </div>
                     </div>
                     <div class="tiket-sub" style="color:#7c3aed;">
@@ -371,13 +371,13 @@
             {{-- Subtotal sebelum diskon (hanya tampil jika ada diskon) --}}
             @if($pesanan->diskon_persen > 0 || $pesanan->diskon_voucher_nominal > 0)
             <div style="display:flex; justify-content:space-between; padding:8px 0; color:#6B7280; font-size:.88rem;">
-                <span>Subtotal sebelum diskon</span>
+                <span>{{ __('Subtotal sebelum diskon') }}</span>
                 <span>Rp {{ number_format($subtotalMentah, 0, ',', '.') }}</span>
             </div>
             @endif
 
             <div class="tiket-total">
-                <span class="label">Total Pembayaran</span>
+                <span class="label">{{ __('Total Pembayaran') }}</span>
                 <span class="amount">@rupiah($pesanan->total_bayar)</span>
             </div>
 
@@ -387,17 +387,17 @@
                     @if($pesanan->status_pembayaran == 'Unpaid')
                         <button type="button" id="btn-bayar-midtrans" class="btn-bayar" disabled>
                             <i class="bi bi-credit-card-fill me-2"></i>
-                            <span id="btn-bayar-label">Menyiapkan pembayaran…</span>
+                            <span id="btn-bayar-label">{{ __('Menyiapkan pembayaran…') }}</span>
                         </button>
                         <p class="text-center text-muted mt-2 mb-0" style="font-size:12px;">
-                            Pilih QRIS, E-Wallet, VA Bank, atau kartu — diproses aman oleh Midtrans.
+                            {{ __('Pilih QRIS, E-Wallet, VA Bank, atau kartu — diproses aman oleh Midtrans.') }}
                         </p>
                         <div id="gateway-error" class="alert alert-warning text-center mb-0 mt-2" style="font-size:13px; display:none;">
-                            Gateway pembayaran sedang tidak tersedia. Silakan coba lagi nanti.
+                            {{ __('Gateway pembayaran sedang tidak tersedia. Silakan coba lagi nanti.') }}
                         </div>
                     @elseif($pesanan->status_pembayaran == 'Paid')
                         <a href="{{ route('cetak.eticket', $pesanan->kode_pesanan) }}" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">
-                         <i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket
+                         <i class="bi bi-ticket-detailed-fill me-2"></i> {{ __('Tampilkan E-Ticket') }}
                         </a>
                     @endif
                 </div>
@@ -411,7 +411,7 @@
         <div class="card-top-bar"></div>
         <div class="card-inner text-center" style="padding:64px 32px; color:#6B7280;">
             <i class="bi bi-receipt-cutoff" style="font-size:3rem; color:#D1D5DB;"></i>
-            <p class="mt-3 mb-0" style="font-size:.95rem;">Detail pesanan akan tampil di sini<br>setelah Anda memasukkan kode pesanan.</p>
+            <p class="mt-3 mb-0" style="font-size:.95rem;">{{ __('Detail pesanan akan tampil di sini') }}<br>{{ __('setelah Anda memasukkan kode pesanan.') }}</p>
         </div>
     </div>
     @endif
@@ -446,17 +446,17 @@
         var badge = document.getElementById('status-badge');
         if (badge) {
             badge.className = 'status-badge paid';
-            badge.innerHTML = '<i class="bi bi-patch-check-fill"></i> LUNAS';
+            badge.innerHTML = '<i class="bi bi-patch-check-fill"></i> {{ __('LUNAS') }}';
         }
 
         var area = document.getElementById('area-pembayaran');
         if (!area) return;
         area.innerHTML =
             '<a href="' + urlETicket + '" target="_blank" class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm text-decoration-none d-block">' +
-                '<i class="bi bi-ticket-detailed-fill me-2"></i> Tampilkan E-Ticket' +
+                '<i class="bi bi-ticket-detailed-fill me-2"></i> {{ __('Tampilkan E-Ticket') }}' +
             '</a>' +
             '<p class="text-center mt-2 mb-0" style="font-size:13px; color:#059669;">' +
-                '<i class="bi bi-check-circle-fill me-1"></i>Pembayaran berhasil dikonfirmasi!' +
+                '<i class="bi bi-check-circle-fill me-1"></i>{{ __('Pembayaran berhasil dikonfirmasi!') }}' +
             '</p>';
     }
 
@@ -486,7 +486,7 @@
             onSuccess: function () { mulaiPolling(); },
             onPending: function () { mulaiPolling(); },
             onError: function () {
-                alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
+                alert('{{ __('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.') }}');
             },
             onClose: function () {
                 // Popup ditutup manual — tetap mulai polling jaga-jaga kalau ternyata sudah kebayar
@@ -504,7 +504,7 @@
             if (data.token) {
                 snapToken = data.token;
                 if (btn) { btn.disabled = false; }
-                if (btnLabel) { btnLabel.textContent = 'Bayar Sekarang'; }
+                if (btnLabel) { btnLabel.textContent = '{{ __('Bayar Sekarang') }}'; }
                 if (autoOpen) { bukaPopup(); } // baru selesai checkout → buka popup otomatis
             } else {
                 if (btn) { btn.style.display = 'none'; }

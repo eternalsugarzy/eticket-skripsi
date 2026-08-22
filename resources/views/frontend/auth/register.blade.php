@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Daftar Akun | E-Ticketing Wisata Kalimantan Selatan</title>
+    <title>{{ __('Daftar Akun | E-Ticketing Wisata Kalimantan Selatan') }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <link rel="icon" href="{{ asset('assets/images/logo1.png') }}" type="image/x-icon">
@@ -289,14 +289,14 @@
     <div style="position:relative; z-index:1; width:100%; max-width:440px;">
         <a href="{{ route('landing') }}" class="back-link">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m7-7l-7 7 7 7"/></svg>
-            Kembali ke Beranda
+            {{ __('Kembali ke Beranda') }}
         </a>
 
         <div class="login-card">
             <div class="card-header-stripe">
                 <img src="{{ asset('assets/images/logo1.png') }}" alt="Logo Dinas Pariwisata Kalimantan Selatan">
-                <h1>Daftar Akun Pengunjung</h1>
-                <p>Kalimantan Selatan</p>
+                <h1>{{ __('Daftar Akun Pengunjung') }}</h1>
+                <p>{{ __('Kalimantan Selatan') }}</p>
             </div>
 
             <div class="card-body">
@@ -315,14 +315,14 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="nama">Nama Lengkap</label>
+                        <label for="nama">{{ __('Nama Lengkap') }}</label>
                         <div class="input-wrapper">
                             <input
                                 type="text"
                                 id="nama"
                                 name="nama"
                                 class="form-control"
-                                placeholder="Nama lengkap Anda"
+                                placeholder="{{ __('Nama lengkap Anda') }}"
                                 value="{{ old('nama') }}"
                                 autocomplete="name"
                                 required
@@ -335,14 +335,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">{{ __('Email') }}</label>
                         <div class="input-wrapper">
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
                                 class="form-control"
-                                placeholder="nama@email.com"
+                                placeholder="{{ __('nama@email.com') }}"
                                 value="{{ old('email') }}"
                                 autocomplete="email"
                                 required
@@ -354,14 +354,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="no_wa">Nomor WhatsApp</label>
+                        <label for="no_wa">{{ __('Nomor WhatsApp') }}</label>
                         <div class="input-wrapper">
                             <input
                                 type="text"
                                 id="no_wa"
                                 name="no_wa"
                                 class="form-control"
-                                placeholder="08xxxxxxxxxx"
+                                placeholder="{{ __('08xxxxxxxxxx') }}"
                                 value="{{ old('no_wa') }}"
                                 autocomplete="tel"
                             >
@@ -372,21 +372,21 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">{{ __('Password') }}</label>
                         <div class="input-wrapper">
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
                                 class="form-control"
-                                placeholder="Minimal 6 karakter"
+                                placeholder="{{ __('Minimal 6 karakter') }}"
                                 autocomplete="new-password"
                                 required
                             >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
-                            <button type="button" class="toggle-password" onclick="togglePassword('password', 'eye-icon-1')" aria-label="Tampilkan atau sembunyikan password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('password', 'eye-icon-1')" aria-label="{{ __('Tampilkan atau sembunyikan password') }}">
                                 <svg id="eye-icon-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -396,21 +396,21 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password_confirmation">Konfirmasi Password</label>
+                        <label for="password_confirmation">{{ __('Konfirmasi Password') }}</label>
                         <div class="input-wrapper">
                             <input
                                 type="password"
                                 id="password_confirmation"
                                 name="password_confirmation"
                                 class="form-control"
-                                placeholder="Ulangi password"
+                                placeholder="{{ __('Ulangi password') }}"
                                 autocomplete="new-password"
                                 required
                             >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
-                            <button type="button" class="toggle-password" onclick="togglePassword('password_confirmation', 'eye-icon-2')" aria-label="Tampilkan atau sembunyikan password">
+                            <button type="button" class="toggle-password" onclick="togglePassword('password_confirmation', 'eye-icon-2')" aria-label="{{ __('Tampilkan atau sembunyikan password') }}">
                                 <svg id="eye-icon-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -419,17 +419,17 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-submit">Daftar Sekarang</button>
+                    <button type="submit" class="btn-submit">{{ __('Daftar Sekarang') }}</button>
                 </form>
 
                 <div class="divider">
                     <div class="divider-line"></div>
-                    <span class="divider-text">atau</span>
+                    <span class="divider-text">{{ __('atau') }}</span>
                     <div class="divider-line"></div>
                 </div>
 
                 <p class="footer-note">
-                    Sudah punya akun? <a href="{{ route('pengunjung.login') }}">Masuk di sini</a>
+                    {{ __('Sudah punya akun?') }} <a href="{{ route('pengunjung.login') }}">{{ __('Masuk di sini') }}</a>
                 </p>
             </div>
         </div>

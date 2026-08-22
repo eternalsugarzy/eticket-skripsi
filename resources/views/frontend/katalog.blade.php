@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Katalog Destinasi Wisata - Kalsel')
+@section('title', __('Katalog Destinasi Wisata - Kalsel'))
 
 @push('styles')
 <style>
@@ -233,8 +233,8 @@
 {{-- ── Hero ── --}}
 <div class="katalog-header">
     <div class="container position-relative">
-        <h1>Katalog Destinasi Wisata</h1>
-        <p class="lead">Jelajahi seluruh objek wisata terbaik di Kalimantan Selatan</p>
+        <h1>{{ __('Katalog Destinasi Wisata') }}</h1>
+        <p class="lead">{{ __('Jelajahi seluruh objek wisata terbaik di Kalimantan Selatan') }}</p>
     </div>
 </div>
 <div class="gold-strip"></div>
@@ -250,7 +250,7 @@
                     {{-- Search --}}
                     <div class="col-lg-4 col-md-12">
                         <label class="form-label fw-semibold" style="font-size:.82rem; color:var(--text-dark);">
-                            <i class="bi bi-search me-1"></i> Cari Destinasi
+                            <i class="bi bi-search me-1"></i> {{ __('Cari Destinasi') }}
                         </label>
                         <div class="search-wrap">
                             <i class="bi bi-search"></i>
@@ -259,7 +259,7 @@
                                 class="form-control"
                                 name="q"
                                 value="{{ request('q') }}"
-                                placeholder="Nama objek wisata..."
+                                placeholder="{{ __('Nama objek wisata...') }}"
                                 autocomplete="off"
                             >
                         </div>
@@ -268,10 +268,10 @@
                     {{-- Filter Kabupaten --}}
                     <div class="col-lg-4 col-md-6">
                         <label class="form-label fw-semibold" style="font-size:.82rem; color:var(--text-dark);">
-                            <i class="bi bi-geo-alt me-1"></i> Kabupaten / Kota
+                            <i class="bi bi-geo-alt me-1"></i> {{ __('Kabupaten / Kota') }}
                         </label>
                         <select class="form-select" name="kabupaten" id="selectKabupaten">
-                            <option value="">-- Semua Kabupaten --</option>
+                            <option value="">{{ __('-- Semua Kabupaten --') }}</option>
                             @foreach($kabupatens as $kab)
                                 <option value="{{ $kab->id }}" {{ request('kabupaten') == $kab->id ? 'selected' : '' }}>
                                     {{ $kab->nama_kabupaten }}
@@ -284,7 +284,7 @@
                     <div class="col-lg-2 col-md-12">
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn-filter flex-grow-1">
-                                <i class="bi bi-funnel-fill me-1"></i> Filter
+                                <i class="bi bi-funnel-fill me-1"></i> {{ __('Filter') }}
                             </button>
                             @if(request()->hasAny(['q','kabupaten']))
                             <a href="{{ route('wisata.katalog') }}" class="btn-reset">
@@ -301,13 +301,13 @@
         {{-- ── Result info ── --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <p class="result-info mb-0">
-                Menampilkan <strong>{{ $allWisata->count() }}</strong>
+                {{ __('Menampilkan') }} <strong>{{ $allWisata->count() }}</strong>
                 @if($allWisata instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                    dari <strong>{{ $allWisata->total() }}</strong>
+                    {{ __('dari') }} <strong>{{ $allWisata->total() }}</strong>
                 @endif
-                destinasi wisata
+                {{ __('destinasi wisata') }}
                 @if(request('q'))
-                    untuk "<strong>{{ request('q') }}</strong>"
+                    {{ __('untuk') }} "<strong>{{ request('q') }}</strong>"
                 @endif
             </p>
             @if(request()->hasAny(['q','kabupaten']))
@@ -335,7 +335,7 @@
                         @auth('pengunjung')
                         <form action="{{ route('wishlist.toggle', $w->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn-wishlist-card" aria-label="Simpan ke Wishlist">
+                            <button type="submit" class="btn-wishlist-card" aria-label="{{ __('Simpan ke Wishlist') }}">
                                 <i class="bi bi-heart{{ in_array($w->id, $wishlistIds) ? '-fill' : '' }}"></i>
                             </button>
                         </form>
@@ -356,7 +356,7 @@
                         <div class="mb-2">
                             <span class="badge-kab">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                {{ $w->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
+                                {{ $w->kabupaten->nama_kabupaten ?? __('Kalimantan Selatan') }}
                             </span>
                         </div>
 
@@ -365,11 +365,11 @@
                         </h5>
 
                         <p class="text-muted mb-3" style="font-size:.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; flex:1;">
-                            {{ $w->deskripsi ?? 'Informasi destinasi belum tersedia.' }}
+                            {{ $w->deskripsi ?? __('Informasi destinasi belum tersedia.') }}
                         </p>
 
                         <a href="{{ route('wisata.detail', $w->id) }}" class="btn-detail mt-auto">
-                            Lihat Detail &amp; Tiket <i class="bi bi-arrow-right ms-1"></i>
+                            {{ __('Lihat Detail & Tiket') }} <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
@@ -378,17 +378,17 @@
             <div class="col-12">
                 <div class="empty-state">
                     <div class="empty-icon"><i class="bi bi-compass"></i></div>
-                    <h5 class="fw-bold mb-2" style="color:var(--text-dark);">Destinasi Tidak Ditemukan</h5>
+                    <h5 class="fw-bold mb-2" style="color:var(--text-dark);">{{ __('Destinasi Tidak Ditemukan') }}</h5>
                     <p class="text-muted mb-4" style="font-size:.9rem;">
                         @if(request()->hasAny(['q','kabupaten']))
-                            Tidak ada destinasi yang cocok dengan filter Anda.<br>Coba ubah kata kunci atau pilihan filter.
+                            {!! __('Tidak ada destinasi yang cocok dengan filter Anda.<br>Coba ubah kata kunci atau pilihan filter.') !!}
                         @else
-                            Belum ada data objek wisata yang ditambahkan.
+                            {{ __('Belum ada data objek wisata yang ditambahkan.') }}
                         @endif
                     </p>
                     @if(request()->hasAny(['q','kabupaten']))
                         <a href="{{ route('wisata.katalog') }}" class="btn-filter" style="display:inline-block; text-decoration:none;">
-                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filter
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> {{ __('Reset Filter') }}
                         </a>
                     @endif
                 </div>

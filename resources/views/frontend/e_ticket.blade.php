@@ -166,50 +166,50 @@
             </div>
             <div class="ticket-title">
                 <h2>E-TICKET</h2>
-                <p>{{ $pesanan->objekWisata->nama_objek ?? 'Objek Wisata' }}</p>
+                <p>{{ $pesanan->objekWisata->nama_objek ?? __('Objek Wisata') }}</p>
             </div>
         </div>
 
         <div class="ticket-body">
             <div class="ticket-info">
                 <div class="info-group">
-                    <span class="info-label">Kode Booking</span>
+                    <span class="info-label">{{ __('Kode Booking') }}</span>
                     <span class="info-value" style="font-size: 20px; color: #0d6efd;">{{ $pesanan->kode_pesanan }}</span>
                 </div>
                 <div class="info-group">
-                    <span class="info-label">Nama Pengunjung</span>
+                    <span class="info-label">{{ __('Nama Pengunjung') }}</span>
                     <span class="info-value">{{ $pesanan->nama_pengunjung }}</span>
                 </div>
                 <div class="info-group">
-                    <span class="info-label">Tanggal Kunjungan</span>
+                    <span class="info-label">{{ __('Tanggal Kunjungan') }}</span>
                     <span class="info-value">{{ date('d F Y', strtotime($pesanan->tanggal_kunjungan)) }}</span>
                 </div>
                 <div class="info-group">
-                    <span class="info-label">Status</span>
-                    <span class="info-value" style="color: #198754;">LUNAS</span>
+                    <span class="info-label">{{ __('Status') }}</span>
+                    <span class="info-value" style="color: #198754;">{{ __('LUNAS') }}</span>
                 </div>
             </div>
             
             <div class="ticket-qr">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $pesanan->kode_pesanan }}" alt="QR Code">
-                <p>Scan barcode ini di pintu masuk tiket.</p>
+                <p>{{ __('Scan barcode ini di pintu masuk tiket.') }}</p>
             </div>
         </div>
 
         <table class="ticket-table">
             <thead>
                 <tr>
-                    <th>Jenis Tiket</th>
-                    <th>Jumlah</th>
-                    <th>Subtotal</th>
+                    <th>{{ __('Jenis Tiket') }}</th>
+                    <th>{{ __('Jumlah') }}</th>
+                    <th>{{ __('Subtotal') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @php $subtotalMentah = $pesanan->details->sum('subtotal'); @endphp
                 @foreach($pesanan->details as $detail)
                 <tr>
-                    <td>{{ $detail->jenisTiket->nama_jenis ?? 'Tiket' }}</td>
-                    <td>{{ $detail->jumlah }} Orang</td>
+                    <td>{{ $detail->jenisTiket->nama_jenis ?? __('Tiket') }}</td>
+                    <td>{{ $detail->jumlah }} {{ __('Orang') }}</td>
                     <td>@rupiah($detail->subtotal)</td>
                 </tr>
                 @endforeach
@@ -217,12 +217,12 @@
                 {{-- ── Baris diskon rombongan ── --}}
                 @if($pesanan->diskon_persen > 0)
                 <tr style="background:#f8f8f8;">
-                    <td colspan="2" style="color:#6B7280; font-size:13px;">Subtotal</td>
+                    <td colspan="2" style="color:#6B7280; font-size:13px;">{{ __('Subtotal') }}</td>
                     <td style="color:#6B7280; font-size:13px;">Rp {{ number_format($subtotalMentah, 0, ',', '.') }}</td>
                 </tr>
                 <tr style="background:#f0fdf4;">
                     <td colspan="2" style="color:#059669; font-weight:600; font-size:13px;">
-                        🏷️ Diskon Rombongan ({{ number_format($pesanan->diskon_persen, 0) }}%)
+                        🏷️ {{ __('Diskon Rombongan') }} ({{ number_format($pesanan->diskon_persen, 0) }}%)
                     </td>
                     <td style="color:#059669; font-weight:700; font-size:13px;">
                         - Rp {{ number_format($pesanan->diskon_nominal, 0, ',', '.') }}
@@ -234,7 +234,7 @@
                 @if($pesanan->diskon_voucher_nominal > 0)
                 <tr style="background:#f5f3ff;">
                     <td colspan="2" style="color:#7c3aed; font-weight:600; font-size:13px;">
-                        🎟️ Voucher {{ $pesanan->kode_voucher }}
+                        🎟️ {{ __('Voucher') }} {{ $pesanan->kode_voucher }}
                     </td>
                     <td style="color:#7c3aed; font-weight:700; font-size:13px;">
                         - Rp {{ number_format($pesanan->diskon_voucher_nominal, 0, ',', '.') }}
@@ -243,7 +243,7 @@
                 @endif
 
                 <tr class="total-row">
-                    <td colspan="2" style="text-align:right; padding-right:20px;">Total Pembayaran</td>
+                    <td colspan="2" style="text-align:right; padding-right:20px;">{{ __('Total Pembayaran') }}</td>
                     <td style="font-weight:700;">@rupiah($pesanan->total_bayar)</td>
                 </tr>
             </tbody>
@@ -256,7 +256,7 @@
               <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
               <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
             </svg>
-            Cetak Tiket / Simpan PDF
+            {{ __('Cetak Tiket / Simpan PDF') }}
         </button>
     </div>
 

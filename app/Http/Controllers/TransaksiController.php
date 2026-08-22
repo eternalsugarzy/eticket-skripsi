@@ -141,7 +141,8 @@ class TransaksiController extends Controller
     {
         $request->validate([
             'id_objek'       => 'required',
-            'bayar'          => 'required|numeric',
+            'metode_pembayaran' => 'required|in:tunai,qris',
+            'bayar'          => 'nullable|numeric',
             'id_jenis_tiket' => 'required|array',
             'jumlah'         => 'required|array',
             'harga_satuan'   => 'required|array',
@@ -169,8 +170,12 @@ class TransaksiController extends Controller
             $diskonNominal = (int) round($subtotalSebelumDiskon * $diskonPersen / 100);
             $grandTotal    = $subtotalSebelumDiskon - $diskonNominal;
 
+            $metode = $request->metode_pembayaran;
+            $bayar = $metode === 'qris' ? $grandTotal : $request->bayar;
+            $kembali = $metode === 'qris' ? 0 : $bayar - $grandTotal;
+
             // Cegah kembalian negatif tercetak di struk — bayar tidak boleh kurang dari total
-            if ($request->bayar < $grandTotal) {
+            if ($metode === 'tunai' && $bayar < $grandTotal) {
                 DB::rollback();
                 return back()->with('error', 'Jumlah bayar kurang dari total tagihan Rp ' . number_format($grandTotal, 0, ',', '.') . '.');
             }
@@ -183,8 +188,9 @@ class TransaksiController extends Controller
                 'total_bayar'   => $grandTotal,
                 'diskon_persen' => $diskonPersen,
                 'diskon_nominal'=> $diskonNominal,
-                'bayar'         => $request->bayar,
-                'kembali'       => $request->bayar - $grandTotal,
+                'metode_pembayaran' => $metode,
+                'bayar'         => $bayar,
+                'kembali'       => $kembali,
                 'status_tiket'  => 'active',
             ]);
 

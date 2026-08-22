@@ -27,6 +27,7 @@ use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\UlasanAdminController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\LanguageController;
 
 
 // =========================================================================
@@ -34,6 +35,10 @@ use App\Http\Controllers\VoucherController;
 // =========================================================================
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+
+// Alih bahasa (switch locale)
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
+
 Route::get('/katalog', [LandingController::class, 'katalog'])->name('wisata.katalog');
 Route::get('/wisata/{id}', [LandingController::class, 'detail'])->name('wisata.detail');
 
@@ -54,6 +59,9 @@ Route::get('/e-ticket/{kode_pesanan}', [CheckoutController::class, 'eTicket'])->
 // API tier diskon (dipanggil JS, tidak perlu login)
 Route::get('/api/diskon-tiers', [DiskonRombonganController::class, 'apiTiers'])->name('diskon.tiers');
 Route::post('/api/cek-voucher', [CheckoutController::class, 'cekVoucher'])->name('voucher.cek');
+
+// API Chatbot knowledge base
+Route::get('/api/chatbot/knowledge', [App\Http\Controllers\ChatbotController::class, 'knowledge'])->name('chatbot.knowledge');
 
 // ── Auth Staff (Admin/Kadis/Kasir/Petugas) ──
 Route::middleware('guest')->group(function () {
