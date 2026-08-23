@@ -6,7 +6,7 @@ Sistem tiket online untuk objek wisata di Provinsi Kalimantan Selatan — dibang
 
 - Pemesanan tiket online tanpa harus punya akun (opsional daftar untuk lihat riwayat pesanan)
 - Pembayaran online via Midtrans (Snap)
-- **[BARU]** Pembayaran QRIS Statis langsung di layar kasir offline/loket.
+- **[BARU]** Pembayaran QRIS Dinamis (terintegrasi Midtrans Snap API) di layar kasir offline/loket.
 - E-Ticket dengan QR Code + validasi/scan tiket di lokasi
 - Diskon rombongan & kode voucher
 - Notifikasi email & WhatsApp (Fonnte)
@@ -15,6 +15,7 @@ Sistem tiket online untuk objek wisata di Provinsi Kalimantan Selatan — dibang
 - Laporan & rekapitulasi (cetak PDF & export Excel)
 - **[BARU]** AI Customer Service Chatbot (NLP berbasis keyword/rule-based) untuk menjawab FAQ, info jam operasional, harga tiket, dan rute perjalanan (Google Maps).
 - **[BARU]** Dukungan Alih Bahasa / Multibahasa (Bahasa Indonesia 🇮🇩 & English 🇬🇧) untuk wisatawan mancanegara.
+- **[BARU]** Penambahan Informasi Jam Operasional di halaman publik/detail objek wisata.
 
 ## Teknologi
 
