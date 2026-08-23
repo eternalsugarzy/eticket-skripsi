@@ -151,26 +151,36 @@
 
                 <div id="section-qris" style="display:none;">
                     <div class="text-center p-3 border rounded mb-3" style="background:#f0fdf4;">
-                        <p class="fw-bold mb-2" style="color:#15803d;"><i class="ti ti-qrcode"></i> Pembayaran QRIS</p>
-                        <div class="mb-2">
-                            <img src="{{ asset('assets/images/qris-loket.png') }}" 
-                                 alt="QRIS" class="img-fluid rounded" 
-                                 style="max-height:280px; border:2px dashed #bbf7d0;"
-                                 onerror="this.onerror=null; this.src='{{ asset('assets/images/qris-placeholder.svg') }}'">
+                        <p class="fw-bold mb-2" style="color:#15803d;"><i class="ti ti-qrcode"></i> Pembayaran QRIS (Midtrans)</p>
+                        <div id="qris-info" class="mb-2">
+                            <i class="ti ti-shield-check fs-3 text-success"></i>
+                            <p class="small text-muted mt-1 mb-0">Klik tombol "BAYAR QRIS" di bawah.<br>Sistem akan membuka jendela pembayaran Midtrans.<br>Pengunjung scan QRIS, lalu pembayaran otomatis terkonfirmasi.</p>
                         </div>
-                        <small class="text-muted">Minta pengunjung scan QRIS di atas untuk melakukan pembayaran</small>
+                        <div id="qris-loading" style="display:none;">
+                            <div class="spinner-border text-success" role="status"></div>
+                            <p class="small text-muted mt-2">Menyiapkan pembayaran QRIS...</p>
+                        </div>
                     </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold"
-                        id="btn-submit" disabled>
+                        id="btn-submit-tunai" disabled>
                     <i class="ti ti-printer"></i> PROSES & CETAK
+                </button>
+                <button type="button" class="btn btn-success w-100 py-2 fw-bold"
+                        id="btn-submit-qris" style="display:none;" disabled
+                        onclick="prosesQris()">
+                    <i class="ti ti-qrcode"></i> BAYAR QRIS
                 </button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+{{-- Midtrans Snap JS --}}
+@php $midtransUrl = config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js'; @endphp
+<script src="{{ $midtransUrl }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
 
 <script>
 const selectObjek    = document.getElementById('id_objek');
@@ -188,7 +198,8 @@ const inputDiskonPers= document.getElementById('input-diskon-persen');
 const inputDiskonNom = document.getElementById('input-diskon-nominal');
 const inputBayar     = document.getElementById('bayar');
 const inputKembali   = document.getElementById('kembali');
-const btnSubmit      = document.getElementById('btn-submit');
+const btnSubmitTunai = document.getElementById('btn-submit-tunai');
+const btnSubmitQris  = document.getElementById('btn-submit-qris');
 
 let grandTotal = 0;
 
@@ -314,7 +325,7 @@ function hitungGrandTotal() {
     // Jika mode QRIS, update button state tanpa perlu cek bayar
     const isTunai = document.getElementById('metode-tunai').checked;
     if (!isTunai) {
-        btnSubmit.disabled = !(grandTotal > 0);
+        btnSubmitQris.disabled = !(grandTotal > 0);
     }
 }
 
@@ -323,6 +334,8 @@ function toggleMetode() {
     const isTunai = document.getElementById('metode-tunai').checked;
     document.getElementById('section-tunai').style.display = isTunai ? 'block' : 'none';
     document.getElementById('section-qris').style.display = isTunai ? 'none' : 'block';
+    btnSubmitTunai.style.display = isTunai ? 'block' : 'none';
+    btnSubmitQris.style.display  = isTunai ? 'none' : 'block';
     
     if (isTunai) {
         // Mode tunai: validasi bayar >= total
@@ -333,7 +346,7 @@ function toggleMetode() {
         inputBayar.required = false;
         inputBayar.value = '';
         inputKembali.value = 'Rp 0';
-        btnSubmit.disabled = !(grandTotal > 0);
+        btnSubmitQris.disabled = !(grandTotal > 0);
     }
 }
 
@@ -363,16 +376,121 @@ function updateSummary() {
     rowDiskon.style.display  = 'none';
     inputDiskonPers.value    = 0;
     inputDiskonNom.value     = 0;
-    btnSubmit.disabled       = true;
+    btnSubmitTunai.disabled  = true;
+    btnSubmitQris.disabled   = true;
 }
 
 function updateButtonState(bayar) {
     const isTunai = document.getElementById('metode-tunai').checked;
     if (isTunai) {
-        btnSubmit.disabled = !(grandTotal > 0 && bayar >= grandTotal);
+        btnSubmitTunai.disabled = !(grandTotal > 0 && bayar >= grandTotal);
     } else {
-        btnSubmit.disabled = !(grandTotal > 0);
+        btnSubmitQris.disabled = !(grandTotal > 0);
     }
+}
+
+// =========================================================
+// QRIS MIDTRANS — Proses pembayaran via Snap
+// =========================================================
+function prosesQris() {
+    if (grandTotal <= 0) return alert('Total tagihan harus lebih dari Rp 0.');
+
+    const form = document.getElementById('form-transaksi');
+    const formData = new FormData(form);
+
+    // Tampilkan loading
+    btnSubmitQris.disabled = true;
+    btnSubmitQris.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyiapkan...';
+    document.getElementById('qris-info').style.display = 'none';
+    document.getElementById('qris-loading').style.display = 'block';
+
+    fetch('{{ route("transaksi.qris.store") }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('qris-loading').style.display = 'none';
+        document.getElementById('qris-info').style.display = 'block';
+
+        if (data.error) {
+            alert('Error: ' + data.error);
+            resetQrisButton();
+            return;
+        }
+
+        // Buka Midtrans Snap
+        window.snap.pay(data.snap_token, {
+            onSuccess: function(result) {
+                // Konfirmasi ke server dan redirect ke struk
+                fetch('{{ url("transaksi/qris-confirm") }}/' + data.transaksi_id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(r => r.json())
+                .then(confirmData => {
+                    if (confirmData.redirect) {
+                        window.location.href = confirmData.redirect;
+                    }
+                })
+                .catch(() => {
+                    // Fallback: redirect manual
+                    window.location.href = '/transaksi/' + data.transaksi_id;
+                });
+            },
+            onPending: function(result) {
+                alert('Pembayaran masih pending. Menunggu konfirmasi dari payment gateway...');
+                // Tetap redirect ke struk, status akan di-sync nanti
+                window.location.href = '/transaksi/' + data.transaksi_id;
+            },
+            onError: function(result) {
+                alert('Pembayaran gagal. Transaksi dibatalkan.');
+                // Hapus transaksi yang pending
+                fetch('{{ url("transaksi/qris-cancel") }}/' + data.transaksi_id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({})
+                });
+                resetQrisButton();
+            },
+            onClose: function() {
+                // User menutup popup tanpa bayar → hapus transaksi pending
+                fetch('{{ url("transaksi/qris-cancel") }}/' + data.transaksi_id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({})
+                });
+                resetQrisButton();
+            }
+        });
+    })
+    .catch(err => {
+        document.getElementById('qris-loading').style.display = 'none';
+        document.getElementById('qris-info').style.display = 'block';
+        alert('Gagal menghubungi server: ' + err.message);
+        resetQrisButton();
+    });
+}
+
+function resetQrisButton() {
+    btnSubmitQris.disabled = false;
+    btnSubmitQris.innerHTML = '<i class="ti ti-qrcode"></i> BAYAR QRIS';
 }
 </script>
 @endsection

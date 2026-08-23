@@ -425,13 +425,19 @@ body {
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="info-box">
-                            <div class="info-label">{{ __('Kabupaten / Kota') }}</div>
+                            <div class="info-label"><i class="bi bi-geo-alt me-1"></i>{{ __('Kabupaten / Kota') }}</div>
                             <div class="info-value">{{ $wisata->kabupaten->nama_kabupaten ?? '-' }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="info-box">
-                            <div class="info-label">{{ __('Alamat Fisik') }}</div>
+                            <div class="info-label"><i class="bi bi-clock me-1"></i>{{ __('Jam Operasional') }}</div>
+                            <div class="info-value">{{ $wisata->jam_operasional ?? __('Belum ditentukan') }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box">
+                            <div class="info-label"><i class="bi bi-map me-1"></i>{{ __('Alamat Fisik') }}</div>
                             <div class="info-value">{{ $wisata->alamat ?? '-' }}</div>
                         </div>
                     </div>

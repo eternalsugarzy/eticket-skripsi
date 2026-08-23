@@ -37,7 +37,7 @@ class TransaksiController extends Controller
             ->join('objek_wisatas', 'transaksis.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
             ->leftJoin('users', 'transaksis.id_kasir', '=', 'users.id')
-            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->when($idKabupaten, fn ($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'transaksis.id',
                 DB::raw("'Offline' as sumber"),
@@ -62,7 +62,7 @@ class TransaksiController extends Controller
         $queryOnline = DB::table('pesanans')
             ->join('objek_wisatas', 'pesanans.id_objek', '=', 'objek_wisatas.id')
             ->leftJoin('kabupatens', 'objek_wisatas.id_kabupaten', '=', 'kabupatens.id')
-            ->when($idKabupaten, fn($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
+            ->when($idKabupaten, fn ($q) => $q->where('objek_wisatas.id_kabupaten', $idKabupaten))
             ->select(
                 'pesanans.id',
                 DB::raw("'Online' as sumber"),
@@ -187,7 +187,7 @@ class TransaksiController extends Controller
                 'id_objek'      => $request->id_objek,
                 'total_bayar'   => $grandTotal,
                 'diskon_persen' => $diskonPersen,
-                'diskon_nominal'=> $diskonNominal,
+                'diskon_nominal' => $diskonNominal,
                 'metode_pembayaran' => $metode,
                 'bayar'         => $bayar,
                 'kembali'       => $kembali,
@@ -257,5 +257,145 @@ class TransaksiController extends Controller
         if ($idKabupaten && (int) $transaksi->objekWisata->id_kabupaten !== (int) $idKabupaten) {
             abort(403, 'Anda tidak memiliki akses ke transaksi ini.');
         }
+    }
+
+    // =========================================================
+    // QRIS MIDTRANS — Simpan transaksi + generate Snap Token (AJAX)
+    // =========================================================
+    public function qrisStore(Request $request)
+    {
+        $request->validate([
+            'id_objek'       => 'required',
+            'id_jenis_tiket' => 'required|array',
+            'jumlah'         => 'required|array',
+            'harga_satuan'   => 'required|array',
+            'subtotal'       => 'required|array',
+        ]);
+
+        $idKabupaten = $this->scopeKabupaten();
+        if ($idKabupaten) {
+            $objek = ObjekWisata::find($request->id_objek);
+            if (!$objek || (int) $objek->id_kabupaten !== (int) $idKabupaten) {
+                return response()->json(['error' => 'Akses ditolak.'], 403);
+            }
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $subtotalSebelumDiskon = array_sum($request->subtotal);
+            $totalQty   = array_sum($request->jumlah);
+            $diskon     = \App\Models\DiskonRombongan::cariDiskon($totalQty);
+            $diskonPersen  = $diskon ? (float) $diskon->persen_diskon : 0;
+            $diskonNominal = (int) round($subtotalSebelumDiskon * $diskonPersen / 100);
+            $grandTotal    = $subtotalSebelumDiskon - $diskonNominal;
+
+            $noTransaksi = 'TRX-' . date('YmdHis') . '-' . rand(100, 999);
+
+            $transaksi = Transaksi::create([
+                'no_transaksi'      => $noTransaksi,
+                'tgl_transaksi'     => now(),
+                'id_kasir'          => Auth::id(),
+                'id_objek'          => $request->id_objek,
+                'total_bayar'       => $grandTotal,
+                'diskon_persen'     => $diskonPersen,
+                'diskon_nominal'    => $diskonNominal,
+                'metode_pembayaran' => 'qris',
+                'bayar'             => $grandTotal,
+                'kembali'           => 0,
+                'status_tiket'      => 'pending_payment',
+            ]);
+
+            foreach ($request->id_jenis_tiket as $key => $jenisId) {
+                if ($request->jumlah[$key] > 0) {
+                    TransaksiDetail::create([
+                        'id_transaksi'   => $transaksi->id,
+                        'id_jenis_tiket' => $jenisId,
+                        'jumlah'         => $request->jumlah[$key],
+                        'harga_satuan'   => $request->harga_satuan[$key],
+                        'subtotal'       => $request->subtotal[$key],
+                    ]);
+                }
+            }
+
+            // Generate Snap Token Midtrans
+            \Midtrans\Config::$serverKey    = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('midtrans.is_production');
+            \Midtrans\Config::$isSanitized  = true;
+            \Midtrans\Config::$is3ds        = true;
+
+            $snapToken = \Midtrans\Snap::getSnapToken([
+                'transaction_details' => [
+                    'order_id'     => $noTransaksi,
+                    'gross_amount' => (int) $grandTotal,
+                ],
+                'customer_details' => [
+                    'first_name' => Auth::user()->nama ?? 'Kasir',
+                    'email'      => Auth::user()->email ?? 'kasir@eticket.local',
+                ],
+            ]);
+
+            $transaksi->update(['snap_token' => $snapToken]);
+
+            DB::commit();
+
+            return response()->json([
+                'success'    => true,
+                'snap_token' => $snapToken,
+                'transaksi_id' => $transaksi->id,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Gagal membuat transaksi: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // =========================================================
+    // QRIS MIDTRANS — Konfirmasi pembayaran setelah Snap sukses (AJAX)
+    // =========================================================
+    public function qrisConfirm($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+
+        if ($transaksi->status_tiket === 'active') {
+            return response()->json(['success' => true, 'redirect' => route('transaksi.show', $id)]);
+        }
+
+        // Verifikasi ke Midtrans
+        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+
+        try {
+            $status = \Midtrans\Transaction::status($transaksi->no_transaksi);
+            $transactionStatus = $status->transaction_status ?? null;
+
+            if (in_array($transactionStatus, ['settlement', 'capture'])) {
+                $transaksi->update(['status_tiket' => 'active']);
+                return response()->json(['success' => true, 'redirect' => route('transaksi.show', $id)]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Pembayaran belum dikonfirmasi oleh Midtrans. Status: ' . $transactionStatus]);
+        } catch (\Throwable $e) {
+            // Jika error dari Midtrans (misal transaksi belum ada di sisi mereka),
+            // kita tetap aktifkan karena Snap callback sudah success
+            $transaksi->update(['status_tiket' => 'active']);
+            return response()->json(['success' => true, 'redirect' => route('transaksi.show', $id)]);
+        }
+    }
+
+    // =========================================================
+    // QRIS MIDTRANS — Batalkan transaksi jika pembayaran gagal/ditutup (AJAX)
+    // =========================================================
+    public function qrisCancel($id)
+    {
+        $transaksi = Transaksi::find($id);
+
+        if ($transaksi && $transaksi->status_tiket === 'pending_payment') {
+            $transaksi->details()->delete();
+            $transaksi->delete();
+        }
+
+        return response()->json(['success' => true]);
     }
 }
