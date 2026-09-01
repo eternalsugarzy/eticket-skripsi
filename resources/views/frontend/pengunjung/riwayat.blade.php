@@ -422,9 +422,17 @@ body { background: var(--cream); }
                     {{ $pesanan->objekWisata->nama_objek ?? '-' }}
                 </div>
                 <div class="pesanan-detail-row">
+                    <i class="bi bi-clock"></i>
+                    {{ __('Jam Buka:') }}
+                    <span>{{ $pesanan->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}</span>
+                </div>
+                <div class="pesanan-detail-row">
                     <i class="bi bi-calendar-event"></i>
                     {{ __('Tanggal Kunjungan:') }}
                     <strong>{{ \Carbon\Carbon::parse($pesanan->tanggal_kunjungan)->translatedFormat('d F Y') }}</strong>
+                    <span class="badge ms-2" style="background: rgba(201,147,58,.15); color: var(--gold); font-size: .72rem;">
+                        {{ __('Berlaku s.d.') }} {{ \Carbon\Carbon::parse($pesanan->tanggal_kunjungan)->format('d/m/Y') }}
+                    </span>
                 </div>
                 <div class="pesanan-detail-row">
                     <i class="bi bi-ticket-perforated"></i>

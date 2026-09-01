@@ -19,6 +19,7 @@ class ValidasiController extends Controller
         $request->validate(['no_transaksi' => 'required']);
 
         $inputCode = strtoupper(trim($request->no_transaksi));
+        $today = Carbon::today('Asia/Makassar');
 
         // ============================================================
         // SKENARIO A: CEK TIKET KASIR (OFFLINE)
@@ -42,7 +43,20 @@ class ValidasiController extends Controller
                 return view('validasi.index', [
                     'status'      => 'warning',
                     'message'     => 'TIKET SUDAH TERPAKAI!',
-                    'sub_message' => 'Tiket ini sudah discan pada: ' . Carbon::parse($transaksi->waktu_validasi)->format('d M Y H:i'),
+                    'sub_message' => 'Tiket ini sudah discan pada: ' . Carbon::parse($transaksi->waktu_validasi)->timezone('Asia/Makassar')->format('d M Y H:i') . ' WITA',
+                    'data'        => $transaksi,
+                    'tipe'        => 'offline',
+                    'input_code'  => $inputCode,
+                ]);
+            }
+
+            // Validasi Masa Berlaku: Tiket kasir loket hanya berlaku pada hari pembelian
+            $tglTransaksi = Carbon::parse($transaksi->tgl_transaksi, 'Asia/Makassar')->startOfDay();
+            if ($today->gt($tglTransaksi)) {
+                return view('validasi.index', [
+                    'status'      => 'error',
+                    'message'     => 'TIKET KEDALUWARSA!',
+                    'sub_message' => 'Masa berlaku tiket telah habis pada ' . $tglTransaksi->translatedFormat('d F Y') . '. Tiket loket hanya berlaku pada hari pembelian.',
                     'data'        => $transaksi,
                     'tipe'        => 'offline',
                     'input_code'  => $inputCode,
@@ -85,7 +99,31 @@ class ValidasiController extends Controller
                 return view('validasi.index', [
                     'status'      => 'warning',
                     'message'     => 'TIKET SUDAH TERPAKAI!',
-                    'sub_message' => 'Tiket ini sudah discan pada: ' . Carbon::parse($pesanan->waktu_validasi)->format('d M Y H:i'),
+                    'sub_message' => 'Tiket ini sudah discan pada: ' . Carbon::parse($pesanan->waktu_validasi)->timezone('Asia/Makassar')->format('d M Y H:i') . ' WITA',
+                    'data'        => $pesanan,
+                    'tipe'        => 'online',
+                    'input_code'  => $inputCode,
+                ]);
+            }
+
+            // Validasi Masa Berlaku: Tiket online berlaku pada tanggal kunjungan
+            $tglKunjungan = Carbon::parse($pesanan->tanggal_kunjungan, 'Asia/Makassar')->startOfDay();
+            if ($today->gt($tglKunjungan)) {
+                return view('validasi.index', [
+                    'status'      => 'error',
+                    'message'     => 'TIKET KEDALUWARSA!',
+                    'sub_message' => 'Masa berlaku tiket telah habis pada ' . $tglKunjungan->translatedFormat('d F Y') . '. Tiket reservasi online hanya berlaku pada tanggal kunjungan yang dipilih.',
+                    'data'        => $pesanan,
+                    'tipe'        => 'online',
+                    'input_code'  => $inputCode,
+                ]);
+            }
+
+            if ($today->lt($tglKunjungan)) {
+                return view('validasi.index', [
+                    'status'      => 'warning',
+                    'message'     => 'TIKET BELUM BERLAKU!',
+                    'sub_message' => 'Tiket ini dijadwalkan untuk kunjungan tanggal ' . $tglKunjungan->translatedFormat('d F Y') . '. Belum dapat divalidasi hari ini.',
                     'data'        => $pesanan,
                     'tipe'        => 'online',
                     'input_code'  => $inputCode,

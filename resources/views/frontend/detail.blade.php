@@ -194,29 +194,28 @@ body {
     justify-content: center; 
     gap: 8px;
     width: 100%;
-    background: var(--gold);
-    color: #fff;
+    background: linear-gradient(135deg, var(--gold) 50%, #b8892e 100%);
+    color: #fff !important;
     font-weight: 700; 
     font-size: .92rem;
     padding: 13px;
     border-radius: 10px; 
     border: none;
-    text-decoration: none;
+    text-decoration: none !important;
     transition: background .2s, transform .15s, box-shadow .2s;
-    position: relative; 
-    overflow: hidden;
-}
-.btn-booking::after {
-    content: "";
-    position: absolute; 
-    inset: 0;
-    background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,.12) 100%);
+    cursor: pointer;
+    position: relative;
+    z-index: 5;
 }
 .btn-booking:hover {
-    background: #b07d28; 
-    color: #fff;
+    background: linear-gradient(135deg, #b07d28 50%, #96691e 100%);
+    color: #fff !important;
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(201,147,58,.35);
+}
+.btn-booking:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 /* ── Lokasi info boxes ── */
@@ -619,8 +618,10 @@ body {
                     @endif
                 @else
                 <div class="mb-4 p-3 text-center" style="background:var(--cream); border-radius:12px; font-size:.85rem; color:var(--text-muted);">
-                    <a href="{{ route('pengunjung.login') }}" style="color:var(--forest); font-weight:700;">{{ __('Masuk sebagai pengunjung') }}</a>
-                    {{ __('yang pernah membeli tiket ke sini untuk memberi ulasan.') }}
+                    <p class="mb-2">{{ __('Ingin membagikan pengalaman kunjungan Anda?') }}</p>
+                    <a href="{{ route('pengunjung.login') }}" class="btn btn-sm fw-bold px-3 py-2 text-white" style="background: var(--forest); border-radius: 8px;">
+                        <i class="bi bi-person-fill me-1"></i> {{ __('Masuk sebagai Pengunjung') }}
+                    </a>
                 </div>
                 @endauth
 

@@ -82,7 +82,7 @@ class PengunjungAuthController extends Controller
     public function riwayat()
     {
         $pengunjung = Auth::guard('pengunjung')->user();
-        $pesanans = $pengunjung->pesanans()->with('objekWisata')->latest()->get();
+        $pesanans = $pesananQuery = $pengunjung->pesanans()->with(['objekWisata', 'details.jenisTiket'])->latest()->get();
 
         return view('frontend.pengunjung.riwayat', compact('pesanans'));
     }

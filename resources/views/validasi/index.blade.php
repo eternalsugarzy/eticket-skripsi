@@ -83,7 +83,7 @@
                     @elseif($status == 'warning')
                         <div class="text-warning mb-3">
                             <i class="ti ti-alert-triangle" style="font-size: 5rem;"></i>
-                            <h2 class="fw-bold mt-2 mb-0">SUDAH TERPAKAI!</h2>
+                            <h2 class="fw-bold mt-2 mb-0">{{ $message ?? 'PERINGATAN TIKET' }}</h2>
                         </div>
                         <div class="alert alert-warning text-dark small fw-semibold border-warning">
                             {{ $sub_message ?? '' }}
@@ -92,7 +92,9 @@
                         <div class="text-danger mb-3">
                             <i class="ti ti-circle-x" style="font-size: 5rem;"></i>
                             <h2 class="fw-bold mt-2 mb-0">{{ $message ?? 'TIDAK DITEMUKAN' }}</h2>
-                            <p class="text-danger opacity-75">{{ $sub_message ?? 'Tiket tidak terdaftar atau belum lunas.' }}</p>
+                        </div>
+                        <div class="alert alert-danger text-dark small fw-semibold border-danger">
+                            {{ $sub_message ?? 'Tiket tidak terdaftar atau belum lunas.' }}
                         </div>
                     @endif
 
@@ -113,7 +115,15 @@
                             @if(isset($tipe) && $tipe == 'online')
                                 <div class="mt-1">
                                     <small class="text-muted">Nama Pengunjung: <strong>{{ $data->nama_pengunjung }}</strong></small><br>
-                                    <small class="text-muted">Tgl Kunjungan: <strong>{{ \Carbon\Carbon::parse($data->tanggal_kunjungan)->format('d M Y') }}</strong></small>
+                                    <small class="text-muted">Tgl Kunjungan: <strong>{{ \Carbon\Carbon::parse($data->tanggal_kunjungan)->format('d M Y') }}</strong></small><br>
+                                    <small class="text-muted">Jam Buka: <strong>{{ $data->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}</strong></small><br>
+                                    <small class="text-muted">Masa Berlaku: <strong class="text-primary">s.d. {{ \Carbon\Carbon::parse($data->tanggal_kunjungan)->format('d M Y') }} (23:59 WITA)</strong></small>
+                                </div>
+                            @else
+                                <div class="mt-1">
+                                    <small class="text-muted">Tgl Transaksi: <strong>{{ \Carbon\Carbon::parse($data->tgl_transaksi)->format('d M Y H:i') }}</strong></small><br>
+                                    <small class="text-muted">Jam Buka: <strong>{{ $data->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}</strong></small><br>
+                                    <small class="text-muted">Masa Berlaku: <strong class="text-primary">Hari ini ({{ \Carbon\Carbon::parse($data->tgl_transaksi)->format('d M Y') }})</strong></small>
                                 </div>
                             @endif
 

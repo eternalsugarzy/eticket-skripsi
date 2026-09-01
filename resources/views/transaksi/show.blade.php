@@ -37,11 +37,13 @@
                     <div class="col-6">
                         No Nota : <strong>{{ $transaksi->no_transaksi }}</strong><br>
                         Tanggal : {{ date('d/m/Y H:i', strtotime($transaksi->tgl_transaksi)) }}<br>
-                        Metode  : <strong><span class="badge {{ $transaksi->metode_pembayaran === 'qris' ? 'bg-success' : 'bg-primary' }}">{{ strtoupper($transaksi->metode_pembayaran ?? 'TUNAI') }}</span></strong>
+                        Metode  : <strong><span class="badge {{ $transaksi->metode_pembayaran === 'qris' ? 'bg-success' : 'bg-primary' }}">{{ strtoupper($transaksi->metode_pembayaran ?? 'TUNAI') }}</span></strong><br>
+                        Masa Berlaku : <strong class="text-success">{{ date('d/m/Y', strtotime($transaksi->tgl_transaksi)) }}</strong> (Hari ini)
                     </div>
                     <div class="col-6 text-end">
                         Kasir : {{ $transaksi->kasir->nama ?? 'Admin' }}<br>
-                        Lokasi : {{ $transaksi->objekWisata->kabupaten->nama_kabupaten ?? '-' }}
+                        Lokasi : {{ $transaksi->objekWisata->kabupaten->nama_kabupaten ?? '-' }}<br>
+                        Jam Buka : {{ $transaksi->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}
                     </div>
                 </div>
 

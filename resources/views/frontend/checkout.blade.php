@@ -59,7 +59,6 @@
                                     value="{{ old('no_wa') }}"
                                     required
                                     placeholder="08xxxxxxxxxx"
-                                    pattern="[0-9]{10,15}"
                                 >
                                 @error('no_wa')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -91,7 +90,7 @@
                                     type="date"
                                     class="form-control @error('tanggal_kunjungan') is-invalid @enderror"
                                     name="tanggal_kunjungan"
-                                    value="{{ old('tanggal_kunjungan') }}"
+                                    value="{{ old('tanggal_kunjungan', date('Y-m-d')) }}"
                                     required
                                     min="{{ date('Y-m-d') }}"
                                 >
@@ -130,7 +129,7 @@
                                         class="form-control text-center input-qty"
                                         name="tiket[{{ $ht->id_jenis_tiket }}]"
                                         id="qty-{{ $ht->id }}"
-                                        value="0"
+                                        value="{{ $loop->first ? 1 : 0 }}"
                                         data-harga="{{ $ht->harga }}"
                                         readonly
                                         style="background-color: #fff;"
@@ -190,10 +189,13 @@
                             @endif
                             <div>
                                 <h6 class="fw-bold mb-1">{{ $wisata->nama_objek }}</h6>
-                                <span class="text-muted" style="font-size: 13px;">
+                                <div class="text-muted mb-1" style="font-size: 13px;">
                                     <i class="bi bi-geo-alt-fill text-danger"></i>
                                     {{ $wisata->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
-                                </span>
+                                </div>
+                                <div class="small text-muted">
+                                    <i class="bi bi-clock-fill text-warning me-1"></i> {{ $wisata->jam_operasional ?? '08:00 - 17:00 WITA' }}
+                                </div>
                             </div>
                         </div>
 
@@ -209,7 +211,7 @@
                             type="submit"
                             class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm"
                             id="btn-submit"
-                            disabled
+                            style="cursor: pointer; position: relative; z-index: 10;"
                         >
                             <span id="btn-submit-label">{{ __('Lanjutkan Pembayaran') }}</span> <i class="bi bi-shield-lock-fill ms-1"></i>
                         </button>
@@ -353,7 +355,9 @@
             displayTotal.innerText = (totalQty === 0) ? 'Rp 0' : formatRupiah(totalAkhir);
             inputTotal.value       = totalAkhir;
             rincianBox.innerHTML   = rincian;
-            btnSubmit.disabled     = (totalQty === 0);
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+            }
 
             // Ubah label tombol & catatan kalau pesanannya gratis (total 0 tapi ada tiket dipilih)
             var gratis = (totalQty > 0 && totalAkhir <= 0);
@@ -365,6 +369,21 @@
                 : "{{ __('Sistem akan memproses ke gerbang pembayaran aman (QRIS/E-Wallet).') }}";
 
             return subtotalSetelahRombongan;
+        }
+
+        // Validasi form saat disubmit
+        var formEl = document.getElementById('formCheckout');
+        if (formEl) {
+            formEl.addEventListener('submit', function(e) {
+                var inputs = document.querySelectorAll('.input-qty');
+                var totalQty = 0;
+                inputs.forEach(function(inp) { totalQty += parseInt(inp.value, 10) || 0; });
+                if (totalQty <= 0) {
+                    e.preventDefault();
+                    alert('Silakan pilih minimal 1 tiket terlebih dahulu dengan menekan tombol (+).');
+                    return false;
+                }
+            });
         }
 
         // ── Tombol +/- jumlah tiket ──

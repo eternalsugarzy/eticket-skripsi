@@ -84,8 +84,16 @@
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->objekWisata->alamat ?? '-' }}</td>
                     </tr>
                     <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Jam Operasional</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ $pesanan->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}</td>
+                    </tr>
+                    <tr>
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Tanggal Kunjungan</td>
                         <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#0F1C14; font-size:13px; font-weight:bold; text-align:right;">{{ \Carbon\Carbon::parse($pesanan->tanggal_kunjungan)->translatedFormat('d F Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#5A6872; font-size:13px;">Masa Berlaku Tiket</td>
+                        <td style="padding:8px 0; border-bottom:1px solid #F0F2F8; color:#B45309; font-size:13px; font-weight:bold; text-align:right;">s.d. {{ \Carbon\Carbon::parse($pesanan->tanggal_kunjungan)->translatedFormat('d M Y') }} (23:59 WITA)</td>
                     </tr>
                     @foreach($pesanan->details as $detail)
                     <tr>

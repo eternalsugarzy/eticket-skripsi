@@ -156,7 +156,7 @@
 .btn-bayar {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, var(--kal-green) 0%, var(--kal-green-mid) 100%);
+    background: linear-gradient(135deg, var(--kal-green) 0%, var(--kal-green-mid) 60%, rgba(201,147,58,.25) 100%);
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
@@ -164,15 +164,9 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: transform .15s, box-shadow .15s;
-    position: relative;
-    overflow: hidden;
-}
-.btn-bayar::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(201,147,58,.2) 100%);
 }
 .btn-bayar:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,61,43,.3); }
+.btn-bayar:active { transform: translateY(0); box-shadow: none; }
 
 .btn-eticket {
     width: 100%; padding: 15px;
@@ -315,8 +309,16 @@
                     <span>{{ $pesanan->objekWisata->nama_objek ?? '-' }}</span>
                 </div>
                 <div class="info-item">
+                    <label>{{ __('Jam Buka') }}</label>
+                    <span>{{ $pesanan->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}</span>
+                </div>
+                <div class="info-item">
                     <label>{{ __('Tanggal Kunjungan') }}</label>
                     <span>{{ date('d M Y', strtotime($pesanan->tanggal_kunjungan)) }}</span>
+                </div>
+                <div class="info-item">
+                    <label>{{ __('Masa Berlaku') }}</label>
+                    <span style="color:#b45309; font-weight:600;">s.d. {{ date('d M Y', strtotime($pesanan->tanggal_kunjungan)) }}</span>
                 </div>
             </div>
 

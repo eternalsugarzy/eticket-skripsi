@@ -182,23 +182,19 @@
 /* Btn detail */
 .btn-detail {
     display: block;
-    background: linear-gradient(135deg, var(--forest), var(--forest-mid));
-    color: #fff;
+    background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 50%, rgba(201,147,58,.22) 100%);
+    color: #fff !important;
     font-weight: 700;
     font-size: .85rem;
     padding: 10px;
     border-radius: 9px;
     text-align: center;
-    text-decoration: none;
+    text-decoration: none !important;
     transition: opacity .2s, transform .15s;
-    position: relative; overflow: hidden;
+    cursor: pointer;
 }
-.btn-detail::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent 50%, rgba(201,147,58,.18) 100%);
-}
-.btn-detail:hover { opacity: .92; transform: translateY(-1px); color: #fff; }
+.btn-detail:hover { opacity: .92; transform: translateY(-1px); color: #fff !important; }
+.btn-detail:active { transform: translateY(0); opacity: 1; }
 
 /* ── Empty state ── */
 .empty-state { padding: 64px 0; text-align: center; }
@@ -353,10 +349,14 @@
                     </div>
 
                     <div class="card-body d-flex flex-column p-4">
-                        <div class="mb-2">
+                        <div class="d-flex flex-wrap gap-2 mb-2">
                             <span class="badge-kab">
                                 <i class="bi bi-geo-alt-fill"></i>
                                 {{ $w->kabupaten->nama_kabupaten ?? __('Kalimantan Selatan') }}
+                            </span>
+                            <span class="badge" style="background: rgba(201,147,58,.12); color: var(--gold); font-size: .75rem; padding: 4px 10px; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="bi bi-clock-fill"></i>
+                                {{ $w->jam_operasional ?? '08:00 - 17:00 WITA' }}
                             </span>
                         </div>
 

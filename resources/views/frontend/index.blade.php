@@ -293,10 +293,16 @@
                              class="card-img-top" alt="{{ $w->nama_objek }}" style="height: 200px; object-fit: cover;">
                         
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title fw-bold mb-1" style="color: #0f172a;">{{ $w->nama_objek }}</h5>
-                            <p class="text-primary small mb-3">
-                                <i class="bi bi-geo-alt-fill"></i> {{ $w->kabupaten->nama_kabupaten ?? 'Kalimantan Selatan' }}
-                            </p>
+                            <h5 class="card-title fw-bold mb-2" style="color: #0f172a;">{{ $w->nama_objek }}</h5>
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3" style="font-size: 0.82rem;">
+                                <span class="text-primary fw-medium">
+                                    <i class="bi bi-geo-alt-fill"></i> {{ $w->kabupaten->nama_kabupaten ?? 'Kalsel' }}
+                                </span>
+                                <span class="text-muted">•</span>
+                                <span class="text-muted">
+                                    <i class="bi bi-clock-fill text-warning me-1"></i> {{ $w->jam_operasional ?? '08:00 - 17:00 WITA' }}
+                                </span>
+                            </div>
                             <p class="card-text text-muted small" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                                 {{ $w->deskripsi ?? 'Informasi destinasi belum tersedia.' }}
                             </p>

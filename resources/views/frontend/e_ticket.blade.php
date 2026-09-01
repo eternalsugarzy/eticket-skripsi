@@ -185,14 +185,29 @@
                     <span class="info-value">{{ date('d F Y', strtotime($pesanan->tanggal_kunjungan)) }}</span>
                 </div>
                 <div class="info-group">
-                    <span class="info-label">{{ __('Status') }}</span>
+                    <span class="info-label">{{ __('Jam Operasional') }}</span>
+                    <span class="info-value" style="color: #4b5563; font-size: 14px;">
+                        {{ $pesanan->objekWisata->jam_operasional ?? '08:00 - 17:00 WITA' }}
+                    </span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">{{ __('Masa Berlaku Tiket') }}</span>
+                    <span class="info-value" style="color: #b45309; font-size: 14px;">
+                        {{ __('Berlaku s.d.') }} {{ date('d M Y', strtotime($pesanan->tanggal_kunjungan)) }} (23:59 WITA)
+                    </span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">{{ __('Status Pembayaran') }}</span>
                     <span class="info-value" style="color: #198754;">{{ __('LUNAS') }}</span>
                 </div>
             </div>
             
             <div class="ticket-qr">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $pesanan->kode_pesanan }}" alt="QR Code">
-                <p>{{ __('Scan barcode ini di pintu masuk tiket.') }}</p>
+                <p>{{ __('Tunjukkan barcode ini kepada petugas loket untuk divalidasi.') }}</p>
+                <div style="margin-top: 8px; font-size: 11px; color: #b45309; font-weight: 600; text-align: center;">
+                    * 1x Validasi Masuk
+                </div>
             </div>
         </div>
 

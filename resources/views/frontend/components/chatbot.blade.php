@@ -13,6 +13,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        pointer-events: none; /* Cegah blocking klik di area transparan */
     }
 
     #chatbot-fab {
@@ -30,6 +31,7 @@
         cursor: pointer;
         transition: transform 0.3s ease, background-color 0.3s ease;
         position: relative;
+        pointer-events: auto; /* Izinkan klik pada tombol */
     }
 
     #chatbot-fab:hover {
