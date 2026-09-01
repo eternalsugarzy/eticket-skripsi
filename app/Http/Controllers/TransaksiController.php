@@ -42,7 +42,7 @@ class TransaksiController extends Controller
                 'transaksis.id',
                 DB::raw("'Offline' as sumber"),
                 'transaksis.no_transaksi as kode_transaksi',
-                'transaksis.tgl_transaksi as tanggal',
+                'transaksis.created_at as tanggal',
                 'objek_wisatas.nama_objek',
                 'kabupatens.nama_kabupaten',
                 'transaksis.total_bayar as total',
@@ -87,14 +87,15 @@ class TransaksiController extends Controller
         // Filter sumber
         if ($request->sumber == 'offline') {
             $queryGabungan = $queryOffline;
+            $finalQuery = $queryGabungan;
         } elseif ($request->sumber == 'online') {
             $queryGabungan = $queryOnline;
+            $finalQuery = $queryGabungan;
         } else {
             $queryGabungan = $queryOffline->unionAll($queryOnline);
+            // Laravel's union with paginate is safer using fromSub
+            $finalQuery = DB::query()->fromSub($queryGabungan, 'combined_table');
         }
-
-        $finalQuery = DB::table(DB::raw("({$queryGabungan->toSql()}) as combined_table"))
-                        ->mergeBindings($queryGabungan);
 
         if ($request->filled('bulan')) {
             $finalQuery->whereMonth('tanggal', $request->bulan);

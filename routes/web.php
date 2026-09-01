@@ -236,6 +236,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan/export-master', [LaporanController::class, 'exportMaster'])->name('laporan.export-master');
     }); // end grup Laporan — admin & kadis provinsi saja
 
+    // 9b. Rangking Wisata — admin, kadis_provinsi, kadis_kabkota
+    Route::middleware('role:admin,kadis_provinsi,kadis_kabkota')->group(function () {
+        Route::get('/rangking-wisata', [\App\Http\Controllers\RangkingWisataController::class, 'index'])->name('rangking.index');
+    });
+
     // 10. Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -643,6 +643,20 @@
                         </a>
                     </li>
 
+                    {{-- ── PERINGKAT WISATA — HANYA admin, kadis provinsi, kadis kabkota ── --}}
+                    @if($isDinas)
+                    <li class="pc-item pc-caption">
+                        <label>Statistik & Peringkat</label>
+                    </li>
+                    <li class="pc-item {{ request()->routeIs('rangking.index') ? 'active' : '' }}">
+                        <a href="{{ route('rangking.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-trending-up"></i></span>
+                            <span class="pc-mtext">Peringkat Wisata</span>
+                        </a>
+                    </li>
+                    @endif
+
+
                     {{-- ── LAPORAN — HANYA admin & kadis provinsi ── --}}
                     @if($isSupervisor)
                     <li class="pc-item pc-caption">
